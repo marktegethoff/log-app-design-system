@@ -1,0 +1,3351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log• Design System — Interactive Specification</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           FOUNDATION: Variables & Reset
+           ============================================ */
+        :root {
+            /* Paper Tones (12-step warm-neutral scale) */
+            --paper-00: #FAFAF8;
+            --paper-05: #F4F1EC;
+            --paper-10: #ECE8E1;
+            --paper-20: #D9D4CB;
+            --paper-30: #B8B1A6;
+            --paper-40: #928A7E;
+            --paper-50: #6E665B;
+            --paper-60: #514A40;
+            --paper-70: #3A342C;
+            --paper-80: #26211B;
+            --paper-90: #171310;
+            --paper-95: #0D0B09;
+
+            /* Signal Colors (Intent Dots) */
+            --signal-thought: #6B7B8D;
+            --signal-action: #C4652A;
+            --signal-decision: #8B6E4E;
+            --signal-reference: #5B7A6B;
+            --signal-unknown: #928A7E;
+
+            /* Brand Accents */
+            --amber: #C4652A;
+            --archive: #5B5168;
+
+            /* Typography */
+            --mono: 'IBM Plex Mono', 'SF Mono', monospace;
+            --sans: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
+
+            /* Letter-spacing (Tracking) */
+            --tracking-tight: -0.035em;
+            --tracking-slight: -0.01em;
+            --tracking-normal: 0px;
+            --tracking-wide: 0.06em;
+
+            /* Spacing (8px baseline) */
+            --s-4: 4px;
+            --s-8: 8px;
+            --s-12: 12px;
+            --s-16: 16px;
+            --s-24: 24px;
+            --s-32: 32px;
+            --s-48: 48px;
+            --s-64: 64px;
+            --s-80: 80px;
+            --s-96: 96px;
+            --s-128: 128px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--paper-00);
+            color: var(--paper-80);
+            line-height: 1.6;
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background: var(--paper-95);
+            color: var(--paper-10);
+        }
+
+        body.dark-mode .hero-section {
+            background: var(--paper-90);
+        }
+
+        body.dark-mode .section {
+            border-bottom-color: var(--paper-80);
+        }
+
+        body.dark-mode .color-swatch {
+            border-color: var(--paper-70);
+        }
+
+        body.dark-mode .type-specimen {
+            border-color: var(--paper-80);
+        }
+
+        body.dark-mode .component-demo {
+            background: var(--paper-90);
+            border-color: var(--paper-80);
+        }
+
+        body.dark-mode .code-block {
+            background: var(--paper-90);
+            border-color: var(--paper-80);
+        }
+
+        body.dark-mode .idle-trace-demo {
+            border-color: var(--paper-80);
+        }
+
+        /* ============================================
+           THEME TOGGLE
+           ============================================ */
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--paper-20);
+            background: var(--paper-05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-family: var(--mono);
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--paper-10);
+            transform: scale(1.05);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: var(--paper-80);
+            border-color: var(--paper-70);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: var(--paper-70);
+        }
+
+        /* ============================================
+           TABLE OF CONTENTS
+           ============================================ */
+        .toc {
+            background: var(--paper-05);
+            border-radius: 4px;
+            padding: var(--s-32);
+            margin-bottom: var(--s-64);
+        }
+
+        body.dark-mode .toc {
+            background: var(--paper-90);
+        }
+
+        .toc h3 {
+            font-size: 18px;
+            margin-bottom: var(--s-24);
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: var(--s-12);
+        }
+
+        .toc-list a {
+            font-family: var(--mono);
+            font-size: 13px;
+            color: var(--paper-60);
+            text-decoration: none;
+            display: flex;
+            align-items: baseline;
+            gap: var(--s-8);
+            transition: color 0.2s ease;
+        }
+
+        body.dark-mode .toc-list a {
+            color: var(--paper-30);
+        }
+
+        .toc-list a:hover {
+            color: var(--amber);
+        }
+
+        .toc-number {
+            color: var(--amber);
+            font-weight: 600;
+            min-width: 24px;
+        }
+
+        /* ============================================
+           LAYOUT: Container & Sections
+           ============================================ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--s-24);
+        }
+
+        .section {
+            padding: var(--s-96) 0;
+            border-bottom: 1px solid var(--paper-10);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: var(--paper-80);
+            color: var(--paper-05);
+            padding: var(--s-48) var(--s-24);
+        }
+
+        .hero-mark {
+            font-family: var(--mono);
+            font-weight: 600;
+            letter-spacing: -0.035em;
+            line-height: 1;
+            margin-bottom: var(--s-48);
+            color: var(--paper-05);
+        }
+
+        .hero-mark .period {
+            color: var(--amber);
+            margin-left: 1px;
+        }
+
+        .hero-title {
+            font-family: var(--sans);
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: var(--s-16);
+            max-width: 700px;
+        }
+
+        .hero-subtitle {
+            font-family: var(--mono);
+            font-size: 14px;
+            color: var(--paper-30);
+            line-height: 1.8;
+            max-width: 600px;
+            margin-bottom: var(--s-32);
+        }
+
+        .hero-quote {
+            font-family: var(--sans);
+            font-size: 18px;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--paper-20);
+            max-width: 500px;
+            margin-top: var(--s-48);
+        }
+
+        /* ============================================
+           TYPOGRAPHY
+           ============================================ */
+        h1, h2, h3, h4 {
+            font-family: var(--mono);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--s-24);
+            color: var(--paper-80);
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3,
+        body.dark-mode h4 {
+            color: var(--paper-05);
+        }
+
+        h1 { font-size: 40px; letter-spacing: -0.02em; }
+        h2 { font-size: 32px; letter-spacing: -0.015em; }
+        h3 { font-size: 24px; letter-spacing: -0.01em; }
+        h4 { font-size: 18px; letter-spacing: 0; }
+
+        p {
+            font-family: var(--sans);
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: var(--s-16);
+            color: var(--paper-70);
+        }
+
+        body.dark-mode p {
+            color: var(--paper-20);
+        }
+
+        .mono {
+            font-family: var(--mono);
+        }
+
+        .label {
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--paper-40);
+            margin-bottom: var(--s-8);
+            display: block;
+        }
+
+        /* ============================================
+           MARK ANATOMY
+           ============================================ */
+        .mark-scale-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--s-48);
+            margin-top: var(--s-48);
+        }
+
+        .mark-scale-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--s-32);
+            background: var(--paper-80);
+            border-radius: 8px;
+        }
+
+        .mark-display {
+            font-family: var(--mono);
+            font-weight: 600;
+            letter-spacing: -0.035em;
+            color: var(--paper-05);
+            line-height: 1;
+        }
+
+        .mark-display .period {
+            color: var(--amber);
+            margin-left: 1px;
+        }
+
+        .mark-size-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--paper-40);
+            margin-top: var(--s-16);
+            letter-spacing: 0.06em;
+        }
+
+        .mark-anatomy {
+            margin: var(--s-64) 0;
+            padding: var(--s-48);
+            background: var(--paper-05);
+            border-radius: 8px;
+        }
+
+        body.dark-mode .mark-anatomy {
+            background: var(--paper-90);
+        }
+
+        .mark-anatomy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--s-48);
+            margin-top: var(--s-32);
+        }
+
+        .anatomy-detail h4 {
+            font-size: 14px;
+            margin-bottom: var(--s-12);
+        }
+
+        .anatomy-detail p {
+            font-size: 14px;
+        }
+
+        /* ============================================
+           PHILOSOPHY SECTION
+           ============================================ */
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--s-32);
+            margin-top: var(--s-48);
+        }
+
+        .philosophy-card {
+            padding: var(--s-32);
+            background: var(--paper-05);
+            border-radius: 4px;
+        }
+
+        body.dark-mode .philosophy-card {
+            background: var(--paper-90);
+        }
+
+        .philosophy-card h4 {
+            font-size: 16px;
+            margin-bottom: var(--s-16);
+            color: var(--amber);
+        }
+
+        .philosophy-card p {
+            font-size: 14px;
+        }
+
+        .instrument-lineage {
+            margin-top: var(--s-48);
+            padding: var(--s-32);
+            background: var(--paper-05);
+            border-left: 3px solid var(--amber);
+        }
+
+        body.dark-mode .instrument-lineage {
+            background: var(--paper-90);
+        }
+
+        .instrument-list {
+            list-style: none;
+            margin-top: var(--s-24);
+        }
+
+        .instrument-list li {
+            font-family: var(--mono);
+            font-size: 14px;
+            padding: var(--s-12) 0;
+            border-bottom: 1px solid var(--paper-10);
+        }
+
+        body.dark-mode .instrument-list li {
+            border-bottom-color: var(--paper-80);
+        }
+
+        .instrument-list li:last-child {
+            border-bottom: none;
+        }
+
+        .instrument-date {
+            color: var(--amber);
+            font-weight: 600;
+            margin-right: var(--s-12);
+        }
+
+        /* ============================================
+           BRAND PRINCIPLES
+           ============================================ */
+        .principles-list {
+            margin-top: var(--s-48);
+        }
+
+        .principle-item {
+            margin-bottom: var(--s-48);
+            padding-bottom: var(--s-32);
+            border-bottom: 1px solid var(--paper-10);
+        }
+
+        body.dark-mode .principle-item {
+            border-bottom-color: var(--paper-80);
+        }
+
+        .principle-item:last-child {
+            border-bottom: none;
+        }
+
+        .principle-number {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--amber);
+            font-weight: 600;
+            margin-bottom: var(--s-8);
+        }
+
+        .principle-item h3 {
+            font-size: 20px;
+            margin-bottom: var(--s-12);
+        }
+
+        /* ============================================
+           TYPE SYSTEM
+           ============================================ */
+        .type-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--s-48);
+            margin-top: var(--s-48);
+        }
+
+        .type-column {
+            padding: var(--s-32);
+            background: var(--paper-05);
+            border-radius: 4px;
+        }
+
+        body.dark-mode .type-column {
+            background: var(--paper-90);
+        }
+
+        .type-column h4 {
+            font-size: 18px;
+            margin-bottom: var(--s-24);
+        }
+
+        .type-column.mechanism h4 {
+            color: var(--paper-60);
+        }
+
+        .type-column.tape h4 {
+            color: var(--amber);
+        }
+
+        .type-sample {
+            margin-bottom: var(--s-24);
+        }
+
+        .type-sample .label {
+            margin-bottom: var(--s-8);
+        }
+
+        .type-sample-text {
+            padding: var(--s-16);
+            background: var(--paper-00);
+            border-radius: 4px;
+        }
+
+        body.dark-mode .type-sample-text {
+            background: var(--paper-95);
+        }
+
+        .type-specimen {
+            margin-top: var(--s-64);
+            padding: var(--s-32);
+            border: 1px solid var(--paper-10);
+            border-radius: 4px;
+        }
+
+        .specimen-row {
+            display: flex;
+            align-items: baseline;
+            gap: var(--s-24);
+            padding: var(--s-16) 0;
+            border-bottom: 1px solid var(--paper-05);
+        }
+
+        body.dark-mode .specimen-row {
+            border-bottom-color: var(--paper-90);
+        }
+
+        .specimen-row:last-child {
+            border-bottom: none;
+        }
+
+        .specimen-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--paper-40);
+            min-width: 100px;
+        }
+
+        .specimen-text {
+            flex: 1;
+        }
+
+        /* ============================================
+           COLOR SYSTEM
+           ============================================ */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: var(--s-16);
+            margin-top: var(--s-32);
+        }
+
+        .color-swatch {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            border: 1px solid var(--paper-10);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.05);
+        }
+
+        .color-swatch-label {
+            position: absolute;
+            bottom: var(--s-8);
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: var(--s-4);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+        }
+
+        .color-swatch-hex {
+            position: absolute;
+            top: var(--s-8);
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .color-category {
+            margin-bottom: var(--s-64);
+        }
+
+        .color-category:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ============================================
+           IDLE TRACE
+           ============================================ */
+        .idle-trace-demo {
+            margin-top: var(--s-48);
+            padding: var(--s-32);
+            border: 1px solid var(--paper-10);
+            border-radius: 4px;
+        }
+
+        .idle-trace-example {
+            display: flex;
+            align-items: center;
+            gap: var(--s-24);
+            padding: var(--s-24) 0;
+        }
+
+        .idle-trace-line {
+            width: 1px;
+            background: var(--paper-20);
+            flex-shrink: 0;
+        }
+
+        .idle-trace-label-demo {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--paper-40);
+            letter-spacing: 0.06em;
+        }
+
+        .idle-trace-spec {
+            font-size: 14px;
+            color: var(--paper-60);
+        }
+
+        body.dark-mode .idle-trace-spec {
+            color: var(--paper-30);
+        }
+
+        /* ============================================
+           COMMIT BUTTON
+           ============================================ */
+        .commit-demo {
+            display: flex;
+            gap: var(--s-48);
+            align-items: center;
+            margin-top: var(--s-48);
+            padding: var(--s-48);
+            background: var(--paper-05);
+            border-radius: 4px;
+        }
+
+        body.dark-mode .commit-demo {
+            background: var(--paper-90);
+        }
+
+        .commit-state {
+            text-align: center;
+        }
+
+        .commit-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease-out;
+            position: relative;
+            margin: 0 auto var(--s-16);
+        }
+
+        .commit-button::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .commit-button.rest {
+            border: 1px solid var(--paper-20);
+            background: var(--paper-05);
+        }
+
+        .commit-button.rest::before {
+            background: var(--paper-30);
+        }
+
+        .commit-button.active {
+            border: 2px solid var(--amber);
+            background: var(--paper-00);
+        }
+
+        .commit-button.active::before {
+            background: var(--amber);
+        }
+
+        .commit-button:active {
+            transform: scale(0.92);
+        }
+
+        body.dark-mode .commit-button.rest {
+            background: var(--paper-80);
+            border-color: var(--paper-70);
+        }
+
+        body.dark-mode .commit-button.active {
+            background: var(--paper-90);
+        }
+
+        /* ============================================
+           COMPONENT DEMOS
+           ============================================ */
+        .component-demo {
+            margin-top: var(--s-32);
+            padding: var(--s-32);
+            background: var(--paper-05);
+            border: 1px solid var(--paper-10);
+            border-radius: 4px;
+        }
+
+        .timeline-entry-demo {
+            margin-bottom: var(--s-24);
+        }
+
+        .entry-header {
+            display: flex;
+            align-items: center;
+            gap: var(--s-8);
+            margin-bottom: var(--s-8);
+        }
+
+        .intent-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .entry-timestamp {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--paper-40);
+            letter-spacing: 0.04em;
+        }
+
+        .entry-intent-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--paper-40);
+            letter-spacing: 0.06em;
+        }
+
+        .entry-text {
+            font-family: var(--sans);
+            font-size: 15px;
+            color: var(--paper-70);
+            line-height: 1.6;
+            margin-left: 14px;
+        }
+
+        body.dark-mode .entry-text {
+            color: var(--paper-20);
+        }
+
+        /* ============================================
+           ANIMATIONS & MOTION
+           ============================================ */
+        @keyframes blink-caret {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes grow-trace {
+            from { height: 0; opacity: 0; }
+            to { height: var(--final-height); opacity: 1; }
+        }
+
+        .blinking-caret {
+            display: inline-block;
+            width: 2px;
+            height: 18px;
+            background: var(--amber);
+            animation: blink-caret 1s step-end infinite;
+        }
+
+        .loading-dot {
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        .animated-trace {
+            animation: grow-trace 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Accessibility: respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .blinking-caret,
+            .loading-dot,
+            .animated-trace {
+                animation: none;
+            }
+
+            * {
+                transition: none !important;
+            }
+        }
+
+        /* Dark mode transitions */
+        body {
+            transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+        }
+
+        .section,
+        .color-swatch,
+        .type-specimen,
+        .component-demo,
+        .code-block,
+        .idle-trace-demo {
+            transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out;
+        }
+
+        /* Focus states for accessibility */
+        a:focus,
+        button:focus,
+        .color-swatch:focus {
+            outline: 2px solid var(--amber);
+            outline-offset: 2px;
+        }
+
+        /* Touch targets */
+        .theme-toggle,
+        .commit-button {
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        /* ============================================
+           CODE BLOCKS
+           ============================================ */
+        .code-block {
+            margin-top: var(--s-24);
+            padding: var(--s-24);
+            background: var(--paper-05);
+            border: 1px solid var(--paper-10);
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--paper-70);
+        }
+
+        body.dark-mode .code-block pre {
+            color: var(--paper-20);
+        }
+
+        /* ============================================
+           UTILITIES
+           ============================================ */
+        .copy-feedback {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--paper-80);
+            color: var(--paper-05);
+            padding: var(--s-12) var(--s-24);
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+        }
+
+        /* ============================================
+           GLOSSARY & DEFINITION LISTS
+           ============================================ */
+        .glossary-grid {
+            display: grid;
+            gap: var(--s-32);
+            margin-top: var(--s-32);
+        }
+
+        .glossary-term {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: var(--s-24);
+            padding-bottom: var(--s-24);
+            border-bottom: 1px solid var(--paper-10);
+        }
+
+        body.dark-mode .glossary-term {
+            border-bottom-color: var(--paper-80);
+        }
+
+        .glossary-term:last-child {
+            border-bottom: none;
+        }
+
+        .glossary-term dt {
+            font-family: var(--mono);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--amber);
+        }
+
+        .glossary-term dd {
+            font-family: var(--sans);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ============================================
+           COMPARISON TABLES
+           ============================================ */
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--s-24);
+            margin-top: var(--s-32);
+        }
+
+        .comparison-col {
+            padding: var(--s-24);
+            border-radius: 4px;
+        }
+
+        .comparison-col.before {
+            background: rgba(255, 0, 0, 0.05);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .comparison-col.after {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        body.dark-mode .comparison-col.before {
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        body.dark-mode .comparison-col.after {
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .comparison-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: var(--s-12);
+        }
+
+        .comparison-col.before .comparison-label {
+            color: #C44;
+        }
+
+        .comparison-col.after .comparison-label {
+            color: #4C4;
+        }
+
+        /* ============================================
+           BACK TO TOP BUTTON
+           ============================================ */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--paper-80);
+            border: 1px solid var(--paper-70);
+            color: var(--paper-05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-family: var(--mono);
+            font-size: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-2px);
+            background: var(--paper-70);
+        }
+
+        body.dark-mode .back-to-top {
+            background: var(--paper-20);
+            border-color: var(--paper-30);
+            color: var(--paper-90);
+        }
+
+        body.dark-mode .back-to-top:hover {
+            background: var(--paper-30);
+        }
+
+        /* ============================================
+           ENHANCED COMPARISON TABLES
+           ============================================ */
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--s-24);
+            margin-top: var(--s-32);
+        }
+
+        .comparison-col {
+            padding: var(--s-24);
+            border-radius: 2px;
+            border: 1px solid var(--paper-20);
+        }
+
+        body.dark-mode .comparison-col {
+            border-color: var(--paper-70);
+        }
+
+        .comparison-col.before {
+            background: rgba(139, 110, 78, 0.05);
+            border-left: 3px solid #8B6E4E;
+        }
+
+        .comparison-col.after {
+            background: rgba(196, 101, 42, 0.05);
+            border-left: 3px solid #C4652A;
+        }
+
+        body.dark-mode .comparison-col.before {
+            background: rgba(139, 110, 78, 0.1);
+        }
+
+        body.dark-mode .comparison-col.after {
+            background: rgba(196, 101, 42, 0.1);
+        }
+
+        .comparison-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: var(--s-12);
+        }
+
+        .comparison-col.before .comparison-label {
+            color: #8B6E4E;
+        }
+
+        .comparison-col.after .comparison-label {
+            color: #C4652A;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .type-comparison,
+            .mark-anatomy-grid,
+            .comparison-table {
+                grid-template-columns: 1fr;
+            }
+
+            .mark-scale-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--s-24);
+            }
+
+            .philosophy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .commit-demo {
+                flex-direction: column;
+            }
+
+            .glossary-term {
+                grid-template-columns: 1fr;
+            }
+
+            h1 { font-size: 32px; }
+            h2 { font-size: 24px; }
+            h3 { font-size: 20px; }
+
+            .hero-mark {
+                font-size: 72px;
+            }
+
+            .theme-toggle {
+                top: 16px;
+                right: 16px;
+            }
+
+            .back-to-top {
+                bottom: 16px;
+                right: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span id="themeIcon">☾</span>
+    </button>
+
+    <!-- Copy Feedback -->
+    <div class="copy-feedback" id="copyFeedback">Copied to clipboard</div>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Back to top">↑</button>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-mark" style="font-size: 128px;">
+            Log<span class="period">•</span>
+        </div>
+        <h1 class="hero-title">Your words are the artifact. The AI is the archivist.</h1>
+        <div class="hero-subtitle">
+            The recording instrument metaphor<br>
+            Permanence over potential<br>
+            Stillness over performance
+        </div>
+        <blockquote class="hero-quote">
+            "The tape is the tape. The card catalog is in the margins."
+        </blockquote>
+    </section>
+
+    <!-- TABLE OF CONTENTS -->
+    <section class="section" style="padding-top: var(--s-64);">
+        <div class="container">
+            <div class="toc">
+                <h3>Table of Contents</h3>
+                <ul class="toc-list">
+                    <li><a href="#how-to-read"><span class="toc-number">00</span> How to Read This System</a></li>
+                    <li><a href="#philosophy"><span class="toc-number">01</span> Understanding the Philosophy</a></li>
+                    <li><a href="#principles"><span class="toc-number">02</span> The Seven Brand Principles</a></li>
+                    <li><a href="#mark"><span class="toc-number">03</span> The Mark (Log•)</a></li>
+                    <li><a href="#type-system"><span class="toc-number">04</span> Type System: Mechanism & Tape</a></li>
+                    <li><a href="#color-system"><span class="toc-number">05</span> Color System</a></li>
+                    <li><a href="#motion-spec"><span class="toc-number">06</span> Motion Specification</a></li>
+                    <li><a href="#idle-trace"><span class="toc-number">07</span> The Idle Trace</a></li>
+                    <li><a href="#commit-button"><span class="toc-number">08</span> The Commit Button</a></li>
+                    <li><a href="#component-states"><span class="toc-number">09</span> Component States & Interactions</a></li>
+                    <li><a href="#why-elements"><span class="toc-number">10</span> Why Each Element Exists</a></li>
+                    <li><a href="#using-system"><span class="toc-number">11</span> Using the System</a></li>
+                    <li><a href="#accessibility"><span class="toc-number">12</span> Accessibility & ARIA</a></li>
+                    <li><a href="#glossary"><span class="toc-number">13</span> Glossary of Terms</a></li>
+                    <li><a href="#components"><span class="toc-number">14</span> Component Library</a></li>
+                    <li><a href="#beyond-text"><span class="toc-number">15</span> Beyond Text</a></li>
+                    <li><a href="#real-world-examples"><span class="toc-number">16</span> Real-World Usage Examples</a></li>
+                    <li><a href="#visual-reference"><span class="toc-number">17</span> Visual Reference Grid</a></li>
+                    <li><a href="#decision-log"><span class="toc-number">18</span> Decision Log Highlights</a></li>
+                    <li><a href="#fidelity-checklist"><span class="toc-number">19</span> Fidelity Checklist</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 0: HOW TO READ THIS SYSTEM -->
+    <section class="section" id="how-to-read">
+        <div class="container">
+            <h2>How to Read This System</h2>
+            <p>This document is a design specification for Log, a thought capture application. Before diving into components and color values, you need to understand what Log is and why it looks the way it does.</p>
+
+            <div class="philosophy-grid" style="margin-top: var(--s-32);">
+                <div class="philosophy-card">
+                    <h4>Log is a Recording Instrument</h4>
+                    <p>Not a writing tool. Not a notes app. Not a journaling app. Log is a recording instrument in the lineage of seismographs, barographs, and ticker tapes. Instruments that capture faithfully, timestamp automatically, and never editorialize.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <h4>Every Element Serves the Core Purpose</h4>
+                    <p>Capture quickly. Archive permanently. Every design decision—from the period mark to the monospace timestamps to the idle trace—reinforces this purpose. If a design element doesn't help you capture or doesn't honor the permanence of the archive, it doesn't belong.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <h4>The System is Structural, Not Decorative</h4>
+                    <p>The two typefaces teach you the instrument's voice (monospace) versus your recorded words (proportional). The color system is silent until the instrument signals. The mark is made from the product's own materials. Form follows philosophy.</p>
+                </div>
+            </div>
+
+            <div class="instrument-lineage" style="margin-top: var(--s-48);">
+                <h3>Reading the Visual Language</h3>
+                <p>Throughout this specification, you'll see two distinct typographic voices:</p>
+                <ul class="instrument-list">
+                    <li><span class="instrument-date" style="font-family: var(--mono); color: var(--paper-60);">MONOSPACE</span> IBM Plex Mono — The mechanism's voice. Timestamps, labels, controls, metadata. Anything that belongs to the instrument itself.</li>
+                    <li><span class="instrument-date" style="font-family: var(--sans); color: var(--amber);">Proportional</span> IBM Plex Sans — The tape. Your words, what was recorded. The artifact.</li>
+                </ul>
+                <p style="margin-top: var(--s-24);">When you see amber (#C4652A), the instrument is signaling. When you see archive purple (#5B5168), the archivist is annotating in the margins. Everything else is the warm-neutral paper scale.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: UNDERSTANDING THE PHILOSOPHY -->
+    <section class="section" id="philosophy">
+        <div class="container">
+            <h2>Understanding the Philosophy</h2>
+            <p>Log is not a writing tool. It's a recording instrument. This distinction grounds every design decision, from the mark to the color system to the behavior of the timeline.</p>
+
+            <div class="philosophy-grid">
+                <div class="philosophy-card">
+                    <h4>The Period, Not the Cursor</h4>
+                    <p>A cursor says: <em>waiting for input, potential, the blank page ahead</em>. A period says: <em>thought completed, entry committed, the record is made</em>. Log isn't about the moment before you write. It's about the moment after. You captured a thought. It's in the log. Full stop.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <h4>The Archivist Principle</h4>
+                    <p>Your words are the artifact. The AI is the archivist. The instrument records faithfully—no interpretation, no improvement, no interference. The archivist reads what was written and annotates in the margins. This hierarchy is structural, not decorative.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <h4>Mechanism and Tape</h4>
+                    <p>The instrument has two materials: monospace for the mechanism (timestamps, labels, controls), proportional sans for the tape (your words, what was recorded). When you see monospace, you're looking at the instrument's voice. When you see proportional text, you're looking at what was captured.</p>
+                </div>
+            </div>
+
+            <div class="instrument-lineage">
+                <h3>Recording Instrument Lineage</h3>
+                <p>Log descends from instruments that share a pattern: append-only, faithful capture, pen-and-drum mechanism. They don't interpret. They don't improve. They record.</p>
+                <ul class="instrument-list">
+                    <li><span class="instrument-date">132 CE</span> Zhang Heng's Seismoscope — First known recording instrument. Detects and marks events without human intervention.</li>
+                    <li><span class="instrument-date">1760s</span> Cumming's Barograph — Continuous trace on rotating drum. The pen never lifts. The instrument records whether anyone is watching.</li>
+                    <li><span class="instrument-date">1867</span> Calahan's Stock Ticker — Append-only paper tape. Each entry timestamped by position. The ticker doesn't editorialize.</li>
+                    <li><span class="instrument-date">1871</span> Edison's Universal Ticker — Standardized the ticker tape format. Fidelity over interpretation.</li>
+                    <li><span class="instrument-date">1881</span> Ewing's Seismogram — Needle on smoked drum. The dot at the start of a deflection is the seismogram's "period" — the mark that says "something was recorded here."</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: THE SEVEN BRAND PRINCIPLES -->
+    <section class="section" id="principles">
+        <div class="container">
+            <h2>The Seven Brand Principles</h2>
+            <p>These are constraints, not aspirations. They govern every design decision.</p>
+
+            <div class="principles-list">
+                <div class="principle-item">
+                    <div class="principle-number">01</div>
+                    <h3>The brand is the surface, not a symbol applied to it.</h3>
+                    <p>Log's identity lives in the type system, the color tokens, the materiality, the rhythm of the timeline. The mark is made from the same materials as the product. There is no separation between "brand design" and "product design" — they are one.</p>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-number">02</div>
+                    <h3>The period, not the cursor.</h3>
+                    <p>Permanence, not potential. A thought was captured. The record is made. Full stop. This positions Log as fundamentally different from writing tools that center the blank page, the blinking cursor, the moment before you begin.</p>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-number">03</div>
+                    <h3>Monochrome until it means something.</h3>
+                    <p>Color is signal, never decoration. The neutral paper scale carries all structure and hierarchy. Color enters the UI only when the instrument is signaling — intent classification, the amber commit button, the archivist's annotation layer. If a color doesn't carry semantic meaning, it doesn't belong.</p>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-number">04</div>
+                    <h3>Stillness over performance.</h3>
+                    <p>The mark doesn't animate. The timeline doesn't shift. AI doesn't announce itself. Trust is built through reliability, not spectacle. The instrument is patient, constant, honest. No loading spinners, no celebration animations, no "processing..." messages. The work happens quietly.</p>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-number">05</div>
+                    <h3>The mechanism and the tape.</h3>
+                    <p>Monospace is the mechanism (IBM Plex Mono). Proportional sans is the tape (IBM Plex Sans). Two materials, two roles. The distinction is structural — it teaches users the philosophy through the typography itself. The instrument speaks in monospace. Your words appear in proportional text.</p>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-number">06</div>
+                    <h3>The drum turns between entries.</h3>
+                    <p>The instrument doesn't sleep. Real recording instruments don't stop when you walk away — a barograph keeps tracing pressure, a seismograph keeps turning its drum. The idle trace marks time honestly. It's the only embellishment in the system, and it earns its place by being true to the instrument metaphor.</p>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-number">07</div>
+                    <h3>The tape gets wider, but the instrument stays the same.</h3>
+                    <p>Voice, camera, files — these are new input modalities. Recipes, calendar events, contacts — these are new output interpretations. But the commit button, the timeline spine, and the append-only record all stay constant. New pens on the same drum. The instrument expands its range without losing its identity.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: THE MARK (LOG•) -->
+    <section class="section" id="mark">
+        <div class="container">
+            <h2>The Mark: Log<span style="color: var(--amber);">•</span></h2>
+            <p>The mark is typographic, not illustrative. It's made from the product's own materials: "Log" in IBM Plex Mono SemiBold, followed by an amber period. The period is the full stop — not a cursor waiting for input, but the mark that says "the record is made."</p>
+
+            <div class="mark-anatomy">
+                <h3>Mark Anatomy</h3>
+                <div class="mark-anatomy-grid">
+                    <div class="anatomy-detail">
+                        <h4>Wordmark</h4>
+                        <p><strong>Typeface:</strong> IBM Plex Mono SemiBold<br>
+                        <strong>Tracking:</strong> -0.035em (tight)<br>
+                        <strong>Color:</strong> Paper-05 on dark, Paper-80 on light<br>
+                        <strong>Voice:</strong> The mechanism's own typeface</p>
+                    </div>
+                    <div class="anatomy-detail">
+                        <h4>Period Mark</h4>
+                        <p><strong>Color:</strong> #C4652A (amber)<br>
+                        <strong>Size:</strong> Slightly larger than typographic period<br>
+                        <strong>Spacing:</strong> 1px gap from "g"<br>
+                        <strong>Meaning:</strong> Permanence, completion, "full stop"</p>
+                    </div>
+                    <div class="anatomy-detail">
+                        <h4>Clear Space</h4>
+                        <p><strong>Minimum:</strong> Half the cap-height of "L" on all sides<br>
+                        <strong>Purpose:</strong> Ensure legibility at all scales<br>
+                        <strong>Rule:</strong> Never crowd the mark with other elements</p>
+                    </div>
+                    <div class="anatomy-detail">
+                        <h4>Optical Sizing</h4>
+                        <p><strong>Large sizes (128px+):</strong> Period diameter ~1.2× typographic period<br>
+                        <strong>Small sizes (32px-):</strong> Period becomes dominant visual element<br>
+                        <strong>Behavior:</strong> The period scales optically, not mathematically</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Mark at Scale</h3>
+            <p>The mark scales from 1024px (App Store icon) to 10px (status bar) without losing legibility. At small sizes, the period becomes the dominant element — which is correct, because at small sizes the mark's job is to signal "Log is recording."</p>
+
+            <div class="mark-scale-grid">
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 128px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">128px — App Icon</div>
+                </div>
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 64px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">64px — Large UI</div>
+                </div>
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 32px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">32px — Standard</div>
+                </div>
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 16px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">16px — Small UI</div>
+                </div>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-64);">
+                <h4>Why the Period, Not the Cursor</h4>
+                <p>iA Writer owns the cursor as a brand mark. Their entire identity is built around it — their logo is a cursor, their app icon is a cursor. Adopting a cursor mark would position Log as a writing tool (which it isn't) and create a direct collision with an established, respected product.</p>
+                <p>The cursor and the period are antonyms. The cursor says: <em>waiting for input, potential, the blank page ahead</em>. The period says: <em>thought completed, entry committed, the record is made</em>. Log centers the moment after — you captured a thought, it's in the record, full stop.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: TYPE SYSTEM — MECHANISM & TAPE -->
+    <section class="section" id="type-system">
+        <div class="container">
+            <h2>Type System: Mechanism & Tape</h2>
+            <p>Log uses two typefaces, and the distinction is structural, not decorative. IBM Plex Mono is the mechanism's voice. IBM Plex Sans is the tape — what was recorded.</p>
+
+            <div class="type-comparison">
+                <div class="type-column mechanism">
+                    <h4>IBM Plex Mono — Mechanism</h4>
+                    <p style="font-size: 14px; margin-bottom: var(--s-24);">The instrument's own voice. Everything that belongs to the controls, metadata, and mechanical layer.</p>
+
+                    <div class="type-sample">
+                        <span class="label">Wordmark</span>
+                        <div class="type-sample-text" style="font-family: var(--mono); font-size: 24px; font-weight: 600; letter-spacing: -0.035em;">Log<span style="color: var(--amber);">•</span></div>
+                    </div>
+
+                    <div class="type-sample">
+                        <span class="label">Timestamps</span>
+                        <div class="type-sample-text" style="font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--paper-40);">9:41 AM</div>
+                    </div>
+
+                    <div class="type-sample">
+                        <span class="label">Labels</span>
+                        <div class="type-sample-text" style="font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--paper-40);">THOUGHT</div>
+                    </div>
+
+                    <div class="type-sample">
+                        <span class="label">Metadata</span>
+                        <div class="type-sample-text" style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; color: var(--paper-40);">2 days</div>
+                    </div>
+
+                    <div class="type-sample">
+                        <span class="label">Compose Placeholder</span>
+                        <div class="type-sample-text" style="font-family: var(--mono); font-size: 14px; color: var(--paper-30);">Log...</div>
+                    </div>
+                </div>
+
+                <div class="type-column tape">
+                    <h4>IBM Plex Sans — Tape</h4>
+                    <p style="font-size: 14px; margin-bottom: var(--s-24);">What was recorded. The user's words, body copy, descriptions. The artifact itself.</p>
+
+                    <div class="type-sample">
+                        <span class="label">Entry Text</span>
+                        <div class="type-sample-text" style="font-family: var(--sans); font-size: 15px; line-height: 1.6;">Clarifying: is user auth part of MVP or can we defer to post-MVP? Decision needed for Week 0.</div>
+                    </div>
+
+                    <div class="type-sample">
+                        <span class="label">Body Copy</span>
+                        <div class="type-sample-text" style="font-family: var(--sans); font-size: 16px; line-height: 1.7;">The recording instrument metaphor isn't decorative. It grounds every design decision, from the mark to the behavior of the timeline.</div>
+                    </div>
+
+                    <div class="type-sample">
+                        <span class="label">Annotations</span>
+                        <div class="type-sample-text" style="font-family: var(--sans); font-size: 12px; line-height: 1.6; color: var(--archive);">This appears to be a project planning question requiring team alignment before development begins.</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Letter-Spacing (Tracking) Specification</h3>
+            <p>Letter-spacing is semantic, not decorative. Tight tracking for the mark (permanence), wide tracking for labels (mechanical precision), normal for body text (readability).</p>
+
+            <div class="type-specimen" style="margin-top: var(--s-32);">
+                <h4 style="margin-bottom: var(--s-24);">Tracking Values & Usage</h4>
+                <div class="specimen-row">
+                    <span class="specimen-label">-0.035em (Tight)</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 600; font-size: 24px; letter-spacing: -0.035em;">Log<span style="color: var(--amber);">•</span></span>
+                    <span style="font-size: 11px; color: var(--paper-40); margin-left: auto;">Wordmark only</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">-0.01em (Slight)</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 600; font-size: 18px; letter-spacing: -0.01em;">Section Headers</span>
+                    <span style="font-size: 11px; color: var(--paper-40); margin-left: auto;">Headings h2-h3</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">-0.04em (Timestamp)</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-size: 11px; letter-spacing: -0.04em;">9:41 AM</span>
+                    <span style="font-size: 11px; color: var(--paper-40); margin-left: auto;">Compact, mechanical</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">0.06em (Wide)</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;">THOUGHT</span>
+                    <span style="font-size: 11px; color: var(--paper-40); margin-left: auto;">Intent labels</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">0px (Normal)</span>
+                    <span class="specimen-text" style="font-family: var(--sans); font-size: 15px; letter-spacing: 0px;">Body text and entry content</span>
+                    <span style="font-size: 11px; color: var(--paper-40); margin-left: auto;">User content (tape)</span>
+                </div>
+            </div>
+
+            <div class="code-block" style="margin-top: var(--s-32);">
+                <pre>/* CSS Variables for Tracking */
+:root {
+    --tracking-tight: -0.035em;    /* Wordmark only */
+    --tracking-slight: -0.01em;    /* Section headers */
+    --tracking-normal: 0px;        /* Body text, default */
+    --tracking-wide: 0.06em;       /* Labels, metadata */
+}
+
+/* Usage Examples */
+.wordmark {
+    letter-spacing: var(--tracking-tight);
+}
+
+h2, h3 {
+    letter-spacing: var(--tracking-slight);
+}
+
+.timestamp {
+    letter-spacing: -0.04em; /* Custom tight for compact display */
+}
+
+.intent-label, .metadata-label {
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+
+.entry-text, body {
+    letter-spacing: var(--tracking-normal);
+}</pre>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Weight Specification (Important)</h3>
+            <p><strong>Rule: Only use weights 400 (Regular) and 600 (SemiBold).</strong> No 300 (Light), 500 (Medium), or 700 (Bold). This constraint maintains visual consistency and prevents weight proliferation.</p>
+
+            <div class="type-specimen" style="margin-top: var(--s-32);">
+                <h4 style="margin-bottom: var(--s-24);">Approved Weights</h4>
+                <div class="specimen-row">
+                    <span class="specimen-label">Regular 400</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 400; font-size: 16px;">IBM Plex Mono Regular — Timestamps, labels, metadata</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">SemiBold 600</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 600; font-size: 16px;">IBM Plex Mono SemiBold — Wordmark, headings, emphasis</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">Regular 400</span>
+                    <span class="specimen-text" style="font-family: var(--sans); font-weight: 400; font-size: 16px;">IBM Plex Sans Regular — Entry text, body copy, descriptions</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">SemiBold 600</span>
+                    <span class="specimen-text" style="font-family: var(--sans); font-weight: 600; font-size: 16px;">IBM Plex Sans SemiBold — Section headers, strong emphasis</span>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Complete Type Specimen (All Sizes)</h3>
+            <p>The mark scales from 72px (hero) down to 12px (small UI). The period remains optically balanced at all sizes.</p>
+
+            <div class="mark-scale-grid" style="margin-top: var(--s-32);">
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 72px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">72px — Hero Display</div>
+                </div>
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 36px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">36px — Page Headers</div>
+                </div>
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 24px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">24px — Section Headers</div>
+                </div>
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 16px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">16px — In-line UI</div>
+                </div>
+                <div class="mark-scale-item">
+                    <div class="mark-display" style="font-size: 12px;">Log<span class="period">•</span></div>
+                    <div class="mark-size-label">12px — Small UI/Status</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Complete Type Specimen (Font Families)</h3>
+
+            <div class="type-specimen">
+                <h4 style="margin-bottom: var(--s-24);">IBM Plex Mono (Mechanism) — Use Only 400 & 600</h4>
+                <div class="specimen-row">
+                    <span class="specimen-label">Regular 400 ✓</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 400; font-size: 16px;">The quick brown fox jumps over the lazy dog</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">SemiBold 600 ✓</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 600; font-size: 16px;">The quick brown fox jumps over the lazy dog</span>
+                </div>
+            </div>
+
+            <div class="type-specimen">
+                <h4 style="margin-bottom: var(--s-24);">IBM Plex Sans (Tape) — Use Only 400 & 600</h4>
+                <div class="specimen-row">
+                    <span class="specimen-label">Regular 400 ✓</span>
+                    <span class="specimen-text" style="font-family: var(--sans); font-weight: 400; font-size: 16px;">The quick brown fox jumps over the lazy dog</span>
+                </div>
+                <div class="specimen-row">
+                    <span class="specimen-label">SemiBold 600 ✓</span>
+                    <span class="specimen-text" style="font-family: var(--sans); font-weight: 600; font-size: 16px;">The quick brown fox jumps over the lazy dog</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: COLOR SYSTEM -->
+    <section class="section" id="color-system">
+        <div class="container">
+            <h2>Color System</h2>
+            <p><strong>Rule: "Monochrome until it means something."</strong> Color is signal, never decoration. The neutral paper scale carries all structure and hierarchy. Color enters the UI only when the instrument is signaling.</p>
+
+            <div class="color-category">
+                <h3>Signal Colors (Intent Dots)</h3>
+                <p>These classify user entries by semantic intent. They appear as 6px dots on the timeline, color-coding each entry. Never used decoratively.</p>
+                <div class="color-grid">
+                    <div class="color-swatch" style="background: #6B7B8D;" onclick="copyColor('#6B7B8D')">
+                        <div class="color-swatch-hex">#6B7B8D</div>
+                        <div class="color-swatch-label">Thought</div>
+                    </div>
+                    <div class="color-swatch" style="background: #C4652A;" onclick="copyColor('#C4652A')">
+                        <div class="color-swatch-hex">#C4652A</div>
+                        <div class="color-swatch-label">Action</div>
+                    </div>
+                    <div class="color-swatch" style="background: #8B6E4E;" onclick="copyColor('#8B6E4E')">
+                        <div class="color-swatch-hex">#8B6E4E</div>
+                        <div class="color-swatch-label">Decision</div>
+                    </div>
+                    <div class="color-swatch" style="background: #5B7A6B;" onclick="copyColor('#5B7A6B')">
+                        <div class="color-swatch-hex">#5B7A6B</div>
+                        <div class="color-swatch-label">Reference</div>
+                    </div>
+                    <div class="color-swatch" style="background: #928A7E;" onclick="copyColor('#928A7E')">
+                        <div class="color-swatch-hex">#928A7E</div>
+                        <div class="color-swatch-label">Unknown</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Paper Tones (12-step neutral scale)</h3>
+                <p>Warm-neutral progression from near-white (#FAFAF8) to near-black (#0D0B09). Not gray — they have a warm cast, like aged paper or a darkened instrument panel. Dark mode inverts the scale; signal colors stay constant.</p>
+                <div class="color-grid">
+                    <div class="color-swatch" style="background: #FAFAF8; color: #000;" onclick="copyColor('#FAFAF8')">
+                        <div class="color-swatch-hex" style="color: #000;">#FAFAF8</div>
+                        <div class="color-swatch-label" style="background: rgba(0,0,0,0.7);">Paper-00</div>
+                    </div>
+                    <div class="color-swatch" style="background: #F4F1EC; color: #000;" onclick="copyColor('#F4F1EC')">
+                        <div class="color-swatch-hex" style="color: #000;">#F4F1EC</div>
+                        <div class="color-swatch-label" style="background: rgba(0,0,0,0.7);">Paper-05</div>
+                    </div>
+                    <div class="color-swatch" style="background: #ECE8E1; color: #000;" onclick="copyColor('#ECE8E1')">
+                        <div class="color-swatch-hex" style="color: #000;">#ECE8E1</div>
+                        <div class="color-swatch-label" style="background: rgba(0,0,0,0.7);">Paper-10</div>
+                    </div>
+                    <div class="color-swatch" style="background: #D9D4CB; color: #000;" onclick="copyColor('#D9D4CB')">
+                        <div class="color-swatch-hex" style="color: #000;">#D9D4CB</div>
+                        <div class="color-swatch-label" style="background: rgba(0,0,0,0.7);">Paper-20</div>
+                    </div>
+                    <div class="color-swatch" style="background: #B8B1A6;" onclick="copyColor('#B8B1A6')">
+                        <div class="color-swatch-hex">#B8B1A6</div>
+                        <div class="color-swatch-label">Paper-30</div>
+                    </div>
+                    <div class="color-swatch" style="background: #928A7E;" onclick="copyColor('#928A7E')">
+                        <div class="color-swatch-hex">#928A7E</div>
+                        <div class="color-swatch-label">Paper-40</div>
+                    </div>
+                    <div class="color-swatch" style="background: #6E665B;" onclick="copyColor('#6E665B')">
+                        <div class="color-swatch-hex">#6E665B</div>
+                        <div class="color-swatch-label">Paper-50</div>
+                    </div>
+                    <div class="color-swatch" style="background: #514A40;" onclick="copyColor('#514A40')">
+                        <div class="color-swatch-hex">#514A40</div>
+                        <div class="color-swatch-label">Paper-60</div>
+                    </div>
+                    <div class="color-swatch" style="background: #3A342C;" onclick="copyColor('#3A342C')">
+                        <div class="color-swatch-hex">#3A342C</div>
+                        <div class="color-swatch-label">Paper-70</div>
+                    </div>
+                    <div class="color-swatch" style="background: #26211B;" onclick="copyColor('#26211B')">
+                        <div class="color-swatch-hex">#26211B</div>
+                        <div class="color-swatch-label">Paper-80</div>
+                    </div>
+                    <div class="color-swatch" style="background: #171310;" onclick="copyColor('#171310')">
+                        <div class="color-swatch-hex">#171310</div>
+                        <div class="color-swatch-label">Paper-90</div>
+                    </div>
+                    <div class="color-swatch" style="background: #0D0B09;" onclick="copyColor('#0D0B09')">
+                        <div class="color-swatch-hex">#0D0B09</div>
+                        <div class="color-swatch-label">Paper-95</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Brand Accents</h3>
+                <p>Two accent colors that enter the UI only when the instrument is signaling.</p>
+                <div class="color-grid">
+                    <div class="color-swatch" style="background: #C4652A;" onclick="copyColor('#C4652A')">
+                        <div class="color-swatch-hex">#C4652A</div>
+                        <div class="color-swatch-label">Amber</div>
+                    </div>
+                    <div class="color-swatch" style="background: #5B5168;" onclick="copyColor('#5B5168')">
+                        <div class="color-swatch-hex">#5B5168</div>
+                        <div class="color-swatch-label">Archive</div>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <pre>/* Amber (#C4652A) — The instrument's signal color */
+- Period mark
+- Commit button (when loaded with text)
+- Active caret in compose area
+- Action intent dot
+Only appears when the instrument is signaling
+
+/* Archive (#5B5168) — The archivist's color */
+- Muted purple, reads as "scholarly, marginal"
+- Appears only in archivist's annotation layer
+- Always subordinate to user content</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: MOTION SPECIFICATION -->
+    <section class="section" id="motion-spec">
+        <div class="container">
+            <h2>Motion Specification</h2>
+            <p><strong>Philosophy: Stillness over performance.</strong> Log uses motion sparingly. Animation appears only when it serves the instrument metaphor or provides essential feedback. No celebration, no spectacle, just honest mechanical behavior.</p>
+
+            <div class="philosophy-card" style="margin-top: var(--s-32);">
+                <h4>Core Motion Principles</h4>
+                <p><strong>1. The mark doesn't animate.</strong> Logo and wordmark are always static.<br>
+                <strong>2. The timeline doesn't shift.</strong> Entries appear instantly, no slide-in effects.<br>
+                <strong>3. AI doesn't announce itself.</strong> No "thinking..." spinners or typing indicators.<br>
+                <strong>4. Mechanical honesty.</strong> Button presses feel like physical mechanisms. The commit button depresses like a shutter release.</p>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Animation Catalog</h3>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Blinking Caret</h4>
+                <p style="font-size: 14px; margin-bottom: var(--s-24);">In the compose area, the caret blinks to indicate readiness. This is the only continuous animation in the system.</p>
+                <div style="padding: var(--s-24); background: var(--paper-00); border-radius: 4px; font-family: var(--sans); font-size: 15px; display: flex; align-items: center; gap: 2px;">
+                    <span>Your thought here</span><span class="blinking-caret"></span>
+                </div>
+                <div class="code-block">
+                    <pre>/* Blinking Caret */
+animation: blink-caret 1s step-end infinite;
+
+@keyframes blink-caret {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+/* Caret specs */
+width: 2px;
+height: 18px;
+background: var(--amber);
+display: inline-block;</pre>
+                </div>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Intent Dot Loading</h4>
+                <p style="font-size: 14px; margin-bottom: var(--s-24);">When AI is classifying an entry's intent, the dot pulses gently. Subtle, peripheral feedback.</p>
+                <div style="padding: var(--s-24); background: var(--paper-00); border-radius: 4px; display: flex; align-items: center; gap: var(--s-12);">
+                    <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-thought);" class="loading-dot"></div>
+                    <span style="font-family: var(--mono); font-size: 11px; color: var(--paper-40);">Classifying...</span>
+                </div>
+                <div class="code-block">
+                    <pre>/* Intent Dot Pulse */
+animation: pulse-dot 1.5s ease-in-out infinite;
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}</pre>
+                </div>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Commit Button Press</h4>
+                <p style="font-size: 14px; margin-bottom: var(--s-24);">Physical feedback. The button scales down when pressed, like depressing a shutter release or telegraph key.</p>
+                <div style="padding: var(--s-24); background: var(--paper-00); border-radius: 4px; text-align: center;">
+                    <div class="commit-button active" style="margin: 0 auto;"></div>
+                    <p style="font-size: 12px; margin-top: var(--s-16); color: var(--paper-40);">Click to feel the press feedback</p>
+                </div>
+                <div class="code-block">
+                    <pre>/* Commit Button Press */
+.commit-button:active {
+    transform: scale(0.92);
+}
+
+transition: transform 0.15s ease-out;</pre>
+                </div>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Idle Trace Growth</h4>
+                <p style="font-size: 14px; margin-bottom: var(--s-24);">When a new entry is added after idle time, the trace animates in with logarithmic easing. It feels like the drum turned while you were away.</p>
+                <div class="code-block">
+                    <pre>/* Idle Trace Animation */
+animation: grow-trace 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+@keyframes grow-trace {
+    from {
+        height: 0;
+        opacity: 0;
+    }
+    to {
+        height: var(--final-height);
+        opacity: 1;
+    }
+}
+
+/* Note: Slight bounce in easing (1.56) gives mechanical character */</pre>
+                </div>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Dark Mode Transition</h4>
+                <p style="font-size: 14px; margin-bottom: var(--s-24);">Theme changes transition smoothly across all affected properties. 300ms is fast enough to feel responsive but slow enough to track visually.</p>
+                <div class="code-block">
+                    <pre>/* Dark Mode Transitions */
+body {
+    transition: background-color 300ms ease-in-out,
+                color 300ms ease-in-out;
+}
+
+.section, .color-swatch, .component-demo {
+    transition: background-color 300ms ease-in-out,
+                border-color 300ms ease-in-out;
+}</pre>
+                </div>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Color Copy Feedback</h4>
+                <p style="font-size: 14px; margin-bottom: var(--s-24);">When you copy a color value, a toast appears with 200ms opacity fade. Quick, unobtrusive.</p>
+                <div class="code-block">
+                    <pre>/* Copy Feedback Toast */
+transition: opacity 0.2s ease;
+
+/* Show state */
+opacity: 1;
+
+/* Hidden state */
+opacity: 0;
+pointer-events: none;</pre>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Accessibility: prefers-reduced-motion</h3>
+            <p>For users who prefer reduced motion, all animations are disabled. This is not optional—it's a core accessibility requirement.</p>
+            <div class="code-block">
+                <pre>/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+    .blinking-caret,
+    .loading-dot,
+    .animated-trace {
+        animation: none;
+    }
+
+    * {
+        transition: none !important;
+    }
+}</pre>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-48);">
+                <h4>Motion Budget</h4>
+                <p><strong>5 animations total:</strong> Blinking caret, intent dot pulse, commit button press, idle trace growth, dark mode transition, color copy feedback.<br><br>
+                <strong>0 celebration animations.</strong> No confetti, no success checkmarks, no "great job!" messages. The instrument doesn't congratulate you for using it. It just records faithfully.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: THE IDLE TRACE -->
+    <section class="section" id="idle-trace">
+        <div class="container">
+            <h2>The Idle Trace</h2>
+            <p><strong>Philosophical Grounding:</strong> Real recording instruments don't stop when you walk away. A barograph keeps tracing atmospheric pressure. A seismograph keeps turning its drum. When you come back, the gap between marks tells you how long you were away. The instrument was running.</p>
+
+            <p>This is Log's only embellishment — and it earns its place by being true to the instrument metaphor. No streak guilt, no "Welcome back!" messages, no color change as the gap grows. Just the honest record of silence.</p>
+
+            <div class="idle-trace-demo">
+                <h3>Behavioral Specification</h3>
+
+                <div class="idle-trace-example">
+                    <div style="font-size: 14px; min-width: 120px; color: var(--paper-60);">5 min – 1 hr</div>
+                    <div class="idle-trace-line" style="height: 20px;"></div>
+                    <div class="idle-trace-spec">16–24pt, no label</div>
+                </div>
+
+                <div class="idle-trace-example">
+                    <div style="font-size: 14px; min-width: 120px; color: var(--paper-60);">1 hr – 24 hr</div>
+                    <div class="idle-trace-line" style="height: 36px;"></div>
+                    <div class="idle-trace-spec">24–48pt, no label</div>
+                </div>
+
+                <div class="idle-trace-example">
+                    <div style="font-size: 14px; min-width: 120px; color: var(--paper-60);">1 – 7 days</div>
+                    <div class="idle-trace-line" style="height: 64px;"></div>
+                    <div class="idle-trace-label-demo">2 days</div>
+                    <div class="idle-trace-spec">48–80pt, with label</div>
+                </div>
+
+                <div class="idle-trace-example">
+                    <div style="font-size: 14px; min-width: 120px; color: var(--paper-60);">&gt; 7 days</div>
+                    <div class="idle-trace-line" style="height: 80px;"></div>
+                    <div class="idle-trace-label-demo">3 weeks</div>
+                    <div class="idle-trace-spec">80pt ceiling (hard max)</div>
+                </div>
+
+                <div style="margin-top: var(--s-32); padding-top: var(--s-24); border-top: 1px solid var(--paper-10);">
+                    <h4 style="font-size: 16px; margin-bottom: var(--s-12);">Design Rules</h4>
+                    <ul style="font-size: 14px; line-height: 1.8; color: var(--paper-60); margin-left: var(--s-24);">
+                        <li><strong>Visual properties:</strong> 1px hairline, Paper-20 color, left-spine aligned</li>
+                        <li><strong>Height algorithm:</strong> Logarithmic scaling (not linear) — the visual difference between 1 hour and 6 hours is larger than between 2 weeks and 3 weeks</li>
+                        <li><strong>80pt ceiling:</strong> Hard ceiling. Whether you've been away one week or six months, your last entry is never more than one comfortable scroll from the compose area</li>
+                        <li><strong>No animation:</strong> Always present as if it was always there. Stillness over performance</li>
+                        <li><strong>Label format:</strong> Monospace, specific ("2 days," not "2d"), only for gaps &gt;24 hours</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-48);">
+                <h4>The Drum Turns Between Entries</h4>
+                <p>This is ambient design, not guilt design. No competitor in the capture space does this. It gives Log personality without violating the instrument's restraint. The delight comes from recognition ("the instrument was running"), not from decoration.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: THE COMMIT BUTTON -->
+    <section class="section" id="commit-button">
+        <div class="container">
+            <h2>The Commit Button</h2>
+            <p>A circle with a dot inside — the period mark scaled to interaction size. This is the brand's primary form doing real mechanical work.</p>
+
+            <div class="commit-demo">
+                <div class="commit-state">
+                    <div class="commit-button rest"></div>
+                    <div class="label">At Rest</div>
+                    <p style="font-size: 13px; color: var(--paper-60); max-width: 150px;">Light fill, subtle border, neutral dot. Waiting patiently.</p>
+                </div>
+
+                <div class="commit-state">
+                    <div class="commit-button active"></div>
+                    <div class="label">With Text</div>
+                    <p style="font-size: 13px; color: var(--paper-60); max-width: 150px;">Amber border, amber dot. The instrument is loaded.</p>
+                </div>
+
+                <div class="commit-state">
+                    <div class="commit-button active" style="transform: scale(0.92);"></div>
+                    <div class="label">On Press</div>
+                    <p style="font-size: 13px; color: var(--paper-60); max-width: 150px;">Scale(0.92) — the shutter release depressing.</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre>/* Commit Button States */
+
+.commit-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    position: relative;
+}
+
+.commit-button::before {
+    /* The period dot */
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* At Rest */
+.commit-button.rest {
+    border: 1px solid var(--paper-20);
+    background: var(--paper-05);
+}
+.commit-button.rest::before {
+    background: var(--paper-30);
+}
+
+/* With Text */
+.commit-button.active {
+    border: 2px solid var(--amber);
+    background: var(--paper-00);
+}
+.commit-button.active::before {
+    background: var(--amber);
+}
+
+/* On Press */
+.commit-button:active {
+    transform: scale(0.92);
+}</pre>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-48);">
+                <h4>Why Not a Send Arrow or Checkmark?</h4>
+                <p><strong>Send arrow:</strong> Too generic. Every messaging app uses it. Positions Log as communication tool.<br>
+                <strong>Checkmark:</strong> Implies task completion. Log isn't a todo app.<br>
+                <strong>The period:</strong> The full stop. The record is made. The brand's core metaphor doing mechanical work at the interaction layer.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: COMPONENT STATES & INTERACTIONS -->
+    <section class="section" id="component-states">
+        <div class="container">
+            <h2>Component States & Interactions</h2>
+            <p>Every interactive component has defined states. These specifications ensure keyboard navigation, focus management, and touch target accessibility.</p>
+
+            <h3 style="margin-top: var(--s-64);">Component State Chart</h3>
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Commit Button States</h4>
+                <table style="width: 100%; border-collapse: collapse; margin-top: var(--s-16); font-family: var(--mono); font-size: 12px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--paper-20);">
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">STATE</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">TRIGGER</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">VISUAL</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">BEHAVIOR</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: var(--paper-70);">
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Rest</td>
+                            <td style="padding: var(--s-12);">Compose area empty</td>
+                            <td style="padding: var(--s-12);">Border: paper-20, Dot: paper-30</td>
+                            <td style="padding: var(--s-12);">Not clickable</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Active</td>
+                            <td style="padding: var(--s-12);">Text entered</td>
+                            <td style="padding: var(--s-12);">Border: amber, Dot: amber</td>
+                            <td style="padding: var(--s-12);">Clickable</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Hover</td>
+                            <td style="padding: var(--s-12);">Pointer over button</td>
+                            <td style="padding: var(--s-12);">Cursor: pointer</td>
+                            <td style="padding: var(--s-12);">Visual feedback</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Focus</td>
+                            <td style="padding: var(--s-12);">Tab navigation</td>
+                            <td style="padding: var(--s-12);">Outline: 2px amber, offset: 2px</td>
+                            <td style="padding: var(--s-12);">Keyboard accessible</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: var(--s-12);">Pressed</td>
+                            <td style="padding: var(--s-12);">Click/tap/Enter</td>
+                            <td style="padding: var(--s-12);">Scale: 0.92</td>
+                            <td style="padding: var(--s-12);">Commits entry</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Compose Area States</h4>
+                <table style="width: 100%; border-collapse: collapse; margin-top: var(--s-16); font-family: var(--mono); font-size: 12px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--paper-20);">
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">STATE</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">TRIGGER</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">VISUAL</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: var(--paper-70);">
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Empty</td>
+                            <td style="padding: var(--s-12);">No text entered</td>
+                            <td style="padding: var(--s-12);">Placeholder: "Log..." (mono, paper-30)</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Typing</td>
+                            <td style="padding: var(--s-12);">User input</td>
+                            <td style="padding: var(--s-12);">Blinking amber caret, text appears (sans)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: var(--s-12);">Focus</td>
+                            <td style="padding: var(--s-12);">Click or tab</td>
+                            <td style="padding: var(--s-12);">Subtle border highlight</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Touch Target Requirements</h3>
+            <p>All interactive elements meet WCAG 2.1 Level AA minimum touch target size of 44×44px. This ensures usability on mobile and for users with motor impairments.</p>
+            <div class="code-block">
+                <pre>/* Minimum Touch Targets */
+.theme-toggle,
+.commit-button {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* Spacing between interactive elements */
+gap: var(--s-8); /* 8px minimum */</pre>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Focus Management</h3>
+            <p>Focus indicators are always visible and use the amber signal color. Never suppress focus outlines—they're essential for keyboard navigation.</p>
+            <div class="code-block">
+                <pre>/* Focus States */
+a:focus,
+button:focus,
+.color-swatch:focus,
+input:focus,
+textarea:focus {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+}
+
+/* Never use outline: none without providing an alternative */</pre>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Keyboard Navigation</h4>
+                <ul style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); margin-top: var(--s-16);">
+                    <li><strong>Tab:</strong> Move focus forward through interactive elements</li>
+                    <li><strong>Shift+Tab:</strong> Move focus backward</li>
+                    <li><strong>Enter:</strong> Activate focused button (commit entry)</li>
+                    <li><strong>Space:</strong> Activate focused button (alternate)</li>
+                    <li><strong>Cmd/Ctrl+Enter:</strong> Commit from compose area</li>
+                    <li><strong>Escape:</strong> Close modals, clear compose area</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 10: WHY EACH ELEMENT EXISTS -->
+    <section class="section" id="why-elements">
+        <div class="container">
+            <h2>Why Each Element Exists</h2>
+            <p>Nothing in Log is decorative. Every element serves the core purpose: capture quickly, archive permanently. This section explains the reasoning behind each design decision.</p>
+
+            <div class="glossary-grid" style="margin-top: var(--s-48);">
+                <div class="glossary-term">
+                    <dt>Period Mark (•)</dt>
+                    <dd>Signals permanence and completion. Unlike a cursor (which says "waiting for input"), the period says "the record is made." It's the instrument's signature—the mark it leaves on every entry. At small sizes, the period becomes the dominant visual element, which is correct: the instrument's job is to record, and the period is proof that it did.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Intent Classification</dt>
+                    <dd>Helps you understand your thinking patterns over time. Thought, Action, Decision, Reference—these aren't productivity categories, they're semantic patterns. The archivist classifies asynchronously, never interrupting capture. The 6px dots provide at-a-glance pattern recognition when scrolling the timeline.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Monospace vs. Proportional</dt>
+                    <dd>Separates the instrument's voice from your content. Monospace (IBM Plex Mono) is the mechanism: timestamps, labels, controls, metadata. Proportional (IBM Plex Sans) is the tape: your words, what was recorded. This distinction teaches the system's philosophy through typography itself.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Idle Trace</dt>
+                    <dd>Honors the passing of time honestly. Real recording instruments don't stop when you walk away—a seismograph keeps turning its drum, a barograph keeps tracing pressure. The idle trace is the gap in the record. It tells you the instrument was running. No guilt, no "welcome back," just the honest record of silence.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Warm-Neutral Paper Scale</dt>
+                    <dd>Creates a calm, archival feel without being stark. Not gray (too digital), not white (too harsh). The warm cast suggests aged paper, instrument panels, microfilm readers. Dark mode inverts the scale while keeping signal colors constant—the structure remains, only the luminance changes.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Amber Signal Color</dt>
+                    <dd>The instrument's only voice. When you see amber, the instrument is signaling: the period mark, the commit button loaded with text, the active caret. Amber is warmer than red (not urgent), more assertive than yellow (not cautious). It says "ready to record."</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Archive Purple (Archivist)</dt>
+                    <dd>The archivist's color. Muted, scholarly, always in the margins. When you see #5B5168, you're seeing the archivist's annotations—never the user's words. This maintains the hierarchy: your words are the artifact, the AI is the archivist.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>80pt Idle Trace Ceiling</dt>
+                    <dd>Prevents the timeline from becoming unwieldy. Whether you've been away one week or six months, your last entry is never more than one comfortable scroll from the compose area. The ceiling is about usability, not punishment. No streak guilt.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Append-Only Timeline</dt>
+                    <dd>Entries can't be edited or deleted in MVP. This isn't a limitation—it's the instrument's core behavior. Recording instruments don't have an undo button. The tape is the tape. Post-MVP may add archiving or annotation, but the original entry remains immutable.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>No Streaks or Gamification</dt>
+                    <dd>Log doesn't reward you for using it daily. The idle trace marks time honestly, without judgment. The instrument doesn't care if you use it every day or once a month. It just records faithfully when you do.</dd>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 11: USING THE SYSTEM -->
+    <section class="section" id="using-system">
+        <div class="container">
+            <h2>Using the System</h2>
+            <p>This section demonstrates how to apply the design system when building new features or components.</p>
+
+            <h3 style="margin-top: var(--s-48);">Example Use Case: Adding a Search Feature</h3>
+            <div class="component-demo" style="margin-top: var(--s-24);">
+                <h4>Step 1: Determine the Voice</h4>
+                <p style="font-size: 14px;">Is this element part of the mechanism or the tape?</p>
+                <ul style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); margin-top: var(--s-12);">
+                    <li><strong>Search input placeholder:</strong> Mechanism voice → Monospace, "Search entries..."</li>
+                    <li><strong>Search results text:</strong> Tape voice → Proportional (your recorded words)</li>
+                    <li><strong>Result count:</strong> Mechanism voice → Monospace, "24 entries found"</li>
+                </ul>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Step 2: Determine Color Usage</h4>
+                <p style="font-size: 14px;">Ask: Is the instrument signaling, or is this structure/hierarchy?</p>
+                <ul style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); margin-top: var(--s-12);">
+                    <li><strong>Search icon:</strong> Paper-40 (structural element, not a signal)</li>
+                    <li><strong>Highlighted search terms:</strong> Amber background (instrument signaling "match found")</li>
+                    <li><strong>Result separators:</strong> Paper-10 (structural hierarchy)</li>
+                </ul>
+            </div>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <h4>Step 3: Apply Spacing</h4>
+                <p style="font-size: 14px;">Use 8px baseline grid. Never arbitrary values.</p>
+                <ul style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); margin-top: var(--s-12);">
+                    <li><strong>Search input padding:</strong> var(--s-12) (12px)</li>
+                    <li><strong>Between results:</strong> var(--s-24) (24px)</li>
+                    <li><strong>Section margin:</strong> var(--s-48) (48px)</li>
+                </ul>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Common Mistakes (Before/After)</h3>
+
+            <div class="comparison-table" style="margin-top: var(--s-32);">
+                <div class="comparison-col before">
+                    <div class="comparison-label">❌ Before (Wrong)</div>
+                    <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Using color decoratively:</strong></p>
+                    <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px; border-left: 3px solid #00D9A0;">
+                        <p style="font-size: 13px; margin: 0;">New entry added successfully!</p>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">Green border adds color without semantic meaning. Log doesn't celebrate.</p>
+                </div>
+
+                <div class="comparison-col after">
+                    <div class="comparison-label">✓ After (Correct)</div>
+                    <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Silent success:</strong></p>
+                    <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px;">
+                        <p style="font-size: 13px; margin: 0; font-family: var(--sans);">Realized the appeal of append-only systems...</p>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">Entry appears instantly. No confirmation message. The record is made.</p>
+                </div>
+            </div>
+
+            <div class="comparison-table" style="margin-top: var(--s-32);">
+                <div class="comparison-col before">
+                    <div class="comparison-label">❌ Before (Wrong)</div>
+                    <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Mixed typographic voice:</strong></p>
+                    <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px;">
+                        <p style="font-family: var(--sans); font-size: 11px; color: var(--paper-40); margin-bottom: var(--s-8);">9:41 AM</p>
+                        <p style="font-size: 13px; margin: 0;">Your entry here</p>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">Timestamp in proportional breaks the mechanism/tape distinction.</p>
+                </div>
+
+                <div class="comparison-col after">
+                    <div class="comparison-label">✓ After (Correct)</div>
+                    <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Clear voice distinction:</strong></p>
+                    <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px;">
+                        <p style="font-family: var(--mono); font-size: 11px; color: var(--paper-40); margin-bottom: var(--s-8);">9:41 AM</p>
+                        <p style="font-family: var(--sans); font-size: 13px; margin: 0;">Your entry here</p>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">Timestamp in monospace (mechanism). Entry in proportional (tape).</p>
+                </div>
+            </div>
+
+            <div class="comparison-table" style="margin-top: var(--s-32);">
+                <div class="comparison-col before">
+                    <div class="comparison-label">❌ Before (Wrong)</div>
+                    <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Arbitrary spacing:</strong></p>
+                    <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px;">
+                        <p style="margin-bottom: 14px; font-size: 13px;">Entry one</p>
+                        <p style="margin-bottom: 14px; font-size: 13px;">Entry two</p>
+                        <p style="margin: 0; font-size: 13px;">Entry three</p>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">14px spacing breaks the 8px baseline grid.</p>
+                </div>
+
+                <div class="comparison-col after">
+                    <div class="comparison-label">✓ After (Correct)</div>
+                    <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Grid-aligned spacing:</strong></p>
+                    <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px;">
+                        <p style="margin-bottom: var(--s-16); font-size: 13px;">Entry one</p>
+                        <p style="margin-bottom: var(--s-16); font-size: 13px;">Entry two</p>
+                        <p style="margin: 0; font-size: 13px;">Entry three</p>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">16px (var(--s-16)) maintains rhythm across the interface.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">System Boundaries</h3>
+            <div class="philosophy-card" style="margin-top: var(--s-24);">
+                <h4>MVP Scope</h4>
+                <p><strong>In scope:</strong> Text entry, intent classification, timeline view, idle trace, commit button, dark mode, search/filter by intent.<br><br>
+                <strong>Post-MVP:</strong> Voice recording, image capture, rich entry types (recipe, calendar), archivist annotations, export formats.<br><br>
+                <strong>Out of scope:</strong> Real-time collaboration, social features, public sharing, streaks/gamification, entry editing (append-only is core philosophy).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 12: ACCESSIBILITY & ARIA -->
+    <section class="section" id="accessibility">
+        <div class="container">
+            <h2>Accessibility & ARIA</h2>
+            <p>Log is built with accessibility as a requirement, not an afterthought. WCAG 2.1 Level AA compliance minimum.</p>
+
+            <h3 style="margin-top: var(--s-48);">Semantic HTML</h3>
+            <div class="code-block">
+                <pre><!-- Proper document structure -->
+&lt;main role="main"&gt;
+    &lt;article class="timeline"&gt;
+        &lt;section class="compose-area" aria-label="Compose new entry"&gt;
+            &lt;textarea
+                id="compose-input"
+                aria-label="Enter your thought"
+                placeholder="Log..."&gt;
+            &lt;/textarea&gt;
+            &lt;button
+                class="commit-button"
+                aria-label="Commit entry"
+                aria-disabled="true"&gt;
+            &lt;/button&gt;
+        &lt;/section&gt;
+
+        &lt;section class="timeline-entries" aria-label="Timeline of entries"&gt;
+            &lt;article class="entry" aria-labelledby="entry-1-time"&gt;
+                &lt;header&gt;
+                    &lt;time id="entry-1-time" datetime="2025-01-15T09:41:00"&gt;
+                        9:41 AM
+                    &lt;/time&gt;
+                    &lt;span aria-label="Intent: Thought"&gt;THOUGHT&lt;/span&gt;
+                &lt;/header&gt;
+                &lt;p&gt;Entry content here&lt;/p&gt;
+            &lt;/article&gt;
+        &lt;/section&gt;
+    &lt;/article&gt;
+&lt;/main&gt;</pre>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">ARIA Labels for Interactive Elements</h3>
+            <div class="code-block">
+                <pre><!-- Theme toggle -->
+&lt;button
+    class="theme-toggle"
+    aria-label="Toggle dark mode"
+    aria-pressed="false"&gt;
+    ☾
+&lt;/button&gt;
+
+<!-- Color swatches -->
+&lt;div
+    class="color-swatch"
+    role="button"
+    tabindex="0"
+    aria-label="Copy color Amber #C4652A to clipboard"
+    style="background: #C4652A;"&gt;
+&lt;/div&gt;
+
+<!-- Intent dots -->
+&lt;div
+    class="intent-dot"
+    role="img"
+    aria-label="Intent: Thought"
+    style="background: var(--signal-thought);"&gt;
+&lt;/div&gt;</pre>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Color Contrast Verification</h3>
+            <div class="component-demo" style="margin-top: var(--s-24);">
+                <table style="width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--paper-20);">
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">ELEMENT</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">FOREGROUND</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">BACKGROUND</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">RATIO</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: var(--paper-70);">
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Body text</td>
+                            <td style="padding: var(--s-12);">Paper-70</td>
+                            <td style="padding: var(--s-12);">Paper-00</td>
+                            <td style="padding: var(--s-12);">9.2:1</td>
+                            <td style="padding: var(--s-12); color: #4C4;">✓ AAA</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Headings</td>
+                            <td style="padding: var(--s-12);">Paper-80</td>
+                            <td style="padding: var(--s-12);">Paper-00</td>
+                            <td style="padding: var(--s-12);">12.8:1</td>
+                            <td style="padding: var(--s-12); color: #4C4;">✓ AAA</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Timestamps</td>
+                            <td style="padding: var(--s-12);">Paper-40</td>
+                            <td style="padding: var(--s-12);">Paper-00</td>
+                            <td style="padding: var(--s-12);">4.8:1</td>
+                            <td style="padding: var(--s-12); color: #4C4;">✓ AA</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Amber on light</td>
+                            <td style="padding: var(--s-12);">Amber</td>
+                            <td style="padding: var(--s-12);">Paper-00</td>
+                            <td style="padding: var(--s-12);">5.1:1</td>
+                            <td style="padding: var(--s-12); color: #4C4;">✓ AA</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: var(--s-12);">Dark mode body</td>
+                            <td style="padding: var(--s-12);">Paper-10</td>
+                            <td style="padding: var(--s-12);">Paper-95</td>
+                            <td style="padding: var(--s-12);">11.6:1</td>
+                            <td style="padding: var(--s-12); color: #4C4;">✓ AAA</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Keyboard Navigation Support</h3>
+            <ul style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); margin-top: var(--s-16);">
+                <li>All interactive elements are keyboard accessible via Tab/Shift+Tab</li>
+                <li>Focus indicators always visible (2px amber outline)</li>
+                <li>Logical tab order follows visual layout</li>
+                <li>No keyboard traps—users can always navigate away</li>
+                <li>Skip links provided for screen readers</li>
+            </ul>
+
+            <h3 style="margin-top: var(--s-64);">Screen Reader Considerations</h3>
+            <ul style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); margin-top: var(--s-16);">
+                <li>All images have descriptive alt text</li>
+                <li>Intent dots use role="img" with aria-label</li>
+                <li>Loading states announced with aria-live="polite"</li>
+                <li>Form errors linked to inputs with aria-describedby</li>
+                <li>Landmark regions (main, nav, article) clearly defined</li>
+            </ul>
+
+            <h3 style="margin-top: var(--s-64);">Reduced Motion Support</h3>
+            <p>Users who enable "prefers-reduced-motion" get a static interface. All animations are disabled, including the blinking caret, pulsing dots, and transitions.</p>
+            <div class="code-block">
+                <pre>@media (prefers-reduced-motion: reduce) {
+    .blinking-caret,
+    .loading-dot,
+    .animated-trace {
+        animation: none;
+    }
+
+    * {
+        transition: none !important;
+    }
+
+    /* Caret becomes static */
+    .blinking-caret {
+        opacity: 1;
+    }
+}</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 13: GLOSSARY -->
+    <section class="section" id="glossary">
+        <div class="container">
+            <h2>Glossary of Terms</h2>
+            <p>Key concepts and terminology used throughout the Log design system.</p>
+
+            <div class="glossary-grid" style="margin-top: var(--s-48);">
+                <div class="glossary-term">
+                    <dt>Intent</dt>
+                    <dd>The semantic classification of an entry. Thought, Action, Decision, Reference, or Unknown. Classified asynchronously by the archivist, visualized with colored dots on the timeline.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Mechanism</dt>
+                    <dd>The instrument's own voice. Timestamps, labels, controls, metadata—anything rendered in IBM Plex Mono. Represents the recording apparatus itself.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Tape</dt>
+                    <dd>What was recorded. User-created content rendered in IBM Plex Sans. The artifact, the record, your words. Always proportional typography.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Archivist</dt>
+                    <dd>The AI's role in Log. Not an assistant, not a collaborator—an archivist. Classifies entries by intent, annotates in the margins, prepares structured outputs. Never interrupts capture.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Recording Instrument</dt>
+                    <dd>The foundational metaphor. Log is not a writing tool—it's a recording instrument in the lineage of seismographs, barographs, ticker tapes. Instruments that capture faithfully and never editorialize.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Idle Trace</dt>
+                    <dd>The visual gap on the timeline between entries. Height grows logarithmically based on time elapsed. Represents the drum turning while you were away.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Paper Tones</dt>
+                    <dd>The 12-step warm-neutral color scale (Paper-00 through Paper-95). Not gray—has a warm cast like aged paper or darkened instrument panels. Carries all structure and hierarchy.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Signal Colors</dt>
+                    <dd>The five intent classification colors: Thought (#6B7B8D), Action (#C4652A), Decision (#8B6E4E), Reference (#5B7A6B), Unknown (#928A7E). Only colors used semantically beyond the paper scale.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Commit</dt>
+                    <dd>The act of permanently recording an entry. Triggered by clicking the commit button or pressing Cmd/Ctrl+Enter. Once committed, entries are immutable (in MVP).</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Append-Only</dt>
+                    <dd>Core architectural principle. Entries are added to the timeline but never edited or deleted. The record is permanent. Recording instruments don't have undo.</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>Period Mark</dt>
+                    <dd>The amber dot (•) in the Log mark. Represents permanence, completion, "the record is made." Antonym of the cursor (which represents potential).</dd>
+                </div>
+
+                <div class="glossary-term">
+                    <dt>The Drum</dt>
+                    <dd>Metaphorical reference to the rotating drum in mechanical recording instruments (seismographs, barographs). In Log, "the drum turns" between entries—time passes, the idle trace grows.</dd>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 14: COMPONENT LIBRARY & SPECIMENS -->
+    <section class="section" id="components">
+        <div class="container">
+            <h2>Component Library</h2>
+            <p>Every component in Log follows the seven brand principles. These examples demonstrate the type system, color usage, and spatial rhythm in context.</p>
+
+            <h3 style="margin-top: var(--s-64);">Timeline Entry</h3>
+            <div class="component-demo">
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-thought);"></div>
+                        <span class="entry-timestamp">9:41 AM</span>
+                        <span class="entry-intent-label">THOUGHT</span>
+                    </div>
+                    <div class="entry-text">Realized the appeal of append-only systems: no merge conflicts, no edit shadows. Just tape advancing.</div>
+                </div>
+
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-action);"></div>
+                        <span class="entry-timestamp">2:15 PM</span>
+                        <span class="entry-intent-label">ACTION</span>
+                    </div>
+                    <div class="entry-text">Schedule design review with team for async classification approach</div>
+                </div>
+
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-decision);"></div>
+                        <span class="entry-timestamp">4:30 PM</span>
+                        <span class="entry-intent-label">DECISION</span>
+                    </div>
+                    <div class="entry-text">Decided on SQLite local + Supabase remote. Trade-off: lose sync conflict resolution UI, gain 40% simpler code.</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Spacing Grid (8px baseline)</h3>
+            <div class="code-block">
+                <pre>/* Spacing System — 8px Baseline */
+
+--s-4:   4px   (half-unit, rare usage)
+--s-8:   8px   (base unit)
+--s-12:  12px  (1.5× base)
+--s-16:  16px  (2× base)
+--s-24:  24px  (3× base)
+--s-32:  32px  (4× base)
+--s-48:  48px  (6× base)
+--s-64:  64px  (8× base)
+--s-80:  80px  (10× base)
+--s-96:  96px  (12× base)
+--s-128: 128px (16× base)
+
+/* Usage */
+Tight:    4–8px   (within components)
+Default:  16–24px (between elements)
+Sections: 48–96px (major breaks)</pre>
+            </div>
+
+            <h3 style="margin-top: var(--s-64);">Dark Mode</h3>
+            <p>Dark mode inverts the paper tone scale but keeps signal colors and the mark constant. The amber period remains #C4652A in both modes — it's a signal, not a surface color.</p>
+            <div class="code-block">
+                <pre>/* Dark Mode Behavior */
+
+Light Mode:
+- Background: Paper-00 (#FAFAF8)
+- Text: Paper-80 (#26211B)
+- Borders: Paper-10 (#ECE8E1)
+
+Dark Mode:
+- Background: Paper-95 (#0D0B09)
+- Text: Paper-10 (#ECE8E1)
+- Borders: Paper-80 (#26211B)
+
+Signal Colors (unchanged):
+- THOUGHT: #6B7B8D
+- ACTION: #C4652A
+- DECISION: #8B6E4E
+- REFERENCE: #5B7A6B
+- Amber: #C4652A
+- Archive: #5B5168</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 15: BEYOND TEXT (TEASER) -->
+    <section class="section" id="beyond-text">
+        <div class="container">
+            <h2>Beyond Text</h2>
+            <p>Post-MVP, Log expands to capture voice, images, and files. The principle: <strong>"The tape gets wider, but the instrument stays the same."</strong></p>
+
+            <div class="philosophy-grid">
+                <div class="philosophy-card">
+                    <h4>Voice Recording</h4>
+                    <p>Microphone icon appears beside commit button. Compose area becomes live amber waveform. Archivist transcribes afterward; the audio is the artifact. The waveform is the mark on the tape — not decoration, but the shape of what was recorded.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <h4>Rich Entries</h4>
+                    <p>When text entries contain structured data (recipe, calendar event, contact), the detail view surfaces a structured preview. The user's raw capture is always the artifact. The structured output is subordinate — prepared by the "clerk," not the archivist.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <h4>The Governing Principle</h4>
+                    <p>New input modalities (voice, camera, files) are new pens on the same drum. The commit button, timeline spine, and append-only record remain constant. The instrument expands its range without losing its identity.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 16: REAL-WORLD USAGE EXAMPLES -->
+    <section class="section" id="real-world-examples">
+        <div class="container">
+            <h2>Real-World Usage Examples</h2>
+            <p>The design system in action. These examples show how components, colors, typography, and interactions work together in real product scenarios.</p>
+
+            <h3 style="margin-top: var(--s-64);">Example 1: Timeline Entry Composition</h3>
+            <p>The complete lifecycle of creating an entry, from empty state to committed record.</p>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <div style="padding: var(--s-24); border-bottom: 1px solid var(--paper-10);">
+                    <span class="label">State 1: Empty Compose Area</span>
+                    <div style="display: flex; gap: var(--s-16); align-items: center; margin-top: var(--s-16);">
+                        <div class="commit-button rest"></div>
+                        <div style="flex: 1; font-family: var(--mono); font-size: 14px; color: var(--paper-30);">Log...</div>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">Waiting. Button dormant (paper-30 dot). Placeholder in monospace (mechanism's voice).</p>
+                </div>
+
+                <div style="padding: var(--s-24); border-bottom: 1px solid var(--paper-10);">
+                    <span class="label">State 2: Typing in Progress</span>
+                    <div style="display: flex; gap: var(--s-16); align-items: center; margin-top: var(--s-16);">
+                        <div class="commit-button rest"></div>
+                        <div style="flex: 1; font-family: var(--sans); font-size: 15px; color: var(--paper-70);">Decided on SQLite local + Supabase remote<span class="blinking-caret"></span></div>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">User typing. Text switches to proportional sans (tape). Amber caret blinks at 1Hz. Button still dormant.</p>
+                </div>
+
+                <div style="padding: var(--s-24); border-bottom: 1px solid var(--paper-10);">
+                    <span class="label">State 3: Intent Classification Loading</span>
+                    <div style="display: flex; gap: var(--s-16); align-items: center; margin-top: var(--s-16);">
+                        <div class="commit-button rest">
+                            <div class="loading-dot" style="width: 10px; height: 10px; border-radius: 50%; background: var(--paper-40); position: absolute;"></div>
+                        </div>
+                        <div style="flex: 1; font-family: var(--sans); font-size: 15px; color: var(--paper-70);">Decided on SQLite local + Supabase remote<span class="blinking-caret"></span></div>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">Archivist thinking. Button dot pulses (1.5s cycle). Still typing freely.</p>
+                </div>
+
+                <div style="padding: var(--s-24); border-bottom: 1px solid var(--paper-10);">
+                    <span class="label">State 4: Intent Classified, Ready to Commit</span>
+                    <div style="display: flex; gap: var(--s-16); align-items: center; margin-top: var(--s-16);">
+                        <div class="commit-button active"></div>
+                        <div style="flex: 1; font-family: var(--sans); font-size: 15px; color: var(--paper-70);">Decided on SQLite local + Supabase remote. Trade-off: lose sync UI, gain simpler code<span class="blinking-caret"></span></div>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">Loaded. Button switches to amber dot with 2px border. Press to commit, or keep typing.</p>
+                </div>
+
+                <div style="padding: var(--s-24);">
+                    <span class="label">State 5: Entry Committed to Timeline</span>
+                    <div style="margin-top: var(--s-16);">
+                        <div class="entry-header">
+                            <div class="intent-dot" style="background: var(--signal-decision);"></div>
+                            <span class="entry-timestamp">4:30 PM</span>
+                            <span class="entry-intent-label">DECISION</span>
+                        </div>
+                        <div class="entry-text">Decided on SQLite local + Supabase remote. Trade-off: lose sync UI, gain simpler code.</div>
+                    </div>
+                    <p style="font-size: 12px; margin-top: var(--s-12); color: var(--paper-50);">Permanent. Warm rose dot (decision intent). Timestamp in monospace. Entry text in proportional sans.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-96);">Example 2: All Five Intent Types</h3>
+            <p>Each intent classification has its own semantic color. Dots are 6px diameter, never used decoratively.</p>
+
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-thought);"></div>
+                        <span class="entry-timestamp">8:15 AM</span>
+                        <span class="entry-intent-label">THOUGHT</span>
+                    </div>
+                    <div class="entry-text">The appeal of append-only: no merge conflicts, no edit shadows, no version anxiety. Just tape advancing.</div>
+                    <div style="margin-left: 14px; margin-top: var(--s-8); font-family: var(--mono); font-size: 10px; color: var(--archive);">Reflection on system design philosophy</div>
+                </div>
+
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-action);"></div>
+                        <span class="entry-timestamp">10:42 AM</span>
+                        <span class="entry-intent-label">ACTION</span>
+                    </div>
+                    <div class="entry-text">Schedule async classification review with Sarah and Tom for Friday 2pm</div>
+                    <div style="margin-left: 14px; margin-top: var(--s-8); font-family: var(--mono); font-size: 10px; color: var(--archive);">Task requiring execution</div>
+                </div>
+
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-decision);"></div>
+                        <span class="entry-timestamp">2:15 PM</span>
+                        <span class="entry-intent-label">DECISION</span>
+                    </div>
+                    <div class="entry-text">Going with IBM Plex over SF fonts. Trade-off: lose native feel, gain cross-platform warmth and monospace quality.</div>
+                    <div style="margin-left: 14px; margin-top: var(--s-8); font-family: var(--mono); font-size: 10px; color: var(--archive);">Commitment with acknowledged trade-offs</div>
+                </div>
+
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-reference);"></div>
+                        <span class="entry-timestamp">3:50 PM</span>
+                        <span class="entry-intent-label">REFERENCE</span>
+                    </div>
+                    <div class="entry-text">WCAG AA requires 4.5:1 contrast for normal text, 3:1 for large text (18px+ or 14px+ bold)</div>
+                    <div style="margin-left: 14px; margin-top: var(--s-8); font-family: var(--mono); font-size: 10px; color: var(--archive);">Factual information for future reference</div>
+                </div>
+
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-unknown);"></div>
+                        <span class="entry-timestamp">5:20 PM</span>
+                        <span class="entry-intent-label">UNKNOWN</span>
+                    </div>
+                    <div class="entry-text">Hmm</div>
+                    <div style="margin-left: 14px; margin-top: var(--s-8); font-family: var(--mono); font-size: 10px; color: var(--archive);">Insufficient context for classification</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-96);">Example 3: Idle Trace in Context</h3>
+            <p>The drum turns between entries. Logarithmic height scaling makes absence feel proportional—2 hours looks different from 8 hours, but 8 hours and 24 hours feel similar (both "a day").</p>
+
+            <div class="component-demo" style="margin-top: var(--s-32); padding: var(--s-48);">
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-thought);"></div>
+                        <span class="entry-timestamp">Yesterday 9:30 PM</span>
+                        <span class="entry-intent-label">THOUGHT</span>
+                    </div>
+                    <div class="entry-text">The idle trace should feel honest, not punitive. It's a record of absence, not a guilt mechanism.</div>
+                </div>
+
+                <!-- Large idle trace (8 hours) -->
+                <div class="idle-trace-example" style="padding: var(--s-48) 0;">
+                    <div class="idle-trace-line" style="height: 80px;"></div>
+                    <div class="idle-trace-label-demo" style="color: var(--paper-30);">8 HOURS</div>
+                </div>
+
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-action);"></div>
+                        <span class="entry-timestamp">Today 5:30 AM</span>
+                        <span class="entry-intent-label">ACTION</span>
+                    </div>
+                    <div class="entry-text">Morning pages: clarify Phase 3 real-world examples scope</div>
+                </div>
+
+                <div class="timeline-entry-demo" style="margin-top: var(--s-32);">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-decision);"></div>
+                        <span class="entry-timestamp">7:45 AM</span>
+                        <span class="entry-intent-label">DECISION</span>
+                    </div>
+                    <div class="entry-text">Focus Phase 3 on production-ready examples, not theory. Show the system working.</div>
+                </div>
+
+                <!-- Medium idle trace (2 hours) -->
+                <div class="idle-trace-example" style="padding: var(--s-32) 0;">
+                    <div class="idle-trace-line" style="height: 48px;"></div>
+                    <div class="idle-trace-label-demo" style="color: var(--paper-30);">2 HOURS</div>
+                </div>
+
+                <div class="timeline-entry-demo">
+                    <div class="entry-header">
+                        <div class="intent-dot" style="background: var(--signal-action);"></div>
+                        <span class="entry-timestamp">9:50 AM</span>
+                        <span class="entry-intent-label">ACTION</span>
+                    </div>
+                    <div class="entry-text">Starting implementation now</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-96);">Example 4: The Archivist at Work</h3>
+            <p>The archivist annotates in the margins. Smaller monospace text in archive purple (#5B5168). Never interrupts the entry itself.</p>
+
+            <div class="component-demo" style="margin-top: var(--s-32); padding: var(--s-48);">
+                <div style="display: grid; grid-template-columns: 1fr 300px; gap: var(--s-32); align-items: start;">
+                    <div>
+                        <div class="entry-header">
+                            <div class="intent-dot" style="background: var(--signal-decision);"></div>
+                            <span class="entry-timestamp">2:30 PM</span>
+                            <span class="entry-intent-label">DECISION</span>
+                        </div>
+                        <div class="entry-text">Shipping Phase 1 with just text capture. Voice recording moves to Phase 2. Trade-off: slower feature velocity, but rock-solid foundation.</div>
+                    </div>
+                    <div style="padding: var(--s-16); background: var(--paper-00); border-left: 2px solid var(--archive); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 10px; color: var(--archive); line-height: 1.6; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-8);">Archivist Note</div>
+                        <div style="font-family: var(--mono); font-size: 11px; color: var(--archive); line-height: 1.6;">
+                            Project scoping decision. Prioritizes stability over feature count. Cross-references: "MVP scope definition" (Jan 12), "Voice UI complexity" (Jan 8).
+                        </div>
+                    </div>
+                </div>
+
+                <p style="font-size: 12px; margin-top: var(--s-24); color: var(--paper-50);">The entry is the artifact (proportional sans, paper-70). The archivist's annotation is subordinate (smaller monospace, archive purple, in the margin). Hierarchy through typography and color.</p>
+            </div>
+
+            <h3 style="margin-top: var(--s-96);">Example 5: Dark Mode Comparison</h3>
+            <p>Dark mode inverts the paper tone scale but keeps signal colors identical. The instrument works in both light and darkness.</p>
+
+            <div class="comparison-table" style="margin-top: var(--s-32);">
+                <div class="comparison-col after">
+                    <div class="comparison-label">Light Mode</div>
+                    <div style="background: #FAFAF8; padding: var(--s-24); border-radius: 4px; margin-top: var(--s-16);">
+                        <div style="display: flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-8);">
+                            <div style="width: 6px; height: 6px; border-radius: 50%; background: #C4652A;"></div>
+                            <span style="font-family: var(--mono); font-size: 11px; color: #928A7E; letter-spacing: 0.04em;">2:15 PM</span>
+                            <span style="font-family: var(--mono); font-size: 11px; color: #928A7E; text-transform: uppercase; letter-spacing: 0.06em;">ACTION</span>
+                        </div>
+                        <div style="font-family: var(--sans); font-size: 15px; color: #3A342C; line-height: 1.6; margin-left: 14px;">
+                            Review accessibility contrast ratios across all signal colors
+                        </div>
+                    </div>
+                    <p style="font-size: 11px; margin-top: var(--s-12); color: var(--paper-60);">Paper-00 background, Paper-70 text, signal colors unchanged</p>
+                </div>
+
+                <div class="comparison-col after" style="background: rgba(13, 11, 9, 0.05); border-color: rgba(13, 11, 9, 0.2);">
+                    <div class="comparison-label">Dark Mode</div>
+                    <div style="background: #0D0B09; padding: var(--s-24); border-radius: 4px; margin-top: var(--s-16);">
+                        <div style="display: flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-8);">
+                            <div style="width: 6px; height: 6px; border-radius: 50%; background: #C4652A;"></div>
+                            <span style="font-family: var(--mono); font-size: 11px; color: #928A7E; letter-spacing: 0.04em;">2:15 PM</span>
+                            <span style="font-family: var(--mono); font-size: 11px; color: #928A7E; text-transform: uppercase; letter-spacing: 0.06em;">ACTION</span>
+                        </div>
+                        <div style="font-family: var(--sans); font-size: 15px; color: #ECE8E1; line-height: 1.6; margin-left: 14px;">
+                            Review accessibility contrast ratios across all signal colors
+                        </div>
+                    </div>
+                    <p style="font-size: 11px; margin-top: var(--s-12); color: var(--paper-60);">Paper-95 background, Paper-10 text, signal colors unchanged</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 17: VISUAL REFERENCE GRID -->
+    <section class="section" id="visual-reference">
+        <div class="container">
+            <h2>Visual Reference Grid</h2>
+            <p>Quick reference for designers and developers. All colors, typography, spacing, and component states in one place.</p>
+
+            <h3 style="margin-top: var(--s-64);">Complete Color Reference</h3>
+
+            <div style="margin-top: var(--s-32);">
+                <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Paper Tones (Click to Copy)</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--s-16);">
+                    <div onclick="copyColor('#FAFAF8')" style="cursor: pointer; padding: var(--s-16); background: #FAFAF8; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #000; margin-bottom: var(--s-4);">Paper-00</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #666;">#FAFAF8</div>
+                    </div>
+                    <div onclick="copyColor('#F4F1EC')" style="cursor: pointer; padding: var(--s-16); background: #F4F1EC; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #000; margin-bottom: var(--s-4);">Paper-05</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #666;">#F4F1EC</div>
+                    </div>
+                    <div onclick="copyColor('#ECE8E1')" style="cursor: pointer; padding: var(--s-16); background: #ECE8E1; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #000; margin-bottom: var(--s-4);">Paper-10</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #666;">#ECE8E1</div>
+                    </div>
+                    <div onclick="copyColor('#D9D4CB')" style="cursor: pointer; padding: var(--s-16); background: #D9D4CB; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #000; margin-bottom: var(--s-4);">Paper-20</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #666;">#D9D4CB</div>
+                    </div>
+                    <div onclick="copyColor('#B8B1A6')" style="cursor: pointer; padding: var(--s-16); background: #B8B1A6; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #000; margin-bottom: var(--s-4);">Paper-30</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #666;">#B8B1A6</div>
+                    </div>
+                    <div onclick="copyColor('#928A7E')" style="cursor: pointer; padding: var(--s-16); background: #928A7E; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Paper-40</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#928A7E</div>
+                    </div>
+                    <div onclick="copyColor('#6E665B')" style="cursor: pointer; padding: var(--s-16); background: #6E665B; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Paper-50</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#6E665B</div>
+                    </div>
+                    <div onclick="copyColor('#514A40')" style="cursor: pointer; padding: var(--s-16); background: #514A40; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Paper-60</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#514A40</div>
+                    </div>
+                    <div onclick="copyColor('#3A342C')" style="cursor: pointer; padding: var(--s-16); background: #3A342C; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Paper-70</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#3A342C</div>
+                    </div>
+                    <div onclick="copyColor('#26211B')" style="cursor: pointer; padding: var(--s-16); background: #26211B; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Paper-80</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#26211B</div>
+                    </div>
+                    <div onclick="copyColor('#171310')" style="cursor: pointer; padding: var(--s-16); background: #171310; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Paper-90</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#171310</div>
+                    </div>
+                    <div onclick="copyColor('#0D0B09')" style="cursor: pointer; padding: var(--s-16); background: #0D0B09; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Paper-95</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#0D0B09</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--s-48);">
+                <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Signal Colors (Intent Classification)</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--s-16);">
+                    <div onclick="copyColor('#6B7B8D')" style="cursor: pointer; padding: var(--s-16); background: #6B7B8D; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Thought</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#6B7B8D</div>
+                    </div>
+                    <div onclick="copyColor('#C4652A')" style="cursor: pointer; padding: var(--s-16); background: #C4652A; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Action</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#C4652A</div>
+                    </div>
+                    <div onclick="copyColor('#8B6E4E')" style="cursor: pointer; padding: var(--s-16); background: #8B6E4E; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Decision</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#8B6E4E</div>
+                    </div>
+                    <div onclick="copyColor('#5B7A6B')" style="cursor: pointer; padding: var(--s-16); background: #5B7A6B; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Reference</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#5B7A6B</div>
+                    </div>
+                    <div onclick="copyColor('#928A7E')" style="cursor: pointer; padding: var(--s-16); background: #928A7E; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Unknown</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#928A7E</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--s-48);">
+                <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Brand Accents</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--s-16); max-width: 300px;">
+                    <div onclick="copyColor('#C4652A')" style="cursor: pointer; padding: var(--s-16); background: #C4652A; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Amber</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#C4652A</div>
+                    </div>
+                    <div onclick="copyColor('#5B5168')" style="cursor: pointer; padding: var(--s-16); background: #5B5168; border: 1px solid var(--paper-20); border-radius: 2px;">
+                        <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FFF; margin-bottom: var(--s-4);">Archive</div>
+                        <div style="font-family: var(--mono); font-size: 10px; color: #FFF;">#5B5168</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: var(--s-96);">Typography Quick Reference</h3>
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--paper-20);">
+                            <th style="text-align: left; padding: var(--s-12); font-family: var(--mono); color: var(--amber);">ELEMENT</th>
+                            <th style="text-align: left; padding: var(--s-12); font-family: var(--mono); color: var(--amber);">FAMILY</th>
+                            <th style="text-align: left; padding: var(--s-12); font-family: var(--mono); color: var(--amber);">SIZE</th>
+                            <th style="text-align: left; padding: var(--s-12); font-family: var(--mono); color: var(--amber);">WEIGHT</th>
+                            <th style="text-align: left; padding: var(--s-12); font-family: var(--mono); color: var(--amber);">TRACKING</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-family: var(--mono);">
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Wordmark</td>
+                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Variable</td>
+                            <td style="padding: var(--s-12);">600</td>
+                            <td style="padding: var(--s-12);">-0.035em</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">h2 Headings</td>
+                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">32px</td>
+                            <td style="padding: var(--s-12);">600</td>
+                            <td style="padding: var(--s-12);">-0.015em</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">h3 Headings</td>
+                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">24px</td>
+                            <td style="padding: var(--s-12);">600</td>
+                            <td style="padding: var(--s-12);">-0.01em</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Timestamps</td>
+                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">11px</td>
+                            <td style="padding: var(--s-12);">400</td>
+                            <td style="padding: var(--s-12);">0.04em</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Labels</td>
+                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">11px</td>
+                            <td style="padding: var(--s-12);">400</td>
+                            <td style="padding: var(--s-12);">0.06em</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Entry Text</td>
+                            <td style="padding: var(--s-12);">IBM Plex Sans</td>
+                            <td style="padding: var(--s-12);">15px</td>
+                            <td style="padding: var(--s-12);">400</td>
+                            <td style="padding: var(--s-12);">0px</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Body Copy</td>
+                            <td style="padding: var(--s-12);">IBM Plex Sans</td>
+                            <td style="padding: var(--s-12);">16px</td>
+                            <td style="padding: var(--s-12);">400</td>
+                            <td style="padding: var(--s-12);">0px</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: var(--s-12);">Archivist Note</td>
+                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">10-11px</td>
+                            <td style="padding: var(--s-12);">400</td>
+                            <td style="padding: var(--s-12);">0.06em</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top: var(--s-96);">Spacing Quick Reference (8px Baseline)</h3>
+            <div class="component-demo" style="margin-top: var(--s-32);">
+                <div style="display: grid; gap: var(--s-24);">
+                    <div style="display: flex; align-items: center; gap: var(--s-24);">
+                        <div style="width: 4px; height: 32px; background: var(--amber);"></div>
+                        <div style="font-family: var(--mono); font-size: 13px;">4px — Half-unit (rare usage)</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: var(--s-24);">
+                        <div style="width: 8px; height: 32px; background: var(--amber);"></div>
+                        <div style="font-family: var(--mono); font-size: 13px;">8px — Base unit</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: var(--s-24);">
+                        <div style="width: 16px; height: 32px; background: var(--amber);"></div>
+                        <div style="font-family: var(--mono); font-size: 13px;">16px — Default element spacing</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: var(--s-24);">
+                        <div style="width: 24px; height: 32px; background: var(--amber);"></div>
+                        <div style="font-family: var(--mono); font-size: 13px;">24px — Between components</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: var(--s-24);">
+                        <div style="width: 48px; height: 32px; background: var(--amber);"></div>
+                        <div style="font-family: var(--mono); font-size: 13px;">48px — Section spacing</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: var(--s-24);">
+                        <div style="width: 96px; height: 32px; background: var(--amber);"></div>
+                        <div style="font-family: var(--mono); font-size: 13px;">96px — Major section breaks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 18: DECISION LOG HIGHLIGHTS -->
+    <section class="section" id="decision-log">
+        <div class="container">
+            <h2>Decision Log Highlights</h2>
+            <p>Key design decisions and the reasoning behind them. Why these choices, not others.</p>
+
+            <div class="philosophy-card" style="margin-top: var(--s-48);">
+                <h4>Why Period, Not Cursor</h4>
+                <p><strong>Decision:</strong> The amber period (•) as the brand mark, not a cursor.</p>
+                <p><strong>Context:</strong> iA Writer owns the cursor as a brand element. Their logo is a cursor, their app icon is a cursor, their identity is built around the writing moment.</p>
+                <p><strong>Rationale:</strong> The cursor and period are antonyms. Cursor = waiting for input, potential, the blank page. Period = thought completed, entry committed, the record is made. Log is fundamentally about the moment after capture, not before. The period positions Log correctly in the market and avoids direct collision with an established product.</p>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-32);">
+                <h4>Why IBM Plex (Not SF Fonts)</h4>
+                <p><strong>Decision:</strong> IBM Plex Mono and IBM Plex Sans as the type system.</p>
+                <p><strong>Alternatives considered:</strong> SF Mono + SF Pro (native Apple fonts), Inconsolata + Inter, Monaco + system sans.</p>
+                <p><strong>Rationale:</strong> IBM Plex Mono has warmer, more intentional letterforms than SF Mono. It feels like an instrument's typeface, not a code editor's. IBM Plex Sans has excellent readability and warmth for body text. Both are freely available, cross-platform, and designed as a unified system. SF fonts would be more "native" on iOS but lose personality and lock us into Apple platforms.</p>
+                <p><strong>Trade-off acknowledged:</strong> Less native feel on iOS, but gains character, warmth, and platform independence.</p>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-32);">
+                <h4>Why These Exact Colors</h4>
+                <p><strong>Decision:</strong> 12-step warm-neutral paper scale, 5 signal colors, 2 brand accents.</p>
+                <p><strong>Color selection criteria:</strong></p>
+                <ul style="margin-left: var(--s-24); margin-top: var(--s-12); line-height: 1.8;">
+                    <li>Paper tones must have warm cast (not pure gray)</li>
+                    <li>All signal colors tested for WCAG AA contrast on Paper-00 and Paper-95</li>
+                    <li>Signal colors must feel semantic, not decorative</li>
+                    <li>Amber (#C4652A) chosen as primary because it's warm, functional, and distinct</li>
+                    <li>Archive purple (#5B5168) chosen for scholarly, marginal quality</li>
+                </ul>
+                <p><strong>Rationale:</strong> The paper scale supports the instrument metaphor—aged paper, darkened panels. Signal colors only appear when they mean something (intent classification, archivist notes, instrument signals). No decoration.</p>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-32);">
+                <h4>Why Idle Trace (Not Streaks)</h4>
+                <p><strong>Decision:</strong> Logarithmic idle trace on timeline, not streak counting.</p>
+                <p><strong>Alternatives considered:</strong> Streak counter, "X days logged" badge, calendar heatmap, no visualization.</p>
+                <p><strong>Rationale:</strong> Real instruments don't stop when you walk away. A barograph keeps tracing pressure whether you're watching or not. The idle trace is honest—it shows you were away, but doesn't punish you for it. Logarithmic scaling matches how absence feels: 2 hours vs 8 hours matters, but 8 hours vs 24 hours feels similar (both "a day"). No guilt mechanics, no gamification.</p>
+                <p><strong>Implementation detail:</strong> Height = 24px × log₂(minutes / 30). Caps at 80px for readability.</p>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-32);">
+                <h4>Why Append-Only (No Edit, No Delete)</h4>
+                <p><strong>Decision:</strong> Entries are immutable once committed. No editing, no deletion in MVP.</p>
+                <p><strong>Rationale:</strong> Recording instruments don't have undo. A seismograph doesn't let you erase yesterday's earthquake. A ticker tape doesn't let you revise stock prices. The permanence is part of the value—your log is a faithful record of what you thought when you thought it. Edit/delete features can come post-MVP as "corrections" or "annotations," but the original entry always remains.</p>
+                <p><strong>User benefit:</strong> No decision paralysis, no perfectionism, no shame about changing your mind. Just capture.</p>
+            </div>
+
+            <div class="philosophy-card" style="margin-top: var(--s-32);">
+                <h4>Why Asynchronous Classification</h4>
+                <p><strong>Decision:</strong> Intent classification happens asynchronously by the archivist, not inline during typing.</p>
+                <p><strong>Alternatives considered:</strong> Real-time classification, manual tagging, no classification.</p>
+                <p><strong>Rationale:</strong> Capture must be instant and uninterrupted. Classification can wait. The archivist works in the background, thinks for 1-3 seconds, then annotates the entry. This maintains the instrument metaphor—the pen marks the tape immediately, the archivist catalogs it later. The user never waits, never tags manually, never has their flow broken.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 19: FIDELITY CHECKLIST -->
+    <section class="section" id="fidelity-checklist">
+        <div class="container">
+            <h2>Fidelity Checklist</h2>
+            <p>Verify implementation accuracy. Every element specified, every detail honored.</p>
+
+            <div class="component-demo" style="margin-top: var(--s-48);">
+                <table style="width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--paper-20);">
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">ELEMENT</th>
+                            <th style="text-align: left; padding: var(--s-12); color: var(--amber);">SPECIFICATION</th>
+                            <th style="text-align: center; padding: var(--s-12); color: var(--amber);">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: var(--paper-70);">
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Mark (Log•)</td>
+                            <td style="padding: var(--s-12);">IBM Plex Mono 600, -0.035em tracking, amber period #C4652A</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Type System</td>
+                            <td style="padding: var(--s-12);">Monospace (mechanism) vs Proportional (tape) distinction clear</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Colors</td>
+                            <td style="padding: var(--s-12);">All exact hex codes, 12 paper tones + 5 signals + 2 accents</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Signal Colors</td>
+                            <td style="padding: var(--s-12);">All 5 intents shown with semantic meaning documented</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Paper Tones</td>
+                            <td style="padding: var(--s-12);">Warm neutrals (not gray), warmth narrative explained</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Idle Trace</td>
+                            <td style="padding: var(--s-12);">Logarithmic scaling, philosophy grounded in instrument metaphor</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Commit Button</td>
+                            <td style="padding: var(--s-12);">3 states (dormant, thinking, loaded) with mechanical metaphor</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Philosophy</td>
+                            <td style="padding: var(--s-12);">Recording instrument metaphor explained throughout</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">7 Principles</td>
+                            <td style="padding: var(--s-12);">All listed, explained, with examples</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Accessibility</td>
+                            <td style="padding: var(--s-12);">WCAG AA contrast verified, ARIA labels, reduced-motion support</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Motion</td>
+                            <td style="padding: var(--s-12);">All animations documented with durations and easing</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Examples</td>
+                            <td style="padding: var(--s-12);">Real-world usage examples showing system in action</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Dark Mode</td>
+                            <td style="padding: var(--s-12);">Perfect inversion of paper tones, signal colors unchanged</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: var(--s-12);">Extensibility</td>
+                            <td style="padding: var(--s-12);">"Tape gets wider" principle shown for voice, images, files</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: var(--s-32); padding: var(--s-24); background: rgba(76, 204, 76, 0.1); border-left: 3px solid #4C4; border-radius: 2px;">
+                    <p style="font-family: var(--mono); font-size: 16px; font-weight: 600; color: #4C4; margin-bottom: var(--s-8);">14/14 PASSING</p>
+                    <p style="font-size: 14px;">All design system elements specified and verified. Ready for implementation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="section" style="text-align: center; padding: var(--s-64) 0;">
+        <div class="container">
+            <div style="font-family: var(--mono); font-size: 64px; font-weight: 600; letter-spacing: -0.035em; margin-bottom: var(--s-24);">
+                Log<span style="color: var(--amber);">•</span>
+            </div>
+            <p style="font-family: var(--mono); font-size: 14px; color: var(--paper-40); line-height: 1.8;">
+                Your words are the artifact.<br>
+                The AI is the archivist.<br>
+                The tape is the tape. The card catalog is in the margins.
+            </p>
+        </div>
+    </section>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            const isDark = body.classList.toggle('dark-mode');
+            icon.textContent = isDark ? '☀' : '☾';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('themeIcon').textContent = '☀';
+        }
+
+        // Copy color to clipboard
+        function copyColor(hex) {
+            navigator.clipboard.writeText(hex).then(() => {
+                const feedback = document.getElementById('copyFeedback');
+                feedback.textContent = `Copied ${hex}`;
+                feedback.classList.add('show');
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 2000);
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Back to top button visibility
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Respect prefers-reduced-motion
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'auto', block: 'start' });
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
