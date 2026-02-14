@@ -889,6 +889,176 @@
         }
 
         /* ============================================
+           CRITICAL INTERACTION MOMENTS
+           ============================================ */
+        .interaction-moment {
+            margin-bottom: var(--s-64);
+            padding-bottom: var(--s-48);
+            border-bottom: 1px solid var(--paper-10);
+        }
+
+        .interaction-moment:last-child {
+            border-bottom: none;
+        }
+
+        .interaction-moment h3 {
+            font-family: var(--sans);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--paper-80);
+            margin-bottom: var(--s-24);
+            letter-spacing: -0.01em;
+        }
+
+        body.dark-mode .interaction-moment h3 {
+            color: var(--paper-10);
+        }
+
+        .interaction-moment h4 {
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--paper-60);
+            margin-top: var(--s-32);
+            margin-bottom: var(--s-12);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        body.dark-mode .interaction-moment h4 {
+            color: var(--paper-30);
+        }
+
+        .interaction-moment h5 {
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--paper-70);
+            margin-bottom: var(--s-12);
+        }
+
+        body.dark-mode .interaction-moment h5 {
+            color: var(--paper-20);
+        }
+
+        .interaction-moment p {
+            font-size: 15px;
+            color: var(--paper-50);
+            line-height: 1.65;
+            margin-bottom: var(--s-16);
+        }
+
+        body.dark-mode .interaction-moment p {
+            color: var(--paper-30);
+        }
+
+        .interaction-moment ul {
+            margin-left: var(--s-24);
+            margin-bottom: var(--s-16);
+        }
+
+        .interaction-moment li {
+            font-size: 14px;
+            color: var(--paper-50);
+            margin-bottom: var(--s-8);
+            line-height: 1.5;
+        }
+
+        body.dark-mode .interaction-moment li {
+            color: var(--paper-30);
+        }
+
+        .interaction-moment em {
+            color: var(--paper-60);
+        }
+
+        body.dark-mode .interaction-moment em {
+            color: var(--paper-20);
+        }
+
+        body.dark-mode .interaction-moment {
+            border-bottom-color: var(--paper-80);
+        }
+
+        .append-stages {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--s-48);
+            margin: var(--s-32) 0;
+        }
+
+        .append-stage {
+            background: var(--paper-05);
+            border: 1px solid var(--paper-10);
+            border-radius: 2px;
+            padding: var(--s-24);
+        }
+
+        .append-stage h5 {
+            margin-top: 0;
+        }
+
+        body.dark-mode .append-stage {
+            background: var(--paper-90);
+            border-color: var(--paper-80);
+        }
+
+        .interaction-timeline {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--s-24) 0;
+            font-size: 13px;
+        }
+
+        .interaction-timeline td {
+            padding: var(--s-12) var(--s-16);
+            border-bottom: 1px solid var(--paper-10);
+            vertical-align: top;
+        }
+
+        .interaction-timeline tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timeline-time {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--paper-40);
+            font-weight: 600;
+            white-space: nowrap;
+            width: 80px;
+        }
+
+        .timeline-event {
+            color: var(--paper-60);
+            padding-left: var(--s-16);
+        }
+
+        body.dark-mode .timeline-event {
+            color: var(--paper-30);
+        }
+
+        .timeline-stage {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--paper-30);
+            text-align: right;
+            width: 140px;
+        }
+
+        body.dark-mode .interaction-timeline td {
+            border-bottom-color: var(--paper-80);
+        }
+
+        body.dark-mode .timeline-time {
+            color: var(--paper-40);
+        }
+
+        body.dark-mode .timeline-stage {
+            color: var(--paper-40);
+        }
+
+        /* ============================================
            CODE BLOCKS
            ============================================ */
         .code-block {
@@ -1214,6 +1384,7 @@
                     <li><a href="#motion-spec"><span class="toc-number">06</span> Motion Specification</a></li>
                     <li><a href="#idle-trace"><span class="toc-number">07</span> The Idle Trace</a></li>
                     <li><a href="#commit-button"><span class="toc-number">08</span> The Commit Button</a></li>
+                    <li><a href="#critical-interactions"><span class="toc-number">8.5</span> Critical Interaction Moments</a></li>
                     <li><a href="#component-states"><span class="toc-number">09</span> Component States & Interactions</a></li>
                     <li><a href="#why-elements"><span class="toc-number">10</span> Why Each Element Exists</a></li>
                     <li><a href="#using-system"><span class="toc-number">11</span> Using the System</a></li>
@@ -1893,7 +2064,7 @@ pointer-events: none;</pre>
 
             <div class="philosophy-card" style="margin-top: var(--s-48);">
                 <h4>Motion Budget</h4>
-                <p><strong>5 animations total:</strong> Blinking caret, intent dot pulse, commit button press, idle trace growth, dark mode transition, color copy feedback.<br><br>
+                <p><strong>6 animations total:</strong> Blinking caret, intent dot pulse, commit button press, entry slide-up, idle trace growth, dark mode transition, color copy feedback.<br><br>
                 <strong>0 celebration animations.</strong> No confetti, no success checkmarks, no "great job!" messages. The instrument doesn't congratulate you for using it. It just records faithfully.</p>
             </div>
         </div>
@@ -2028,6 +2199,204 @@ pointer-events: none;</pre>
                 <strong>Checkmark:</strong> Implies task completion. Log isn't a todo app.<br>
                 <strong>The period:</strong> The full stop. The record is made. The brand's core metaphor doing mechanical work at the interaction layer.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8.5: CRITICAL INTERACTION MOMENTS -->
+    <section class="section" id="critical-interactions">
+        <div class="container">
+            <h2>Critical Interaction Moments</h2>
+            <p>Two essential moments where the mechanical metaphor becomes tactile: returning to the log after absence, and appending a new entry.</p>
+
+            <!-- IDLE TRACE INSTANT APPEARANCE -->
+            <article class="interaction-moment">
+                <h3>The Idle Trace: Instant Appearance</h3>
+                <p>When the user opens Log after time has passed, the idle trace appears <strong>instantly</strong> (0ms). The drum was turning while they were away. You see the record of that time, not the act of recording it.</p>
+
+                <h4>Mechanical Grounding</h4>
+                <p>When you look at a barograph, you don't watch it draw the trace—you see what was already drawn. The trace is the <em>evidence</em> of time passing, not a <em>performance</em> of time passing. No animation. No celebration. Just the honest record.</p>
+
+                <h4>Implementation</h4>
+                <p>CSS for idle trace:</p>
+                <div class="code-block">
+                    <pre>.idle-trace {
+  height: [calculated by logarithmic scale]; /* 16-80pt */
+  width: 1px;
+  background: var(--paper-40);
+  /* NO transition */
+  /* NO animation */
+  /* Appears instantly at 0ms */
+}
+
+.idle-trace-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--paper-30);
+  /* Labels appear with trace, no delay */
+}</pre>
+                </div>
+
+                <h4>Timeline: App Load</h4>
+                <ul style="font-size: 14px; line-height: 1.8; color: var(--paper-60); margin-left: var(--s-24); margin-top: var(--s-16);">
+                    <li><strong>T+0ms:</strong> App DOM loads</li>
+                    <li><strong>T+0ms:</strong> Idle trace rendered with calculated height (instant)</li>
+                    <li><strong>T+300ms:</strong> Compose area ready (user can type)</li>
+                </ul>
+
+                <h4>Principle Honored</h4>
+                <p><em>"Stillness over performance. The mark doesn't animate. The drum was turning; here's the gap."</em></p>
+            </article>
+
+            <!-- APPEND DELIGHT CYCLE -->
+            <article class="interaction-moment">
+                <h3>Entry Append: The Mechanical Cycle</h3>
+                <p>When the user taps commit, a three-stage mechanical cycle makes the entry feel <strong>physically inscribed</strong> into the log, not just appearing in a list.</p>
+
+                <h4>The Mechanical Metaphor</h4>
+                <p>A ticker tape machine works in stages: the key is pressed (shutter), the tape advances (mechanism moves), the mark appears (inscription), the paper settles (ready state). Log's entry append mirrors this exact mechanical sequence.</p>
+
+                <h4>The Three Stages (750ms total)</h4>
+
+                <div class="append-stages">
+                    <div class="append-stage">
+                        <h5>Stage 1: Shutter Depression (0-150ms)</h5>
+                        <p><strong>What Happens:</strong> Commit button depresses under user's tap</p>
+                        <p><strong>Animation:</strong> Button scale(0.92) with ease-out</p>
+                        <p><strong>Metaphor:</strong> User triggers the mechanism</p>
+                        <p><strong>Feel:</strong> Tactile, responsive, mechanical click</p>
+                        <div class="code-block">
+                            <pre>.commit-button:active {
+  transform: scale(0.92);
+  transition: transform 0.15s ease-out;
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="append-stage">
+                        <h5>Stage 2: Tape Advancement + Inscription (150-500ms, parallel start at 0ms)</h5>
+                        <p><strong>What Happens:</strong> Entry slides up into timeline from compose area, intent dot pulses</p>
+                        <p><strong>Entry Slide Animation:</strong></p>
+                        <ul style="margin-left: var(--s-24); margin-bottom: var(--s-16);">
+                            <li>Starts: 12px below compose area (offset)</li>
+                            <li>Ends: In timeline position</li>
+                            <li>Duration: 350ms</li>
+                            <li>Easing: cubic-bezier(0.2, 0.8, 0.3, 1.0) ← Mechanical snap</li>
+                        </ul>
+                        <p><strong>Intent Dot Animation:</strong></p>
+                        <ul style="margin-left: var(--s-24); margin-bottom: var(--s-16);">
+                            <li>Starts: scale(0.85)</li>
+                            <li>Ends: scale(1.0)</li>
+                            <li>Duration: 350ms (parallel with entry slide)</li>
+                            <li>Easing: cubic-bezier(0.2, 0.8, 0.3, 1.0)</li>
+                        </ul>
+                        <p><strong>Metaphor:</strong> Tape advancing through the mechanism, pen striking the drum</p>
+                        <p><strong>Feel:</strong> Spatial, decisive, mechanical "snap into place"</p>
+                        <div class="code-block">
+                            <pre>.new-entry {
+  animation: entrySlide 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.0) forwards;
+}
+
+@keyframes entrySlide {
+  from {
+    transform: translateY(12px);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.new-entry .intent-dot {
+  animation: dotPulse 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.0) forwards;
+}
+
+@keyframes dotPulse {
+  from {
+    transform: scale(0.85);
+  }
+  to {
+    transform: scale(1.0);
+  }
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="append-stage">
+                        <h5>Stage 3: Mechanism Reset (500-750ms)</h5>
+                        <p><strong>What Happens:</strong> Timeline scrolls to show new entry, compose area clears and is ready</p>
+                        <p><strong>Timeline Scroll:</strong></p>
+                        <ul style="margin-left: var(--s-24); margin-bottom: var(--s-16);">
+                            <li>Scrolls smoothly to reveal new entry at bottom</li>
+                            <li>Duration: 250ms (0.5s-0.75s)</li>
+                            <li>Easing: ease-out</li>
+                        </ul>
+                        <p><strong>Compose Area Reset:</strong></p>
+                        <ul style="margin-left: var(--s-24); margin-bottom: var(--s-16);">
+                            <li>Text cleared</li>
+                            <li>Placeholder visible again</li>
+                            <li>Caret ready to blink</li>
+                            <li>Commit button returns to rest state</li>
+                            <li>No animation (instant)</li>
+                        </ul>
+                        <p><strong>Metaphor:</strong> Instrument returns to ready state, waiting for next entry</p>
+                        <p><strong>Feel:</strong> Settlement, completion, readiness</p>
+                        <div class="code-block">
+                            <pre>.timeline {
+  scroll-behavior: smooth; /* or manual scroll with js */
+}
+
+.compose-area {
+  transition: none; /* Instant reset */
+}
+
+.compose-input {
+  /* Clear instantly, no fade */
+  content: '';
+}
+
+.commit-button {
+  /* Return to rest state instantly */
+  transform: scale(1.0);
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>Complete Timeline: User Appends Entry</h4>
+                <table class="interaction-timeline">
+                    <tbody>
+                        <tr>
+                            <td class="timeline-time">T+0ms</td>
+                            <td class="timeline-event">User taps commit button</td>
+                            <td class="timeline-stage">⚙️ Start</td>
+                        </tr>
+                        <tr>
+                            <td class="timeline-time">T+0-150ms</td>
+                            <td class="timeline-event">Button depresses (scale 0.92)</td>
+                            <td class="timeline-stage">Stage 1: Shutter</td>
+                        </tr>
+                        <tr>
+                            <td class="timeline-time">T+0-350ms</td>
+                            <td class="timeline-event">Entry slides up + dot pulses (parallel)</td>
+                            <td class="timeline-stage">Stage 2: Inscription</td>
+                        </tr>
+                        <tr>
+                            <td class="timeline-time">T+350-750ms</td>
+                            <td class="timeline-event">Timeline scrolls, compose resets</td>
+                            <td class="timeline-stage">Stage 3: Reset</td>
+                        </tr>
+                        <tr>
+                            <td class="timeline-time">T+750ms</td>
+                            <td class="timeline-event">User can type next entry</td>
+                            <td class="timeline-stage">✅ Ready</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Principle Honored</h4>
+                <p><em>"The mark is a period. The instrument records. The tape advances. Mechanical motion, not celebration. Multi-sensory (spatial + visual) feedback without violating stillness."</em></p>
+            </article>
         </div>
     </section>
 
@@ -3250,6 +3619,16 @@ Signal Colors (unchanged):
                             <td style="padding: var(--s-12);">Perfect inversion of paper tones, signal colors unchanged</td>
                             <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
                         </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Idle Trace Instant</td>
+                            <td style="padding: var(--s-12);">Idle trace appears instantly (0ms), no animation</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--paper-10);">
+                            <td style="padding: var(--s-12);">Append Cycle Delight</td>
+                            <td style="padding: var(--s-12);">750ms mechanical cycle: shutter (150ms) → inscription (350ms) → reset (250ms)</td>
+                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
+                        </tr>
                         <tr>
                             <td style="padding: var(--s-12);">Extensibility</td>
                             <td style="padding: var(--s-12);">"Tape gets wider" principle shown for voice, images, files</td>
@@ -3259,7 +3638,7 @@ Signal Colors (unchanged):
                 </table>
 
                 <div style="margin-top: var(--s-32); padding: var(--s-24); background: rgba(76, 204, 76, 0.1); border-left: 3px solid #4C4; border-radius: 2px;">
-                    <p style="font-family: var(--mono); font-size: 16px; font-weight: 600; color: #4C4; margin-bottom: var(--s-8);">14/14 PASSING</p>
+                    <p style="font-family: var(--mono); font-size: 16px; font-weight: 600; color: #4C4; margin-bottom: var(--s-8);">16/16 PASSING</p>
                     <p style="font-size: 14px;">All design system elements specified and verified. Ready for implementation.</p>
                 </div>
             </div>
