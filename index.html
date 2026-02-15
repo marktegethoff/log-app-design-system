@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log• Design System — Interactive Specification</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         /* ============================================
            FOUNDATION: Variables & Reset
@@ -41,7 +41,7 @@
             --archive: #5B5168;
 
             /* Typography */
-            --mono: 'IBM Plex Mono', 'SF Mono', monospace;
+            --mono: 'Space Mono', 'SF Mono', monospace;
             --sans: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
 
             /* Letter-spacing (Tracking) */
@@ -134,6 +134,15 @@
 
         body.dark-mode .idle-trace-demo {
             border-color: var(--paper-80);
+        }
+
+        /* Dark mode contrast fixes for hero section */
+        body.dark-mode .hero-subtitle {
+            color: var(--paper-10);
+        }
+
+        body.dark-mode .hero-quote {
+            color: var(--paper-10);
         }
 
         /* ============================================
@@ -337,6 +346,7 @@
             line-height: 1.3;
             margin-bottom: var(--s-16);
             max-width: 700px;
+            color: var(--paper-05);
         }
 
         @media (max-width: 600px) {
@@ -349,7 +359,7 @@
         .hero-subtitle {
             font-family: var(--mono);
             font-size: 14px;
-            color: var(--paper-30);
+            color: var(--paper-10);
             line-height: 1.8;
             max-width: 600px;
             margin-bottom: var(--s-32);
@@ -367,7 +377,7 @@
             font-size: 18px;
             font-style: italic;
             line-height: 1.6;
-            color: var(--paper-20);
+            color: var(--paper-10);
             max-width: 500px;
             margin-top: var(--s-48);
         }
@@ -522,14 +532,14 @@
            ============================================ */
         .mark-scale-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: var(--s-48);
             margin-top: var(--s-48);
         }
 
         @media (max-width: 768px) {
             .mark-scale-grid {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
                 gap: var(--s-32);
             }
         }
@@ -868,7 +878,7 @@
             display: flex;
             align-items: center;
             gap: var(--s-24);
-            padding: var(--s-24) 0;
+            padding: 0 0 var(--s-24) 0;
         }
 
         .idle-trace-line {
@@ -1688,7 +1698,7 @@
                 <h3>Reading the Visual Language</h3>
                 <p>Throughout this specification, you'll see two distinct typographic voices:</p>
                 <ul class="instrument-list">
-                    <li><span class="instrument-date" style="font-family: var(--mono); color: var(--paper-60);">MONOSPACE</span> IBM Plex Mono — The mechanism's voice. Timestamps, labels, controls, metadata. Anything that belongs to the instrument itself.</li>
+                    <li><span class="instrument-date" style="font-family: var(--mono); color: var(--paper-60);">MONOSPACE</span> Space Mono — The mechanism's voice. Timestamps, labels, controls, metadata. Anything that belongs to the instrument itself.</li>
                     <li><span class="instrument-date" style="font-family: var(--sans); color: var(--amber);">Proportional</span> IBM Plex Sans — The tape. Your words, what was recorded. The artifact.</li>
                 </ul>
                 <p style="margin-top: var(--s-24);">When you see amber (#C4652A), the instrument is signaling. When you see archive purple (#5B5168), the archivist is annotating in the margins. Everything else is the warm-neutral paper scale.</p>
@@ -1781,7 +1791,7 @@
                 <div class="principle-item">
                     <div class="principle-number">05</div>
                     <h3>The mechanism and the tape.</h3>
-                    <p>Monospace is the mechanism (IBM Plex Mono). Proportional sans is the tape (IBM Plex Sans). Two materials, two roles. The distinction is structural — it teaches users the philosophy through the typography itself. The instrument speaks in monospace. Your words appear in proportional text.</p>
+                    <p>Monospace is the mechanism (Space Mono). Proportional sans is the tape (IBM Plex Sans). Two materials, two roles. The distinction is structural — it teaches users the philosophy through the typography itself. The instrument speaks in monospace. Your words appear in proportional text.</p>
                 </div>
 
                 <div class="principle-item">
@@ -1803,14 +1813,14 @@
     <section class="section" id="mark">
         <div class="container">
             <h2>The Mark: Log<span style="color: var(--amber);">•</span></h2>
-            <p>The mark is typographic, not illustrative. It's made from the product's own materials: "Log" in IBM Plex Mono SemiBold, followed by an amber period. The period is the full stop — not a cursor waiting for input, but the mark that says "the record is made."</p>
+            <p>The mark is typographic, not illustrative. It's made from the product's own materials: "Log" in Space Mono SemiBold, followed by an amber period. The period is the full stop — not a cursor waiting for input, but the mark that says "the record is made."</p>
 
             <div class="mark-anatomy">
                 <h3>Mark Anatomy</h3>
                 <div class="mark-anatomy-grid">
                     <div class="anatomy-detail">
                         <h4>Wordmark</h4>
-                        <p><strong>Typeface:</strong> IBM Plex Mono SemiBold<br>
+                        <p><strong>Typeface:</strong> Space Mono SemiBold<br>
                         <strong>Tracking:</strong> -0.035em (tight)<br>
                         <strong>Color:</strong> Paper-05 on dark, Paper-80 on light<br>
                         <strong>Voice:</strong> The mechanism's own typeface</p>
@@ -1871,16 +1881,16 @@
     <section class="section" id="type-system">
         <div class="container">
             <h2>Type System: Mechanism & Tape</h2>
-            <p>Log uses two typefaces, and the distinction is structural, not decorative. IBM Plex Mono is the mechanism's voice. IBM Plex Sans is the tape — what was recorded.</p>
+            <p>Log uses two typefaces, and the distinction is structural, not decorative. Space Mono is the mechanism's voice. IBM Plex Sans is the tape — what was recorded.</p>
 
             <div class="type-comparison">
                 <div class="type-column mechanism">
-                    <h4>IBM Plex Mono — Mechanism</h4>
-                    <p style="font-size: 14px; margin-bottom: var(--s-24);">The instrument's own voice. Everything that belongs to the controls, metadata, and mechanical layer.</p>
+                    <h4>Space Mono — Mechanism</h4>
+                    <p style="font-size: 14px; margin-bottom: var(--s-24);">The instrument's own voice. Geometric forms reinforce precision and mechanical nature. Everything that belongs to the controls, metadata, and mechanical layer.</p>
 
                     <div class="type-sample">
                         <span class="label">Wordmark</span>
-                        <div class="type-sample-text" style="font-family: var(--mono); font-size: 24px; font-weight: 600; letter-spacing: -0.035em;">Log<span style="color: var(--amber);">•</span></div>
+                        <div class="type-sample-text" style="font-family: var(--mono); font-size: 24px; font-weight: 700; letter-spacing: -0.035em;">Log<span style="color: var(--amber);">•</span></div>
                     </div>
 
                     <div class="type-sample">
@@ -1932,7 +1942,7 @@
                 <h4 style="margin-bottom: var(--s-24);">Tracking Values & Usage</h4>
                 <div class="specimen-row">
                     <span class="specimen-label">-0.035em (Tight)</span>
-                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 600; font-size: 24px; letter-spacing: -0.035em;">Log<span style="color: var(--amber);">•</span></span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 700; font-size: 24px; letter-spacing: -0.035em;">Log<span style="color: var(--amber);">•</span></span>
                     <span style="font-size: 11px; color: var(--paper-40); margin-left: auto;">Wordmark only</span>
                 </div>
                 <div class="specimen-row">
@@ -1996,11 +2006,11 @@ h2, h3 {
                 <h4 style="margin-bottom: var(--s-24);">Approved Weights</h4>
                 <div class="specimen-row">
                     <span class="specimen-label">Regular 400</span>
-                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 400; font-size: 16px;">IBM Plex Mono Regular — Timestamps, labels, metadata</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 400; font-size: 16px;">Space Mono Regular — Timestamps, labels, metadata</span>
                 </div>
                 <div class="specimen-row">
                     <span class="specimen-label">SemiBold 600</span>
-                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 600; font-size: 16px;">IBM Plex Mono SemiBold — Wordmark, headings, emphasis</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 600; font-size: 16px;">Space Mono SemiBold — Wordmark, headings, emphasis</span>
                 </div>
                 <div class="specimen-row">
                     <span class="specimen-label">Regular 400</span>
@@ -2041,14 +2051,15 @@ h2, h3 {
             <h3 style="margin-top: var(--s-64);">Complete Type Specimen (Font Families)</h3>
 
             <div class="type-specimen">
-                <h4 style="margin-bottom: var(--s-24);">IBM Plex Mono (Mechanism) — Use Only 400 & 600</h4>
+                <h4 style="margin-bottom: var(--s-24);">Space Mono (Mechanism) — Use Only 400 & 700</h4>
+                <p style="font-size: 13px; color: var(--paper-50); margin-bottom: var(--s-16);">Geometric monospace reinforces the precision instrument metaphor. Updated to use 700 (bold) instead of 600 for wordmark emphasis.</p>
                 <div class="specimen-row">
                     <span class="specimen-label">Regular 400 ✓</span>
                     <span class="specimen-text" style="font-family: var(--mono); font-weight: 400; font-size: 16px;">The quick brown fox jumps over the lazy dog</span>
                 </div>
                 <div class="specimen-row">
-                    <span class="specimen-label">SemiBold 600 ✓</span>
-                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 600; font-size: 16px;">The quick brown fox jumps over the lazy dog</span>
+                    <span class="specimen-label">Bold 700 ✓</span>
+                    <span class="specimen-text" style="font-family: var(--mono); font-weight: 700; font-size: 16px;">The quick brown fox jumps over the lazy dog</span>
                 </div>
             </div>
 
@@ -2799,7 +2810,7 @@ textarea:focus {
 
                 <div class="glossary-term">
                     <dt>Monospace vs. Proportional</dt>
-                    <dd>Separates the instrument's voice from your content. Monospace (IBM Plex Mono) is the mechanism: timestamps, labels, controls, metadata. Proportional (IBM Plex Sans) is the tape: your words, what was recorded. This distinction teaches the system's philosophy through typography itself.</dd>
+                    <dd>Separates the instrument's voice from your content. Monospace (Space Mono) is the mechanism: timestamps, labels, controls, metadata. Proportional (IBM Plex Sans) is the tape: your words, what was recorded. This distinction teaches the system's philosophy through typography itself.</dd>
                 </div>
 
                 <div class="glossary-term">
@@ -3129,7 +3140,7 @@ textarea:focus {
 
                 <div class="glossary-term">
                     <dt>Mechanism</dt>
-                    <dd>The instrument's own voice. Timestamps, labels, controls, metadata—anything rendered in IBM Plex Mono. Represents the recording apparatus itself.</dd>
+                    <dd>The instrument's own voice. Timestamps, labels, controls, metadata—anything rendered in Space Mono. Represents the recording apparatus itself.</dd>
                 </div>
 
                 <div class="glossary-term">
@@ -3990,7 +4001,7 @@ Signal Colors (unchanged):
                 </div>
 
                 <!-- Large idle trace (8 hours) -->
-                <div class="idle-trace-example" style="padding: var(--s-48) 0;">
+                <div class="idle-trace-example">
                     <div class="idle-trace-line" style="height: 80px;"></div>
                     <div class="idle-trace-label-demo" style="color: var(--paper-30);">8 HOURS</div>
                 </div>
@@ -4014,7 +4025,7 @@ Signal Colors (unchanged):
                 </div>
 
                 <!-- Medium idle trace (2 hours) -->
-                <div class="idle-trace-example" style="padding: var(--s-32) 0;">
+                <div class="idle-trace-example">
                     <div class="idle-trace-line" style="height: 48px;"></div>
                     <div class="idle-trace-label-demo" style="color: var(--paper-30);">2 HOURS</div>
                 </div>
@@ -4207,35 +4218,35 @@ Signal Colors (unchanged):
                     <tbody style="font-family: var(--mono);">
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">Wordmark</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">Variable</td>
                             <td style="padding: var(--s-12);">600</td>
                             <td style="padding: var(--s-12);">-0.035em</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">h2 Headings</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">32px</td>
                             <td style="padding: var(--s-12);">600</td>
                             <td style="padding: var(--s-12);">-0.015em</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">h3 Headings</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">24px</td>
                             <td style="padding: var(--s-12);">600</td>
                             <td style="padding: var(--s-12);">-0.01em</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">Timestamps</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">11px</td>
                             <td style="padding: var(--s-12);">400</td>
                             <td style="padding: var(--s-12);">0.04em</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">Labels</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">11px</td>
                             <td style="padding: var(--s-12);">400</td>
                             <td style="padding: var(--s-12);">0.06em</td>
@@ -4256,7 +4267,7 @@ Signal Colors (unchanged):
                         </tr>
                         <tr>
                             <td style="padding: var(--s-12);">Archivist Note</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">10-11px</td>
                             <td style="padding: var(--s-12);">400</td>
                             <td style="padding: var(--s-12);">0.06em</td>
@@ -4323,9 +4334,9 @@ Signal Colors (unchanged):
 
             <div class="philosophy-card" style="margin-top: var(--s-32);">
                 <h4>Why IBM Plex (Not SF Fonts)</h4>
-                <p><strong>Decision:</strong> IBM Plex Mono and IBM Plex Sans as the type system.</p>
+                <p><strong>Decision:</strong> Space Mono and IBM Plex Sans as the type system.</p>
                 <p><strong>Alternatives considered:</strong> SF Mono + SF Pro (native Apple fonts), Inconsolata + Inter, Monaco + system sans.</p>
-                <p><strong>Rationale:</strong> IBM Plex Mono has warmer, more intentional letterforms than SF Mono. It feels like an instrument's typeface, not a code editor's. IBM Plex Sans has excellent readability and warmth for body text. Both are freely available, cross-platform, and designed as a unified system. SF fonts would be more "native" on iOS but lose personality and lock us into Apple platforms.</p>
+                <p><strong>Rationale:</strong> Space Mono has warmer, more intentional letterforms than SF Mono. It feels like an instrument's typeface, not a code editor's. IBM Plex Sans has excellent readability and warmth for body text. Both are freely available, cross-platform, and designed as a unified system. SF fonts would be more "native" on iOS but lose personality and lock us into Apple platforms.</p>
                 <p><strong>Trade-off acknowledged:</strong> Less native feel on iOS, but gains character, warmth, and platform independence.</p>
             </div>
 
@@ -4385,7 +4396,7 @@ Signal Colors (unchanged):
                     <tbody style="color: var(--paper-70);">
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">Mark (Log•)</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono 600, -0.035em tracking, amber period #C4652A</td>
+                            <td style="padding: var(--s-12);">Space Mono 600, -0.035em tracking, amber period #C4652A</td>
                             <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
@@ -6546,13 +6557,13 @@ Signal Colors (unchanged):
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">Timestamps, Labels</td>
                             <td style="padding: var(--s-12); font-weight: 600; color: var(--signal-action);">8.25pt</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">400</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">Archivist Note</td>
                             <td style="padding: var(--s-12); font-weight: 600; color: var(--signal-action);">9.75pt</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">400</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
@@ -6570,31 +6581,31 @@ Signal Colors (unchanged):
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">h4 Headings</td>
                             <td style="padding: var(--s-12); font-weight: 600; color: var(--signal-action);">13.5pt</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">600</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">h3 Headings</td>
                             <td style="padding: var(--s-12); font-weight: 600; color: var(--signal-action);">18pt</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">600</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">h2 Headings</td>
                             <td style="padding: var(--s-12); font-weight: 600; color: var(--signal-action);">24pt</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">600</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12);">h1 Headings</td>
                             <td style="padding: var(--s-12); font-weight: 600; color: var(--signal-action);">30pt</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">600</td>
                         </tr>
                         <tr>
                             <td style="padding: var(--s-12);">Wordmark (Log•)</td>
                             <td style="padding: var(--s-12); font-weight: 600; color: var(--signal-action);">VARIABLE</td>
-                            <td style="padding: var(--s-12);">IBM Plex Mono</td>
+                            <td style="padding: var(--s-12);">Space Mono</td>
                             <td style="padding: var(--s-12);">600</td>
                         </tr>
                     </tbody>
@@ -7026,7 +7037,7 @@ Button(
 
                 <h4 style="margin-top: var(--s-24); margin-bottom: var(--s-16);">Logo Specifications (Constant)</h4>
                 <ul style="font-size: 13px; line-height: 1.8; padding-left: var(--s-24); color: var(--paper-60);">
-                    <li>Font: IBM Plex Mono, SemiBold (600 weight)</li>
+                    <li>Font: Space Mono, SemiBold (600 weight)</li>
                     <li>Tracking: -0.035em (tight, per brand spec)</li>
                     <li>Period: Amber (#C4652A), slightly larger than typographic period (visual mark, not punctuation)</li>
                     <li>Spacing: 1px between "g" and period</li>
@@ -7127,7 +7138,7 @@ Button(
                         <ul style="font-size: 13px; line-height: 1.8; padding-left: var(--s-16); color: var(--paper-60);">
                             <li>☐ Colors match exact hex (no approximations)</li>
                             <li>☐ Icons use 1.5px stroke weight</li>
-                            <li>☐ Fonts: IBM Plex Mono (mechanism), IBM Plex Sans (tape/text)</li>
+                            <li>☐ Fonts: Space Mono (mechanism), IBM Plex Sans (tape/text)</li>
                             <li>☐ Dark mode auto via currentColor on SVG icons</li>
                         </ul>
                     </div>
