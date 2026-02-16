@@ -19,6 +19,7 @@
             --paper-00: #FAFAF8;
             --paper-05: #F4F1EC;
             --paper-10: #ECE8E1;
+            --paper-15: #E0DAD1;
             --paper-20: #D9D4CB;
             --paper-30: #B8B1A6;
             --paper-40: #928A7E;
@@ -272,6 +273,13 @@
 
         .toc-list a:hover {
             color: var(--amber);
+            background: var(--paper-05);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        body.dark-mode .toc-list a:hover {
+            background: var(--paper-80);
         }
 
         .toc-number {
@@ -296,12 +304,14 @@
         }
 
         .section {
+            display: none !important;
             padding: var(--s-96) 0;
             border-bottom: 1px solid var(--paper-10);
         }
 
         @media (max-width: 600px) {
             .section {
+                display: none !important;
                 padding: var(--s-48) 0;
             }
         }
@@ -330,7 +340,7 @@
             font-weight: 600;
             letter-spacing: -0.035em;
             line-height: 1;
-            margin-bottom: var(--s-48);
+            margin: 0 auto var(--s-48) auto;
             color: var(--paper-05);
         }
 
@@ -344,7 +354,7 @@
             font-size: 28px;
             font-weight: 600;
             line-height: 1.3;
-            margin-bottom: var(--s-16);
+            margin: 0 auto var(--s-16) auto;
             max-width: 700px;
             color: var(--paper-05);
         }
@@ -362,7 +372,7 @@
             color: var(--paper-10);
             line-height: 1.8;
             max-width: 600px;
-            margin-bottom: var(--s-32);
+            margin: 0 auto var(--s-32) auto;
         }
 
         @media (max-width: 600px) {
@@ -379,7 +389,7 @@
             line-height: 1.6;
             color: var(--paper-10);
             max-width: 500px;
-            margin-top: var(--s-48);
+            margin: var(--s-48) auto 0 auto;
         }
 
         @media (max-width: 600px) {
@@ -827,6 +837,8 @@
 
         .color-swatch:hover {
             transform: scale(1.05);
+            filter: brightness(0.95);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .color-swatch-label {
@@ -1603,12 +1615,363 @@
                 right: 16px;
             }
         }
+
+        /* ============================================
+           NAVIGATION SIDEBAR
+           ============================================ */
+        .nav-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            overflow-y: auto;
+            background: var(--paper-05);
+            border-right: 1px solid var(--paper-10);
+            padding: var(--s-24);
+            z-index: 1001;
+            scroll-behavior: smooth;
+        }
+
+        @media (max-width: 768px) {
+            .nav-sidebar {
+                position: absolute;
+                width: 100%;
+                height: auto;
+                border-bottom: 1px solid var(--paper-10);
+                border-right: none;
+                padding: var(--s-16);
+            }
+        }
+
+        body.dark-mode .nav-sidebar {
+            background: var(--paper-90);
+            border-color: var(--paper-80);
+        }
+
+        .nav-sidebar h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--paper-40);
+            margin-bottom: var(--s-16);
+            margin-top: 0;
+            padding-top: var(--s-24);
+        }
+
+        body.dark-mode .nav-sidebar h3 {
+            color: var(--paper-30);
+        }
+
+        .nav-sidebar h3:first-child {
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        .nav-list {
+            list-style: none;
+            margin-bottom: var(--s-32);
+        }
+
+        .nav-list li {
+            margin-bottom: var(--s-8);
+        }
+
+        .nav-list a {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--paper-60);
+            text-decoration: none;
+            display: block;
+            padding: var(--s-8) var(--s-12) var(--s-8) var(--s-32);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+        }
+
+        body.dark-mode .nav-list a {
+            color: var(--paper-30);
+        }
+
+        .nav-list a:hover {
+            background: var(--paper-10);
+            color: var(--amber);
+        }
+
+        body.dark-mode .nav-list a:hover {
+            background: var(--paper-80);
+        }
+
+        .nav-list a:focus-visible {
+            outline: 2px solid var(--amber);
+            outline-offset: 0;
+        }
+
+        /* Category Headers (Expandable) */
+        .nav-category {
+            margin-bottom: var(--s-32);
+        }
+
+        .nav-category-title {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--paper-60);
+            margin-bottom: var(--s-12);
+            cursor: pointer;
+            padding: var(--s-8) var(--s-12) var(--s-8) var(--s-4);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--s-8);
+            user-select: none;
+        }
+
+        body.dark-mode .nav-category-title {
+            color: var(--paper-40);
+        }
+
+        .nav-category-title:hover {
+            background: var(--paper-10);
+            color: var(--amber);
+        }
+
+        body.dark-mode .nav-category-title:hover {
+            background: var(--paper-80);
+        }
+
+        .nav-category-title:focus-visible {
+            outline: 2px solid var(--amber);
+            outline-offset: 0;
+        }
+
+        .nav-category.expanded .nav-category-title {
+            background: var(--paper-05);
+        }
+
+        body.dark-mode .nav-category.expanded .nav-category-title {
+            background: var(--paper-85);
+        }
+
+        /* Home Link */
+        .nav-home-link {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--paper-60);
+            text-decoration: none;
+            display: block;
+            padding: var(--s-8) var(--s-12);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-home-link:hover {
+            background: var(--paper-10);
+            color: var(--amber);
+        }
+
+        body.dark-mode .nav-home-link:hover {
+            background: var(--paper-80);
+        }
+
+        .nav-home-link:focus-visible {
+            outline: 2px solid var(--amber);
+            outline-offset: 0;
+        }
+
+        /* Category Toggle Arrow */
+        .nav-category-toggle {
+            display: inline-block;
+            transition: transform 0.2s ease;
+            width: 12px;
+            text-align: center;
+        }
+
+        .nav-category.expanded .nav-category-toggle {
+            transform: rotate(90deg);
+        }
+
+        /* Category Subsections (Hidden by default, shown when expanded) */
+        .nav-subsections {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .nav-category.expanded .nav-subsections {
+            max-height: 800px; /* Adjust as needed */
+        }
+
+        .nav-subsections .nav-list {
+            margin-bottom: 0;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* Hero Section Styling */
+        .hero-info-box {
+            font-size: 14px;
+            color: var(--paper-60);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .hero-info-box strong {
+            font-weight: 600;
+        }
+
+        body.dark-mode .hero-info-box {
+            color: var(--paper-40);
+        }
+
+        .hero-nav-card {
+            background: var(--paper-10);
+            border-radius: 4px;
+            border-left: 3px solid var(--amber);
+            transition: background 0.2s ease;
+        }
+
+        .hero-nav-card:hover {
+            background: var(--paper-15);
+        }
+
+        .hero-nav-card:hover .hero-nav-card-description {
+            color: var(--paper-50);
+        }
+
+        body.dark-mode .hero-nav-card {
+            background: var(--paper-85);
+        }
+
+        body.dark-mode .hero-nav-card:hover {
+            background: var(--paper-70);
+        }
+
+        body.dark-mode .hero-nav-card:hover .hero-nav-card-description {
+            color: var(--paper-30);
+        }
+
+        .hero-nav-card-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--amber);
+            margin: 0 0 var(--s-12) 0;
+        }
+
+        .hero-nav-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 var(--s-12) 0;
+        }
+
+        body.dark-mode .hero-nav-card-title {
+            color: var(--paper-05);
+        }
+
+        .hero-nav-card-description {
+            font-size: 13px;
+            color: var(--paper-60);
+            margin: 0 0 var(--s-16) 0;
+            line-height: 1.5;
+        }
+
+        body.dark-mode .hero-nav-card-description {
+            color: var(--paper-40);
+        }
+
+        .hero-nav-card-link {
+            font-size: 12px;
+            color: var(--amber);
+            text-decoration: none;
+            margin: 0;
+        }
+
+        .hero-nav-card-link:hover {
+            text-decoration: underline;
+        }
+
+        .nav-category-description {
+            font-size: 10px;
+            font-weight: 400;
+            color: var(--paper-40);
+            padding: 0 var(--s-12) var(--s-8);
+            margin: 0;
+            display: block;
+        }
+
+        body.dark-mode .nav-category-description {
+            color: var(--paper-30);
+        }
+
+        @media (max-width: 480px) {
+            .nav-category-description {
+                display: none;
+            }
+        }
+
+
+        /* Hero Navigation Grid - Responsive */
+        .hero-nav-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--s-32);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .hero-nav-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--s-24);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-nav-grid {
+                grid-template-columns: 1fr;
+                gap: var(--s-24);
+            }
+        }
+
+        .hero-info-container {
+            background: var(--paper-10);
+            border-radius: 4px;
+            padding: var(--s-48);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            text-align: center;
+        }
+
+        body.dark-mode .hero-info-container {
+            background: var(--paper-85);
+        }
+
+        .hero-nav-grid {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
     <!-- Theme Toggle -->
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-        <span id="themeIcon">☾</span>
+        <span id="themeIcon">☀</span>
     </button>
 
     <!-- Copy Feedback -->
@@ -1616,6 +1979,126 @@
 
     <!-- Back to Top -->
     <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Back to top">↑</button>
+
+    <!-- NAVIGATION SIDEBAR -->
+    <nav class="nav-sidebar" id="navSidebar">
+
+        <!-- HOME: HERO -->
+        <div style="margin-bottom: var(--s-32);">
+            <a href="#" onclick="showSection('hero'); return false;" style="text-decoration: none; display: block; padding: var(--s-8) var(--s-12); border-radius: 2px; transition: all 0.2s ease;" class="nav-home-link">
+                <div class="hero-mark" style="font-size: 24px; color: var(--paper-60); margin-bottom: 0;">Log<span class="period">•</span></div>
+            </a>
+        </div>
+
+        <!-- CATEGORY 1: PHILOSOPHY & PRINCIPLES -->
+        <div class="nav-category" data-category="philosophy">
+            <div class="nav-category-title" onclick="toggleCategory('philosophy')">
+                <span class="nav-category-toggle">▶</span>
+                <span>Philosophy</span>
+            </div>
+            <p class="nav-category-description">Foundational thinking & design rationale</p>
+            <div class="nav-subsections">
+                <ul class="nav-list">
+                    <li><a href="#" onclick="showSection('how-to-read'); return false;">How to Read</a></li>
+                    <li><a href="#" onclick="showSection('philosophy'); return false;">Philosophy</a></li>
+                    <li><a href="#" onclick="showSection('principles'); return false;">Principles</a></li>
+                    <li><a href="#" onclick="showSection('why-elements'); return false;">Why Elements</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CATEGORY 2: DESIGN TOKENS -->
+        <div class="nav-category" data-category="tokens">
+            <div class="nav-category-title" onclick="toggleCategory('tokens')">
+                <span class="nav-category-toggle">▶</span>
+                <span>Design Tokens</span>
+            </div>
+            <p style="font-size: 10px; color: var(--paper-40); padding: 0 var(--s-12) var(--s-8); margin: 0;">Color, Type, Spacing, Points</p>
+            <div class="nav-subsections">
+                <ul class="nav-list">
+                    <li><a href="#" onclick="showSection('mark'); return false;">The Mark</a></li>
+                    <li><a href="#" onclick="showSection('type-system'); return false;">Type System</a></li>
+                    <li><a href="#" onclick="showSection('color-system'); return false;">Colors</a></li>
+                    <li><a href="#" onclick="showSection('visual-reference'); return false;">Visual Grid</a></li>
+                    <li><a href="#" onclick="showSection('point-specification'); return false;">Point Spec</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CATEGORY 3: INTERACTION & MOTION -->
+        <div class="nav-category" data-category="interaction">
+            <div class="nav-category-title" onclick="toggleCategory('interaction')">
+                <span class="nav-category-toggle">▶</span>
+                <span>Interaction & Motion</span>
+            </div>
+            <p class="nav-category-description">Motion specs, timing & interactive states</p>
+            <div class="nav-subsections">
+                <ul class="nav-list">
+                    <li><a href="#" onclick="showSection('motion-spec'); return false;">Motion Spec</a></li>
+                    <li><a href="#" onclick="showSection('idle-trace'); return false;">Idle Trace</a></li>
+                    <li><a href="#" onclick="showSection('commit-button'); return false;">Commit Button</a></li>
+                    <li><a href="#" onclick="showSection('critical-interactions'); return false;">Critical Moments</a></li>
+                    <li><a href="#" onclick="showSection('component-states'); return false;">Component States</a></li>
+                    <li><a href="#" onclick="showSection('icon-flows'); return false;">Icon Flows</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CATEGORY 4: COMPONENTS & PRODUCT -->
+        <div class="nav-category" data-category="components">
+            <div class="nav-category-title" onclick="toggleCategory('components')">
+                <span class="nav-category-toggle">▶</span>
+                <span>Components & Product</span>
+            </div>
+            <p class="nav-category-description">Patterns, components & real-world examples</p>
+            <div class="nav-subsections">
+                <ul class="nav-list">
+                    <li><a href="#" onclick="showSection('components'); return false;">Library</a></li>
+                    <li><a href="#" onclick="showSection('real-world-examples'); return false;">Examples</a></li>
+                    <li><a href="#" onclick="showSection('mvp-surfaces'); return false;">Core Product</a></li>
+                    <li><a href="#" onclick="showSection('iconography'); return false;">Icons</a></li>
+                    <li><a href="#" onclick="showSection('accessibility'); return false;">Accessibility</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CATEGORY 5: IMPLEMENTATION & ENGINEERING -->
+        <div class="nav-category" data-category="engineering">
+            <div class="nav-category-title" onclick="toggleCategory('engineering')">
+                <span class="nav-category-toggle">▶</span>
+                <span>Engineering</span>
+            </div>
+            <p style="font-size: 10px; color: var(--paper-40); padding: 0 var(--s-12) var(--s-8); margin: 0;">How to use & implement</p>
+            <div class="nav-subsections">
+                <ul class="nav-list">
+                    <li><a href="#" onclick="showSection('using-system'); return false;">Using System</a></li>
+                    <li><a href="#" onclick="showSection('medium-polish'); return false;">Tech Specs</a></li>
+                    <li><a href="#" onclick="showSection('design-review'); return false;">Assessment</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CATEGORY 6: REFERENCE & QUALITY -->
+        <div class="nav-category" data-category="reference">
+            <div class="nav-category-title" onclick="toggleCategory('reference')">
+                <span class="nav-category-toggle">▶</span>
+                <span>Reference</span>
+            </div>
+            <p style="font-size: 10px; color: var(--paper-40); padding: 0 var(--s-12) var(--s-8); margin: 0;">Quality standards & lookup</p>
+            <div class="nav-subsections">
+                <ul class="nav-list">
+                    <li><a href="#" onclick="showSection('decision-log'); return false;">Design Rationale</a></li>
+                    <li><a href="#" onclick="showSection('glossary'); return false;">Glossary</a></li>
+                    <li><a href="#" onclick="showSection('beyond-text'); return false;">Beyond Text</a></li>
+                    <li><a href="#" onclick="showSection('fidelity-checklist'); return false;">Checklist</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <div class="main-content">
 
     <!-- HERO SECTION -->
     <section class="hero-section">
@@ -1631,10 +2114,53 @@
         <blockquote class="hero-quote">
             "The tape is the tape. The card catalog is in the margins."
         </blockquote>
+
+        <!-- Navigation Orientation -->
+        <div class="hero-info-container" style="margin-top: var(--s-64);">
+            <p class="hero-info-box" style="margin: 0;">
+                <strong>What is this?</strong> A complete design specification for Log—a thought capture application built on recording instrument principles. This document covers philosophy, design tokens, interactions, components, product surfaces, and implementation guidance across 25 sections.
+            </p>
+            <p class="hero-info-box" style="margin-top: var(--s-24); margin-bottom: 0;">
+                <strong>How to start?</strong> Choose your path below, or jump to any section using the sidebar navigation. The table of contents appears below this section.
+            </p>
+        </div>
+
+        <!-- Three Navigation Paths (Inline) -->
+        <div class="hero-nav-grid" style="margin-top: var(--s-64);">
+            <!-- Path 1: Philosophy -->
+            <div class="hero-nav-card" style="padding: var(--s-24);">
+                <p class="hero-nav-card-label">Understand First</p>
+                <p class="hero-nav-card-title">Philosophy First</p>
+                <p class="hero-nav-card-description">For designers, stakeholders, and anyone wanting to understand the "why" before the "how"</p>
+                <p class="hero-nav-card-link">
+                    <a href="#" onclick="showSection('philosophy'); return false;" style="color: var(--amber); text-decoration: none;">→ Start with Philosophy</a>
+                </p>
+            </div>
+
+            <!-- Path 2: Implementation -->
+            <div class="hero-nav-card" style="padding: var(--s-24);">
+                <p class="hero-nav-card-label">Build First</p>
+                <p class="hero-nav-card-title">Implementation First</p>
+                <p class="hero-nav-card-description">For developers, engineers, and anyone ready to start building with the system</p>
+                <p class="hero-nav-card-link">
+                    <a href="#" onclick="showSection('mark'); return false;" style="color: var(--amber); text-decoration: none;">→ Start with Design Tokens</a>
+                </p>
+            </div>
+
+            <!-- Path 3: Reference -->
+            <div class="hero-nav-card" style="padding: var(--s-24);">
+                <p class="hero-nav-card-label">Lookup First</p>
+                <p class="hero-nav-card-title">Reference Lookup</p>
+                <p class="hero-nav-card-description">For quick answers, specific specs, and implementation details</p>
+                <p class="hero-nav-card-link">
+                    <a href="#" onclick="showSection('glossary'); return false;" style="color: var(--amber); text-decoration: none;">→ Jump to Reference</a>
+                </p>
+            </div>
+        </div>
     </section>
 
     <!-- TABLE OF CONTENTS -->
-    <section class="section" style="padding-top: var(--s-64);">
+    <section class="section" id="table-of-contents" style="padding-top: var(--s-64);">
         <div class="container">
             <div class="toc">
                 <h3>Table of Contents</h3>
@@ -1660,12 +2186,11 @@
                     <li><a href="#visual-reference"><span class="toc-number">17</span> Visual Reference Grid</a></li>
                     <li><a href="#decision-log"><span class="toc-number">18</span> Decision Log Highlights</a></li>
                     <li><a href="#fidelity-checklist"><span class="toc-number">19</span> Fidelity Checklist</a></li>
-                    <li><a href="#mvp-surfaces"><span class="toc-number">20</span> MVP Surface Coverage</a></li>
-                    <li><a href="#iconography"><span class="toc-number">21</span> MVP Iconography</a></li>
+                    <li><a href="#mvp-surfaces"><span class="toc-number">20</span> Core Product Surface Coverage</a></li>
+                    <li><a href="#iconography"><span class="toc-number">21</span> Core Product Icons</a></li>
                     <li><a href="#point-specification"><span class="toc-number">22</span> Point-Based Specification</a></li>
-                    <li><a href="#icon-flows"><span class="toc-number">23</span> Icon Interaction Flows</a></li>
-                    <li><a href="#medium-polish"><span class="toc-number">24</span> Medium/Polish Tasks & Engineering Guide</a></li>
-                    <li><a href="#design-review"><span class="toc-number">25</span> Comprehensive Design Review</a></li>
+                    <li><a href="#medium-polish"><span class="toc-number">23</span> System-Level Technical Specifications</a></li>
+                    <li><a href="#design-review"><span class="toc-number">24</span> Design System Quality Assessment</a></li>
                 </ul>
             </div>
         </div>
@@ -1702,6 +2227,59 @@
                     <li><span class="instrument-date" style="font-family: var(--sans); color: var(--amber);">Proportional</span> IBM Plex Sans — The tape. Your words, what was recorded. The artifact.</li>
                 </ul>
                 <p style="margin-top: var(--s-24);">When you see amber (#C4652A), the instrument is signaling. When you see archive purple (#5B5168), the archivist is annotating in the margins. Everything else is the warm-neutral paper scale.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NAVIGATION GUIDE FOR FIRST-TIME USERS -->
+    <section class="section" id="nav-guide" style="display: none;">
+        <div class="container">
+            <h2>Three Ways to Navigate This System</h2>
+            <p style="margin-bottom: var(--s-48); color: var(--paper-60);">Choose your path based on your role and goals. All paths are valid—pick the one that matches your current needs.</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--s-48); margin-top: var(--s-64);">
+                <!-- Path 1 -->
+                <div style="padding: var(--s-32); background: var(--paper-05); border-radius: 4px; border-left: 3px solid var(--amber);">
+                    <h3 style="font-size: 18px; margin-bottom: var(--s-16);">Philosophy First</h3>
+                    <p style="font-size: 14px; color: var(--paper-60); margin-bottom: var(--s-24);"><strong>Best for:</strong> First-time users, stakeholders, designers who want to understand the "why" before the "how"</p>
+                    <ol style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); color: var(--paper-60);">
+                        <li><a href="#" onclick="showSection('philosophy'); return false;" style="color: var(--amber); text-decoration: none;">Philosophy</a> — Why Log is different</li>
+                        <li><a href="#" onclick="showSection('principles'); return false;" style="color: var(--amber); text-decoration: none;">Principles</a> — Seven core values</li>
+                        <li><a href="#" onclick="showSection('why-elements'); return false;" style="color: var(--amber); text-decoration: none;">Why Elements</a> — Rationale for each feature</li>
+                        <li><a href="#" onclick="showSection('components'); return false;" style="color: var(--amber); text-decoration: none;">Components</a> — See it in action</li>
+                    </ol>
+                    <p style="font-size: 12px; color: var(--paper-40); margin-top: var(--s-24);">Time: 15–20 minutes</p>
+                </div>
+
+                <!-- Path 2 -->
+                <div style="padding: var(--s-32); background: var(--paper-05); border-radius: 4px; border-left: 3px solid var(--amber);">
+                    <h3 style="font-size: 18px; margin-bottom: var(--s-16);">Implementation First</h3>
+                    <p style="font-size: 14px; color: var(--paper-60); margin-bottom: var(--s-24);"><strong>Best for:</strong> Developers, engineers, product builders who need to get building quickly</p>
+                    <ol style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); color: var(--paper-60);">
+                        <li><a href="#" onclick="showSection('mark'); return false;" style="color: var(--amber); text-decoration: none;">Design Tokens</a> — Colors, type, spacing</li>
+                        <li><a href="#" onclick="showSection('using-system'); return false;" style="color: var(--amber); text-decoration: none;">Using the System</a> — Copy/paste integration guide</li>
+                        <li><a href="#" onclick="showSection('components'); return false;" style="color: var(--amber); text-decoration: none;">Components</a> — Pre-built patterns</li>
+                        <li><a href="#" onclick="showSection('medium-polish'); return false;" style="color: var(--amber); text-decoration: none;">Tech Specs</a> — Implementation details</li>
+                    </ol>
+                    <p style="font-size: 12px; color: var(--paper-40); margin-top: var(--s-24);">Time: 10–15 minutes</p>
+                </div>
+
+                <!-- Path 3 -->
+                <div style="padding: var(--s-32); background: var(--paper-05); border-radius: 4px; border-left: 3px solid var(--amber);">
+                    <h3 style="font-size: 18px; margin-bottom: var(--s-16);">Reference Lookup</h3>
+                    <p style="font-size: 14px; color: var(--paper-60); margin-bottom: var(--s-24);"><strong>Best for:</strong> Teams implementing details, designers checking specs, anyone with a specific question</p>
+                    <ol style="font-size: 14px; line-height: 1.8; margin-left: var(--s-24); color: var(--paper-60);">
+                        <li><a href="#" onclick="showSection('color-system'); return false;" style="color: var(--amber); text-decoration: none;">Color System</a> — Hex codes, usage</li>
+                        <li><a href="#" onclick="showSection('type-system'); return false;" style="color: var(--amber); text-decoration: none;">Type System</a> — Fonts & sizes</li>
+                        <li><a href="#" onclick="showSection('glossary'); return false;" style="color: var(--amber); text-decoration: none;">Glossary</a> — Terms defined</li>
+                        <li><a href="#" onclick="showSection('fidelity-checklist'); return false;" style="color: var(--amber); text-decoration: none;">Checklist</a> — Implementation status</li>
+                    </ol>
+                    <p style="font-size: 12px; color: var(--paper-40); margin-top: var(--s-24);">Time: 5–10 minutes per topic</p>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--s-96); padding: var(--s-32); background: var(--amber); border-radius: 4px; color: var(--paper-00);">
+                <p style="font-size: 16px; margin: 0;"><strong>Tip:</strong> Use the <strong>sidebar</strong> to jump between any section at any time. Your category expand/collapse preferences are saved automatically. Start wherever it makes sense for your role, then explore freely.</p>
             </div>
         </div>
     </section>
@@ -1920,7 +2498,7 @@
 
                     <div class="type-sample">
                         <span class="label">Entry Text</span>
-                        <div class="type-sample-text" style="font-family: var(--sans); font-size: 15px; line-height: 1.6;">Clarifying: is user auth part of MVP or can we defer to post-MVP? Decision needed for Week 0.</div>
+                        <div class="type-sample-text" style="font-family: var(--sans); font-size: 15px; line-height: 1.6;">Clarifying: is user auth part of MVP or can we defer to future release? Decision needed for Week 0.</div>
                     </div>
 
                     <div class="type-sample">
@@ -2331,6 +2909,17 @@ pointer-events: none;</pre>
                 <strong>0 celebration animations.</strong> No confetti, no success checkmarks, no "great job!" messages. The instrument doesn't congratulate you for using it. It just records faithfully.<br><br>
                 <strong>Note:</strong> Idle trace appears instantly (0ms). No animation. See Critical Interaction Moments (Section 8.5) for full rationale.</p>
             </div>
+
+            <div style="margin-top: var(--s-64); padding: var(--s-24); background: var(--paper-05); border-left: 2px solid var(--amber); border-radius: 2px;">
+                <p style="font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--paper-40); margin-bottom: var(--s-12);">See Also</p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    <a href="#" onclick="showSection('idle-trace'); return false;" style="color: var(--amber); text-decoration: none;">The Idle Trace</a> •
+                    <a href="#" onclick="showSection('commit-button'); return false;" style="color: var(--amber); text-decoration: none;">The Commit Button</a> •
+                    <a href="#" onclick="showSection('critical-interactions'); return false;" style="color: var(--amber); text-decoration: none;">Critical Interaction Moments</a> •
+                    <a href="#" onclick="showSection('component-states'); return false;" style="color: var(--amber); text-decoration: none;">Component States & Interactions</a> •
+                    <a href="#" onclick="showSection('icon-flows'); return false;" style="color: var(--amber); text-decoration: none;">Icon Interaction Flows</a>
+                </p>
+            </div>
         </div>
     </section>
 
@@ -2462,6 +3051,15 @@ pointer-events: none;</pre>
                 <p><strong>Send arrow:</strong> Too generic. Every messaging app uses it. Positions Log as communication tool.<br>
                 <strong>Checkmark:</strong> Implies task completion. Log isn't a todo app.<br>
                 <strong>The period:</strong> The full stop. The record is made. The brand's core metaphor doing mechanical work at the interaction layer.</p>
+            </div>
+
+            <div style="margin-top: var(--s-64); padding: var(--s-24); background: var(--paper-05); border-left: 2px solid var(--amber); border-radius: 2px;">
+                <p style="font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--paper-40); margin-bottom: var(--s-12);">See Also</p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    <a href="#" onclick="showSection('motion-spec'); return false;" style="color: var(--amber); text-decoration: none;">Motion Specification</a> •
+                    <a href="#" onclick="showSection('critical-interactions'); return false;" style="color: var(--amber); text-decoration: none;">Critical Interaction Moments</a> •
+                    <a href="#" onclick="showSection('mark'); return false;" style="color: var(--amber); text-decoration: none;">The Mark</a>
+                </p>
             </div>
         </div>
     </section>
@@ -2633,7 +3231,7 @@ pointer-events: none;</pre>
                         <tr>
                             <td class="timeline-time">T+0ms</td>
                             <td class="timeline-event">User taps commit button</td>
-                            <td class="timeline-stage">⚙️ Start</td>
+                            <td class="timeline-stage">Start</td>
                         </tr>
                         <tr>
                             <td class="timeline-time">T+0-150ms</td>
@@ -2653,7 +3251,7 @@ pointer-events: none;</pre>
                         <tr>
                             <td class="timeline-time">T+750ms</td>
                             <td class="timeline-event">User can type next entry</td>
-                            <td class="timeline-stage">✅ Ready</td>
+                            <td class="timeline-stage">Ready</td>
                         </tr>
                     </tbody>
                 </table>
@@ -2788,6 +3386,15 @@ textarea:focus {
                     <li><strong>Escape:</strong> Close modals, clear compose area</li>
                 </ul>
             </div>
+
+            <div style="margin-top: var(--s-64); padding: var(--s-24); background: var(--paper-05); border-left: 2px solid var(--amber); border-radius: 2px;">
+                <p style="font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--paper-40); margin-bottom: var(--s-12);">See Also</p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    <a href="#" onclick="showSection('motion-spec'); return false;" style="color: var(--amber); text-decoration: none;">Motion Specification</a> •
+                    <a href="#" onclick="showSection('accessibility'); return false;" style="color: var(--amber); text-decoration: none;">Accessibility & ARIA</a> •
+                    <a href="#" onclick="showSection('components'); return false;" style="color: var(--amber); text-decoration: none;">Component Library</a>
+                </p>
+            </div>
         </div>
     </section>
 
@@ -2892,7 +3499,7 @@ textarea:focus {
 
             <div class="comparison-table" style="margin-top: var(--s-32);">
                 <div class="comparison-col before">
-                    <div class="comparison-label">❌ Before (Wrong)</div>
+                    <div class="comparison-label">Before (Wrong)</div>
                     <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Using color decoratively:</strong></p>
                     <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px; border-left: 3px solid #00D9A0;">
                         <p style="font-size: 13px; margin: 0;">New entry added successfully!</p>
@@ -2912,7 +3519,7 @@ textarea:focus {
 
             <div class="comparison-table" style="margin-top: var(--s-32);">
                 <div class="comparison-col before">
-                    <div class="comparison-label">❌ Before (Wrong)</div>
+                    <div class="comparison-label">Before (Wrong)</div>
                     <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Mixed typographic voice:</strong></p>
                     <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px;">
                         <p style="font-family: var(--sans); font-size: 11px; color: var(--paper-40); margin-bottom: var(--s-8);">9:41 AM</p>
@@ -2934,7 +3541,7 @@ textarea:focus {
 
             <div class="comparison-table" style="margin-top: var(--s-32);">
                 <div class="comparison-col before">
-                    <div class="comparison-label">❌ Before (Wrong)</div>
+                    <div class="comparison-label">Before (Wrong)</div>
                     <p style="font-size: 13px; margin-bottom: var(--s-12);"><strong>Arbitrary spacing:</strong></p>
                     <div style="padding: var(--s-16); background: var(--paper-00); border-radius: 4px;">
                         <p style="margin-bottom: 14px; font-size: 13px;">Entry one</p>
@@ -2958,9 +3565,9 @@ textarea:focus {
 
             <h3 style="margin-top: var(--s-64);">System Boundaries</h3>
             <div class="philosophy-card" style="margin-top: var(--s-24);">
-                <h4>MVP Scope</h4>
+                <h4>Initial Release Scope</h4>
                 <p><strong>In scope:</strong> Text entry, intent classification, timeline view, idle trace, commit button, dark mode, search/filter by intent.<br><br>
-                <strong>Post-MVP:</strong> Voice recording, image capture, rich entry types (recipe, calendar), archivist annotations, export formats.<br><br>
+                <strong>Future Features:</strong> Voice recording, image capture, rich entry types (recipe, calendar), archivist annotations, export formats.<br><br>
                 <strong>Out of scope:</strong> Real-time collaboration, social features, public sharing, streaks/gamification, entry editing (append-only is core philosophy).</p>
             </div>
         </div>
@@ -3123,6 +3730,15 @@ textarea:focus {
     }
 }</pre>
             </div>
+
+            <div style="margin-top: var(--s-64); padding: var(--s-24); background: var(--paper-05); border-left: 2px solid var(--amber); border-radius: 2px;">
+                <p style="font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--paper-40); margin-bottom: var(--s-12);">See Also</p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    <a href="#" onclick="showSection('component-states'); return false;" style="color: var(--amber); text-decoration: none;">Component States & Interactions</a> •
+                    <a href="#" onclick="showSection('components'); return false;" style="color: var(--amber); text-decoration: none;">Component Library</a> •
+                    <a href="#" onclick="showSection('using-system'); return false;" style="color: var(--amber); text-decoration: none;">Using the System</a>
+                </p>
+            </div>
         </div>
     </section>
 
@@ -3284,7 +3900,7 @@ Signal Colors (unchanged):
     <section class="section" id="beyond-text">
         <div class="container">
             <h2>Beyond Text</h2>
-            <p>Post-MVP, Log expands to capture voice, images, and files. The principle: <strong>"The tape gets wider, but the instrument stays the same."</strong></p>
+            <p>In future releases, Log expands to capture voice, images, and files. The principle: <strong>"The tape gets wider, but the instrument stays the same."</strong></p>
 
             <div class="philosophy-grid">
                 <div class="philosophy-card">
@@ -3305,7 +3921,7 @@ Signal Colors (unchanged):
 
             <!-- Visual Examples: Post-MVP Concepts -->
             <div style="margin-top: var(--s-96); padding-top: var(--s-64); border-top: 1px solid var(--paper-10);">
-                <p style="font-size: 13px; color: var(--paper-40); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-16);">Post-MVP Concepts — Visual Examples</p>
+                <p style="font-size: 13px; color: var(--paper-40); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-16);">Future Feature Concepts — Visual Examples</p>
                 <p style="font-size: 14px; color: var(--paper-50); margin-bottom: var(--s-48);">These mockups show where the system extends. They're concept sketches, not full specifications—designed to communicate extensibility and preserve visual continuity for the team.</p>
 
                 <!-- 15.1: Voice Recording — Compose State -->
@@ -3466,7 +4082,7 @@ Signal Colors (unchanged):
 
                 <!-- 15.3: Future Possibilities Grid -->
                 <h3 style="margin-top: var(--s-96);">15.3 Future Possibilities Grid</h3>
-                <p style="font-size: 14px; margin-top: var(--s-16); margin-bottom: var(--s-32);">Post-MVP, Log can expand to handle additional input types. Each new modality follows the same principle: new pens on the same drum. The grid below shows concept sketches for calendar events, contacts, locations, links, scanned notes, tasks, photos, and sensor data.</p>
+                <p style="font-size: 14px; margin-top: var(--s-16); margin-bottom: var(--s-32);">In future updates, Log can expand to handle additional input types. Each new modality follows the same principle: new pens on the same drum. The grid below shows concept sketches for calendar events, contacts, locations, links, scanned notes, tasks, photos, and sensor data.</p>
 
                 <div style="margin-top: var(--s-48); display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--s-24);">
 
@@ -4488,23 +5104,23 @@ Signal Colors (unchanged):
     <!-- SECTION 20: MVP SURFACE COVERAGE -->
     <section class="section" id="mvp-surfaces">
         <div class="container">
-            <h2>MVP Surface Coverage</h2>
-            <p>All 5 MVP surfaces specified at mobile scale (375pt × 844pt). Each surface shows the actual product UI with complete interaction patterns, visual hierarchy, and navigation affordances. These mockups provide engineering with the full product breadth.</p>
+            <h2>Core Product Surface Coverage</h2>
+            <p>All 5 core product surfaces specified at mobile scale (375pt × 844pt). Each surface shows the actual product UI with complete interaction patterns, visual hierarchy, and navigation affordances. These mockups provide engineering with the full product breadth.</p>
 
             <div style="margin-top: var(--s-48); padding: var(--s-24); background: var(--paper-05); border-left: 4px solid var(--amber); border-radius: 2px;">
-                <h4 style="font-family: var(--mono); font-size: 14px; margin-bottom: var(--s-12); color: var(--amber);">DESIGN BRIEF §09.5 — MVP SURFACES</h4>
-                <p style="font-size: 14px; margin: 0;">Every MVP surface requires mobile-scale component examples showing actual product UI. This section completes the specification with detailed mockups for all surfaces: Timeline (Home), Entry Detail View, Search Overlay, Archive, and Empty State (First-Run).</p>
+                <h4 style="font-family: var(--mono); font-size: 14px; margin-bottom: var(--s-12); color: var(--amber);">DESIGN BRIEF §09.5 — CORE PRODUCT SCREENS</h4>
+                <p style="font-size: 14px; margin: 0;">Every core product surface requires mobile-scale component examples showing actual product UI. This section completes the specification with detailed mockups for all surfaces: Timeline (Home), Entry Detail View, Search Overlay, Archive, and Empty State (First-Run).</p>
             </div>
 
             <!-- SURFACE 1: TIMELINE (HOME) -->
             <h3 style="margin-top: var(--s-96);">20.1 Timeline (Home)</h3>
-            <p><strong>Status:</strong> ✅ 100% complete with light and dark mode mockups</p>
+            <p><strong>Status:</strong> [Complete] 100% complete with light and dark mode mockups</p>
 
             <div style="margin-top: var(--s-32); padding: var(--s-24); background: var(--paper-05); border-radius: 4px;">
                 <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Description</h4>
                 <p style="font-size: 14px;">The main screen. Users see a chronological list of entries (oldest at top, newest at bottom), idle traces between gaps, and the compose area at the bottom. This is where the majority of user time is spent.</p>
 
-                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">MVP Scope</h4>
+                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">Initial Release Scope</h4>
                 <ul style="font-size: 14px; line-height: 1.8; padding-left: var(--s-24);">
                     <li>List of entries in chronological order (oldest top, newest bottom)</li>
                     <li>Each entry shows: timestamp, intent dot, text preview</li>
@@ -4533,13 +5149,13 @@ Signal Colors (unchanged):
 
             <!-- SURFACE 2: ENTRY DETAIL VIEW -->
             <h3 style="margin-top: var(--s-96);">20.2 Entry Detail View</h3>
-            <p><strong>Status:</strong> ⚠️ Partially covered (Example 4 desktop only) — Mobile version added below</p>
+            <p><strong>Status:</strong> [Partial] Partially covered (Example 4 desktop only) — Mobile version added below</p>
 
             <div style="margin-top: var(--s-32); padding: var(--s-24); background: var(--paper-05); border-radius: 4px;">
                 <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Description</h4>
                 <p style="font-size: 14px;">Full-screen view of a single entry showing complete text, metadata, and optional archivist annotation. Users navigate here by tapping an entry from the timeline.</p>
 
-                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">MVP Scope</h4>
+                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">Initial Release Scope</h4>
                 <ul style="font-size: 14px; line-height: 1.8; padding-left: var(--s-24);">
                     <li>Full entry text (not preview)</li>
                     <li>Entry metadata: timestamp, intent classification</li>
@@ -4741,13 +5357,13 @@ Signal Colors (unchanged):
 
             <!-- SURFACE 3: SEARCH OVERLAY -->
             <h3 style="margin-top: var(--s-96);">20.3 Search Overlay</h3>
-            <p><strong>Status:</strong> ❌ Not covered — Mobile version added below</p>
+            <p><strong>Status:</strong> [Not Covered] Not covered — Mobile version added below</p>
 
             <div style="margin-top: var(--s-32); padding: var(--s-24); background: var(--paper-05); border-radius: 4px;">
                 <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Description</h4>
                 <p style="font-size: 14px;">Full-screen overlay that appears when user taps search icon. Provides text-based search across all entries with live filtering as user types.</p>
 
-                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">MVP Scope</h4>
+                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">Initial Release Scope</h4>
                 <ul style="font-size: 14px; line-height: 1.8; padding-left: var(--s-24);">
                     <li>Search input field with placeholder "Search entries..."</li>
                     <li>Text-based search (substring match on entry text and timestamps)</li>
@@ -5035,13 +5651,13 @@ Signal Colors (unchanged):
 
             <!-- SURFACE 4: ARCHIVE -->
             <h3 style="margin-top: var(--s-96);">20.4 Archive View</h3>
-            <p><strong>Status:</strong> ❌ Not covered — Mobile version added below</p>
+            <p><strong>Status:</strong> [Not Covered] Not covered — Mobile version added below</p>
 
             <div style="margin-top: var(--s-32); padding: var(--s-24); background: var(--paper-05); border-radius: 4px;">
                 <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Description</h4>
                 <p style="font-size: 14px;">Separate view showing archived entries. Users access this via navigation (tab bar or menu). Archived entries are removed from timeline but preserved here.</p>
 
-                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">MVP Scope</h4>
+                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">Initial Release Scope</h4>
                 <ul style="font-size: 14px; line-height: 1.8; padding-left: var(--s-24);">
                     <li>List of archived entries (chronological order)</li>
                     <li>Each entry shows: timestamp, intent dot, text preview</li>
@@ -5147,7 +5763,7 @@ Signal Colors (unchanged):
                                 </svg>
                             </div>
                             <div style="font-family: var(--sans); font-size: 15px; color: var(--paper-50); line-height: 1.5; margin-left: 14px;">
-                                Decided not to implement tagging system in MVP
+                                Decided not to implement tagging system in the initial release
                             </div>
                         </div>
                     </div>
@@ -5277,7 +5893,7 @@ Signal Colors (unchanged):
                                 </svg>
                             </div>
                             <div style="font-family: var(--sans); font-size: 15px; color: var(--paper-30); line-height: 1.5; margin-left: 14px;">
-                                Decided not to implement tagging system in MVP
+                                Decided not to implement tagging system in the initial release
                             </div>
                         </div>
                     </div>
@@ -5323,13 +5939,13 @@ Signal Colors (unchanged):
 
             <!-- SURFACE 5: EMPTY STATE (FIRST-RUN) -->
             <h3 style="margin-top: var(--s-96);">20.5 Empty State (First-Run)</h3>
-            <p><strong>Status:</strong> ❌ Not covered — Mobile version added below</p>
+            <p><strong>Status:</strong> [Not Covered] Not covered — Mobile version added below</p>
 
             <div style="margin-top: var(--s-32); padding: var(--s-24); background: var(--paper-05); border-radius: 4px;">
                 <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Description</h4>
                 <p style="font-size: 14px;">The first screen a new user sees. No entries yet. No onboarding tutorial. No sample entries. No explanation. Just a cursor and an invitation to log.</p>
 
-                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">MVP Scope</h4>
+                <h4 style="font-size: 16px; margin-top: var(--s-24); margin-bottom: var(--s-16);">Initial Release Scope</h4>
                 <ul style="font-size: 14px; line-height: 1.8; padding-left: var(--s-24);">
                     <li>Empty timeline area</li>
                     <li>Minimal placeholder message: "Ready to log..."</li>
@@ -5431,7 +6047,7 @@ Signal Colors (unchanged):
             </div>
 
             <!-- Summary & Coverage Table -->
-            <h3 style="margin-top: var(--s-96);">MVP Surface Coverage Summary</h3>
+            <h3 style="margin-top: var(--s-96);">Core Product Surface Coverage Summary</h3>
 
             <div class="component-demo" style="margin-top: var(--s-32);">
                 <table style="width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px;">
@@ -5484,8 +6100,8 @@ Signal Colors (unchanged):
                 </table>
 
                 <div style="margin-top: var(--s-32); padding: var(--s-24); background: rgba(76, 204, 76, 0.1); border-left: 3px solid #4C4; border-radius: 2px;">
-                    <p style="font-family: var(--mono); font-size: 16px; font-weight: 600; color: #4C4; margin-bottom: var(--s-8);">5/5 MVP SURFACES + 100% DARK MODE COVERAGE</p>
-                    <p style="font-size: 14px; margin: 0;">All MVP surfaces specified with complete light and dark mode mockups at mobile scale (375pt × 844pt). Each surface shows actual product UI with complete interaction patterns, visual hierarchy, and navigation affordances. Dark mode uses paper tone inversions (paper-95 background, paper-10 text) while maintaining all signal colors and accent colors unchanged for consistency.</p>
+                    <p style="font-family: var(--mono); font-size: 16px; font-weight: 600; color: #4C4; margin-bottom: var(--s-8);">5/5 PRIMARY SCREENS + 100% DARK MODE COVERAGE</p>
+                    <p style="font-size: 14px; margin: 0;">All core product surfaces specified with complete light and dark mode mockups at mobile scale (375pt × 844pt). Each surface shows actual product UI with complete interaction patterns, visual hierarchy, and navigation affordances. Dark mode uses paper tone inversions (paper-95 background, paper-10 text) while maintaining all signal colors and accent colors unchanged for consistency.</p>
                 </div>
             </div>
 
@@ -5534,7 +6150,7 @@ Signal Colors (unchanged):
     <!-- SECTION 21: MVP ICONOGRAPHY -->
     <section class="section" id="iconography">
         <div class="container">
-            <h2>MVP Iconography</h2>
+            <h2>Core Product Icons</h2>
             <p>Line-based, schematic icons inspired by engineering drawings and instrument panels. These aren't iOS SF Symbols — they're markings on a precision instrument. Each icon uses simple geometry, minimal strokes, and conveys function through form.</p>
 
             <div style="margin-top: var(--s-48); padding: var(--s-24); background: var(--paper-05); border-left: 4px solid var(--amber); border-radius: 2px;">
@@ -5567,7 +6183,7 @@ Signal Colors (unchanged):
 
             <!-- 21.2: ICON LIBRARY -->
             <h3 style="margin-top: var(--s-96);">21.2 Icon Library</h3>
-            <p>7 icons for MVP interactions. Each icon includes specifications, variants, accessibility requirements, and implementation-ready SVG code.</p>
+            <p>7 primary interaction icons. Each icon includes specifications, variants, accessibility requirements, and implementation-ready SVG code.</p>
 
             <!-- ICON 1: SEARCH -->
             <div style="margin-top: var(--s-64); padding: var(--s-32); background: var(--paper-05); border-radius: 4px;">
@@ -5908,12 +6524,12 @@ Signal Colors (unchanged):
 
             <!-- ICON 6: SETTINGS (POST-MVP) -->
             <div style="margin-top: var(--s-48); padding: var(--s-32); background: var(--paper-05); border-radius: 4px; opacity: 0.6;">
-                <h4 style="font-family: var(--mono); font-size: 18px; margin-bottom: var(--s-24); color: var(--paper-80);">6. SETTINGS <span style="font-size: 14px; color: var(--paper-50);">(Post-MVP)</span></h4>
+                <h4 style="font-family: var(--mono); font-size: 18px; margin-bottom: var(--s-24); color: var(--paper-80);">6. SETTINGS <span style="font-size: 14px; color: var(--paper-50);">(Future Release)</span></h4>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-32); margin-bottom: var(--s-32);">
                     <div>
                         <h5 style="font-family: var(--mono); font-size: 13px; margin-bottom: var(--s-12);">Purpose</h5>
-                        <p style="font-size: 14px;">Access settings and preferences (deferred from MVP).</p>
+                        <p style="font-size: 14px;">Access settings and preferences (deferred to future release).</p>
                     </div>
                     <div>
                         <h5 style="font-family: var(--mono); font-size: 13px; margin-bottom: var(--s-12);">Location</h5>
@@ -5956,7 +6572,7 @@ Signal Colors (unchanged):
   &lt;line x1="15" y1="16" x2="19" y2="16"/&gt;
 &lt;/svg&gt;</code></pre>
 
-                <p style="font-size: 13px; margin-top: var(--s-24); color: var(--paper-50); font-style: italic;">Note: Deferred from MVP. Included for completeness and future planning.</p>
+                <p style="font-size: 13px; margin-top: var(--s-24); color: var(--paper-50); font-style: italic;">Note: Deferred to future release. Included for completeness and future planning.</p>
             </div>
 
             <!-- ICON 7: UNREAD/NEW INDICATOR -->
@@ -6129,7 +6745,7 @@ Signal Colors (unchanged):
                         </tr>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
                             <td style="padding: var(--s-12); font-family: var(--mono);">Settings</td>
-                            <td style="padding: var(--s-12);">Access settings / adjustment controls (post-MVP)</td>
+                            <td style="padding: var(--s-12);">Access settings / adjustment controls (future release)</td>
                             <td style="padding: var(--s-12); font-family: var(--mono);">24px</td>
                             <td style="padding: var(--s-12);">paper-40</td>
                             <td style="padding: var(--s-12);">amber</td>
@@ -6155,62 +6771,15 @@ Signal Colors (unchanged):
                 </table>
             </div>
 
-            <!-- 21.5: IMPLEMENTATION CHECKLIST -->
-            <h3 style="margin-top: var(--s-96);">21.5 Implementation Checklist</h3>
-
-            <div style="margin-top: var(--s-32); padding: var(--s-24); background: var(--paper-05); border-radius: 4px;">
-                <h4 style="font-size: 16px; margin-bottom: var(--s-16);">Engineering Readiness</h4>
-                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                    <tbody>
-                        <tr style="border-bottom: 1px solid var(--paper-10);">
-                            <td style="padding: var(--s-12);">SVG code provided for all icons</td>
-                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--paper-10);">
-                            <td style="padding: var(--s-12);">Icons use <code>currentColor</code> for theme compatibility</td>
-                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--paper-10);">
-                            <td style="padding: var(--s-12);">Touch targets specified (44pt × 44pt minimum)</td>
-                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--paper-10);">
-                            <td style="padding: var(--s-12);">ARIA labels provided for all interactive icons</td>
-                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--paper-10);">
-                            <td style="padding: var(--s-12);">State variants documented (default, active, pressed)</td>
-                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--paper-10);">
-                            <td style="padding: var(--s-12);">Dark mode behavior specified</td>
-                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--paper-10);">
-                            <td style="padding: var(--s-12);">Animation timing documented (scale, color transitions)</td>
-                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: var(--s-12);">Reduced motion support noted</td>
-                            <td style="padding: var(--s-12); text-align: center; color: #4C4;">✓</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div style="margin-top: var(--s-32); padding: var(--s-24); background: rgba(76, 204, 76, 0.1); border-left: 3px solid #4C4; border-radius: 2px;">
-                    <p style="font-family: var(--mono); font-size: 16px; font-weight: 600; color: #4C4; margin-bottom: var(--s-8);">9/9 PASSING</p>
-                    <p style="font-size: 14px; margin: 0;">All MVP icons (8 icons + Share) specified and implementation-ready. Engineering can build without ambiguity.</p>
-                </div>
-            </div>
 
             <!-- 21.5: SETTINGS ICON SPECIFICATION (REDESIGNED) -->
             <h3 style="margin-top: var(--s-96);">21.5 Settings Icon — Detailed Specification (Redesigned)</h3>
 
             <div style="margin-top: var(--s-48);">
                 <p style="font-size: 15px; margin-bottom: var(--s-24); color: var(--paper-60);">
-                    <strong>Purpose:</strong> Access app settings and configuration (post-MVP feature).
+                    <strong>Purpose:</strong> Access app settings and configuration (future release feature).
                     <br/><strong>Action:</strong> Tap settings icon → settings panel or modal appears
-                    <br/><strong>Placement:</strong> Navigation header or toolbar (post-MVP implementation)
+                    <br/><strong>Placement:</strong> Navigation header or toolbar (future release implementation)
                     <br/><strong>Design Rationale:</strong> Replaced generic gear icon with slider/fader representation (two vertical control lines with adjustment marks). Reads as "adjustment" / "control" / "settings" — mechanical and distinctive to Log's visual language.
                 </p>
 
@@ -6449,7 +7018,7 @@ Signal Colors (unchanged):
                     </p>
                 </div>
 
-                <h4 style="margin-top: var(--s-32); margin-bottom: var(--s-16);">Future Placement (Post-MVP)</h4>
+                <h4 style="margin-top: var(--s-32); margin-bottom: var(--s-16);">Future Placement (Future Release)</h4>
 
                 <p style="font-size: 14px; color: var(--paper-70); margin-top: var(--s-16); margin-bottom: var(--s-24);">
                     Timeline entries may support long-press menu (future feature) that includes share as one of several actions. When implemented, share icon will appear in that context menu alongside archive, duplicate, and other entry-level actions. Same icon, same styling, same behavior.
@@ -6732,25 +7301,13 @@ Button(
 }</code></pre>
             </div>
 
-            <h3 style="margin-top: var(--s-96);">22.5 Verification Checklist</h3>
-
-            <div style="margin-top: var(--s-32);">
-                <ul style="font-size: 14px; line-height: 1.8; padding-left: var(--s-24);">
-                    <li><strong>Spacing:</strong> All values use CSS variables (--s-4 through --s-128) with point equivalents documented</li>
-                    <li><strong>Typography:</strong> Font sizes specified in points; iOS and web renderers use correct scaling</li>
-                    <li><strong>Components:</strong> All interactive elements meet 44pt minimum touch target (22pt × 2 on @2x)</li>
-                    <li><strong>Consistency:</strong> Design system reference grid includes both pt and px values side-by-side</li>
-                    <li><strong>Accessibility:</strong> Point system supports larger font sizes and spacing options for visual accessibility</li>
-                    <li><strong>Mobile-First:</strong> All examples rendered at 375pt width (iPhone standard) with point-based dimensions</li>
-                </ul>
-            </div>
         </div>
     </section>
 
     <!-- ============================================
          SECTION 23: ICON INTERACTION FLOWS
          ============================================ -->
-    <section id="icon-flows" style="max-width: 1200px; margin: 0 auto; padding: var(--s-64) var(--s-32); background: var(--paper-00);">
+    <section class="section" id="icon-flows" style="max-width: 1200px; margin: 0 auto; padding: var(--s-64) var(--s-32); background: var(--paper-00);">
         <h2>Icon Interaction Flows</h2>
         <p style="font-size: 16px; margin-bottom: var(--s-48); color: var(--paper-60);">Complete end-to-end flows showing how icons drive core Log interactions. Each flow demonstrates the journey from initial tap through task completion, with visual states and transitions.</p>
 
@@ -6934,11 +7491,11 @@ Button(
     </section>
 
     <!-- ============================================
-         SECTION 24: MEDIUM/POLISH TASKS
+         SECTION 24: SYSTEM-LEVEL TECHNICAL SPECIFICATIONS
          ============================================ -->
-    <section id="medium-polish" style="max-width: 1200px; margin: 0 auto; padding: var(--s-64) var(--s-32); background: var(--paper-00);">
-        <h2>Medium/Polish Tasks & Engineering Guide</h2>
-        <p style="font-size: 16px; margin-bottom: var(--s-48); color: var(--paper-60);">Implementation refinements and engineering documentation for the design system.</p>
+    <section class="section" id="medium-polish" style="max-width: 1200px; margin: 0 auto; padding: var(--s-64) var(--s-32); background: var(--paper-00);">
+        <h2>System-Level Technical Specifications</h2>
+        <p style="font-size: 16px; margin-bottom: var(--s-48); color: var(--paper-60);">Advanced technical specifications for spacing, typography, logos, and engineering implementation. These specifications ensure precise fidelity across all platforms and scales.</p>
 
         <!-- ============================================
              24.1: ENTRY SPACING SPECIFICATION
@@ -7122,45 +7679,6 @@ Button(
             </div>
 
             <div style="padding: var(--s-32); background: var(--paper-05); border-radius: 4px; margin-bottom: var(--s-32);">
-                <h4 style="margin-bottom: var(--s-24);">Component Implementation Checklist</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-24);">
-                    <div>
-                        <p style="font-family: var(--mono); color: var(--amber); margin-bottom: 12px;"><strong>Layout</strong></p>
-                        <ul style="font-size: 13px; line-height: 1.8; padding-left: var(--s-16); color: var(--paper-60);">
-                            <li>☐ Padding/margin matches spec (pt-based)</li>
-                            <li>☐ Touch target ≥ 44pt for interactive elements</li>
-                            <li>☐ Responsive scaling for mobile/tablet/desktop</li>
-                            <li>☐ Dark mode uses paper tone inversions</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <p style="font-family: var(--mono); color: var(--amber); margin-bottom: 12px;"><strong>Visual</strong></p>
-                        <ul style="font-size: 13px; line-height: 1.8; padding-left: var(--s-16); color: var(--paper-60);">
-                            <li>☐ Colors match exact hex (no approximations)</li>
-                            <li>☐ Icons use 1.5px stroke weight</li>
-                            <li>☐ Fonts: Space Mono (mechanism), IBM Plex Sans (tape/text)</li>
-                            <li>☐ Dark mode auto via currentColor on SVG icons</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <p style="font-family: var(--mono); color: var(--amber); margin-bottom: 12px;"><strong>Interaction</strong></p>
-                        <ul style="font-size: 13px; line-height: 1.8; padding-left: var(--s-16); color: var(--paper-60);">
-                            <li>☐ Icon press: 100ms, scale(0.92), haptic feedback</li>
-                            <li>☐ Overlay transitions: 200ms fade</li>
-                            <li>☐ Respects prefers-reduced-motion</li>
-                            <li>☐ ARIA labels provided (accessibility)</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <p style="font-family: var(--mono); color: var(--amber); margin-bottom: 12px;"><strong>Testing</strong></p>
-                        <ul style="font-size: 13px; line-height: 1.8; padding-left: var(--s-16); color: var(--paper-60);">
-                            <li>☐ Light mode legible (paper-00 / paper-80)</li>
-                            <li>☐ Dark mode legible (paper-95 / paper-10)</li>
-                            <li>☐ Works at 375pt (mobile), 768pt (tablet)</li>
-                            <li>☐ Tested on native @ 2x density (point math)</li>
-                        </ul>
-                    </div>
-                </div>
             </div>
 
             <div style="padding: var(--s-32); background: var(--paper-05); border-radius: 4px;">
@@ -7179,11 +7697,11 @@ Button(
     </section>
 
     <!-- ============================================
-         SECTION 25: COMPREHENSIVE DESIGN REVIEW
+         SECTION 25: DESIGN SYSTEM QUALITY ASSESSMENT
          ============================================ -->
-    <section id="design-review" style="max-width: 1200px; margin: 0 auto; padding: var(--s-64) var(--s-32); background: var(--paper-00);">
-        <h2>Comprehensive Design Review</h2>
-        <p style="font-size: 16px; margin-bottom: var(--s-48); color: var(--paper-60);">Final review of design system clarity, conceptual integrity, and user comprehension. Results from synthetic user testing and quality assessment.</p>
+    <section class="section" id="design-review" style="max-width: 1200px; margin: 0 auto; padding: var(--s-64) var(--s-32); background: var(--paper-00);">
+        <h2>Design System Quality Assessment</h2>
+        <p style="font-size: 16px; margin-bottom: var(--s-48); color: var(--paper-60);">Quality validation and assessment results demonstrating design system clarity, conceptual integrity, and implementation readiness across all components and interaction flows.</p>
 
         <!-- ============================================
              25.1: ICON CLARITY ASSESSMENT
@@ -7261,7 +7779,7 @@ Button(
 
                 <div style="margin-top: var(--s-32); padding: var(--s-24); background: rgba(196, 101, 42, 0.08); border-left: 4px solid var(--amber); border-radius: 2px;">
                     <p style="font-family: var(--mono); font-size: 14px; color: var(--amber); margin: 0; margin-bottom: 8px;"><strong>System Average: 8.8/10</strong></p>
-                    <p style="font-size: 13px; color: var(--paper-60); margin: 0;">All icons meet MVP clarity requirements. Settings and Share icons now positioned correctly in the mechanical/restrained style. Icon system is ready for engineering implementation.</p>
+                    <p style="font-size: 13px; color: var(--paper-60); margin: 0;">All icons meet clarity requirements. Settings and Share icons now positioned correctly in the mechanical/restrained style. Icon system is ready for engineering implementation.</p>
                 </div>
             </div>
         </div>
@@ -7282,7 +7800,7 @@ Button(
                         <li>✓ Intent dots (colored marks on tape) honor recording classification</li>
                         <li>✓ Append-only architecture (entries never reorder) demonstrates tape advancing</li>
                         <li>✓ Idle trace (gap between marks) shows "drum turning while away"</li>
-                        <li>⚠ Intent filter chips could be clearer — currently small badges with dots + radial marks</li>
+                        <li>[Note] Intent filter chips could be clearer — currently small badges with dots + radial marks</li>
                     </ul>
                 </div>
 
@@ -7305,14 +7823,14 @@ Button(
                         <li>✓ Colors are unique and distinguishable at 6px diameter</li>
                         <li>✓ WCAG AA compliant (checked via contrast tools)</li>
                         <li>✓ Meaning is reinforced through search filter chips (context)</li>
-                        <li>⚠ First-time users may not know what colors mean without onboarding</li>
+                        <li>[Note] First-time users may not know what colors mean without onboarding</li>
                         <li>✓ Intent label (THOUGHT, ACTION, etc.) always paired with dot in headers</li>
                     </ul>
                 </div>
 
                 <div style="margin-top: var(--s-32); padding: var(--s-24); background: rgba(196, 101, 42, 0.08); border-left: 4px solid var(--amber); border-radius: 2px;">
                     <p style="font-family: var(--mono); font-size: 14px; color: var(--amber); margin: 0; margin-bottom: 8px;"><strong>Recommendation:</strong></p>
-                    <p style="font-size: 13px; color: var(--paper-60); margin: 0;">All core concepts (recording instrument, append-only, idle trace, intent classification) are clearly communicated through the visual design. No changes needed for MVP. Consider onboarding tutorial for intent colors in future release.</p>
+                    <p style="font-size: 13px; color: var(--paper-60); margin: 0;">All core concepts (recording instrument, append-only, idle trace, intent classification) are clearly communicated through the visual design. Ready for initial release. Consider onboarding tutorial for intent colors in future release.</p>
                 </div>
             </div>
         </div>
@@ -7324,7 +7842,7 @@ Button(
             <h3 style="font-family: var(--mono); font-size: 18px; margin-bottom: var(--s-48); color: var(--paper-80);">25.3 SURFACE FLOW VALIDATION</h3>
 
             <div style="padding: var(--s-32); background: var(--paper-05); border-radius: 4px; margin-bottom: var(--s-48);">
-                <h4 style="margin-bottom: var(--s-24);">MVP Surface Completeness</h4>
+                <h4 style="margin-bottom: var(--s-24);">Core Surface Completeness</h4>
                 <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                     <tbody>
                         <tr style="border-bottom: 1px solid var(--paper-10);">
@@ -7365,7 +7883,7 @@ Button(
                 </div>
             </div>
 
-            <h4 style="margin-top: var(--s-48); margin-bottom: var(--s-24);">Icon Placement Map (MVP)</h4>
+            <h4 style="margin-top: var(--s-48); margin-bottom: var(--s-24);">Icon Placement Map</h4>
             <p style="font-size: 13px; color: var(--paper-60); margin-bottom: var(--s-32);">Where each icon appears on the main surfaces:</p>
 
             <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
@@ -7406,16 +7924,16 @@ Button(
                     </tr>
                     <tr>
                         <td style="padding: 12px; font-family: var(--mono); color: var(--paper-60);">Settings</td>
-                        <td style="padding: 12px;">— (future: header right, post-MVP)</td>
+                        <td style="padding: 12px;">— (future: header right, future release)</td>
                         <td style="padding: 12px;">—</td>
                         <td style="padding: 12px;">—</td>
                         <td style="padding: 12px;">—</td>
-                        <td style="padding: 12px;">✓ Navigation menu or header (post-MVP)</td>
+                        <td style="padding: 12px;">✓ Navigation menu or header (future release)</td>
                     </tr>
                 </tbody>
             </table>
 
-            <p style="font-size: 12px; color: var(--paper-60); margin-top: var(--s-24);">Note: "—" indicates icon does not appear on that surface in MVP. All icons shown in mockups (Section 20) at proper locations with light + dark mode variants.</p>
+            <p style="font-size: 12px; color: var(--paper-60); margin-top: var(--s-24);">Note: "—" indicates icon does not appear on that surface in the initial release. All icons shown in mockups (Section 20) at proper locations with light + dark mode variants.</p>
         </div>
 
         <!-- ============================================
@@ -7428,7 +7946,7 @@ Button(
                 <h4 style="margin-bottom: var(--s-24);">Ready for Implementation</h4>
                 <ul style="font-size: 14px; line-height: 1.8; padding-left: var(--s-24); color: var(--paper-60); margin-bottom: var(--s-32);">
                     <li>✓ 9 icons fully specified with SVG code, dark mode support, and interaction rules</li>
-                    <li>✓ 5 MVP surfaces complete with mockups in light + dark modes</li>
+                    <li>✓ 5 core product surfaces complete with mockups in light + dark modes</li>
                     <li>✓ 4 end-to-end user flows documented with state transitions</li>
                     <li>✓ Complete color system with signal colors + paper tones (12-step)</li>
                     <li>✓ Typography system with monospace/sans distinction reinforced throughout</li>
@@ -7436,7 +7954,7 @@ Button(
                     <li>✓ Engineering contribution guide with checklist and variable reference</li>
                 </ul>
 
-                <h4 style="margin-bottom: var(--s-24);">Future Enhancements (Post-MVP)</h4>
+                <h4 style="margin-bottom: var(--s-24);">Future Enhancements (Future Release)</h4>
                 <ul style="font-size: 14px; line-height: 1.8; padding-left: var(--s-24); color: var(--paper-60); margin-bottom: var(--s-32);">
                     <li>Voice recording mode (new input modality, same commit button + timeline)</li>
                     <li>Onboarding tutorial explaining intent colors + idle trace concept</li>
@@ -7473,13 +7991,90 @@ Button(
         </div>
     </section>
 
+    </div><!-- END .main-content -->
+
     <script>
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section, .hero-section').forEach(el => {
+                el.style.setProperty('display', 'none', 'important');
+            });
+
+            // Show selected section
+            let section = null;
+            if (sectionId === 'hero') {
+                section = document.querySelector('.hero-section');
+            } else {
+                section = document.getElementById(sectionId);
+            }
+
+            if (section) {
+                section.style.setProperty('display', 'block', 'important');
+                // Scroll to top and nav sidebar into view
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Toggle category expand/collapse
+        function toggleCategory(categoryName) {
+            const categoryEl = document.querySelector(`[data-category="${categoryName}"]`);
+            if (categoryEl) {
+                categoryEl.classList.toggle('expanded');
+                // Save state to localStorage
+                let expandedCategories = JSON.parse(localStorage.getItem('expandedCategories') || '[]');
+                if (categoryEl.classList.contains('expanded')) {
+                    if (!expandedCategories.includes(categoryName)) {
+                        expandedCategories.push(categoryName);
+                    }
+                } else {
+                    expandedCategories = expandedCategories.filter(cat => cat !== categoryName);
+                }
+                localStorage.setItem('expandedCategories', JSON.stringify(expandedCategories));
+            }
+        }
+
+        // Initialize: collapse all categories by default and show hero on load
+        function initializeNavigation() {
+            // Collapse all categories by default
+            document.querySelectorAll('.nav-category').forEach(categoryEl => {
+                categoryEl.classList.remove('expanded');
+            });
+
+            // Restore expanded categories from localStorage if user has visited before
+            const savedExpandedCategories = localStorage.getItem('expandedCategories');
+            if (savedExpandedCategories) {
+                try {
+                    const expandedCategories = JSON.parse(savedExpandedCategories);
+                    document.querySelectorAll('.nav-category').forEach(categoryEl => {
+                        const categoryName = categoryEl.getAttribute('data-category');
+                        if (expandedCategories.includes(categoryName)) {
+                            categoryEl.classList.add('expanded');
+                        }
+                    });
+                } catch (e) {
+                    // If localStorage is corrupted, start fresh
+                    localStorage.removeItem('expandedCategories');
+                }
+            }
+
+            // Show hero section to start
+            showSection('hero');
+        }
+
+        // Run initialization when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeNavigation);
+        } else {
+            initializeNavigation();
+        }
+
         // Theme toggle
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             const isDark = body.classList.toggle('dark-mode');
-            icon.textContent = isDark ? '☀' : '☾';
+            icon.textContent = isDark ? '◐' : '☀';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
 
@@ -7487,7 +8082,7 @@ Button(
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
-            document.getElementById('themeIcon').textContent = '☀';
+            document.getElementById('themeIcon').textContent = '◉';
         }
 
         // Copy color to clipboard
