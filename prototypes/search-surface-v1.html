@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Surface v1 — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    body { background: var(--paper-10); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      border-bottom: 1px solid var(--paper-15);
+      background: var(--paper-00);
+    }
+    body.dark-mode .proto-header {
+      background: var(--paper-90);
+      border-bottom-color: var(--paper-80);
+    }
+    .proto-header .mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      text-decoration: none;
+    }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.06em;
+    }
+
+    .stage {
+      display: flex;
+      justify-content: center;
+      padding: var(--s-48) var(--s-24);
+    }
+
+    .device-frame {
+      width: 390px;
+      height: 844px;
+      background: var(--paper-00);
+      border-radius: 48px;
+      border: 8px solid var(--paper-70);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    body.dark-mode .device-frame {
+      background: var(--paper-90);
+      border-color: var(--paper-60);
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px 8px;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      font-weight: 700;
+      color: var(--paper-80);
+    }
+    body.dark-mode .status-time { color: var(--paper-05); }
+    .status-right {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+    }
+
+    /* Search bar area */
+    .search-bar-wrap {
+      padding: 8px 16px 12px;
+      flex-shrink: 0;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+      background: var(--paper-05);
+      border: 1px solid var(--paper-15);
+      border-radius: 10px;
+      padding: 0 12px;
+      height: 44px;
+    }
+    body.dark-mode .search-bar {
+      background: var(--paper-80);
+      border-color: var(--paper-70);
+    }
+    .search-bar svg { stroke: var(--paper-40); flex-shrink: 0; }
+    .search-input {
+      flex: 1;
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--paper-80);
+      background: transparent;
+      border: none;
+      outline: none;
+    }
+    body.dark-mode .search-input { color: var(--paper-05); }
+    .search-input::placeholder { color: var(--paper-30); }
+    body.dark-mode .search-input::placeholder { color: var(--paper-50); }
+    .search-clear {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--paper-30);
+      border: none;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .search-clear.visible { display: flex; }
+    .search-clear svg { stroke: var(--paper-00); }
+
+    /* Filter pills */
+    .filter-row {
+      display: flex;
+      gap: var(--s-8);
+      padding: 0 16px 12px;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-pill {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-60);
+      border: 1px solid var(--paper-15);
+      background: transparent;
+      border-radius: 100px;
+      padding: 5px 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    body.dark-mode .filter-pill {
+      color: var(--paper-30);
+      border-color: var(--paper-70);
+    }
+    .filter-pill.active {
+      border-color: var(--paper-50);
+      background: var(--paper-05);
+      color: var(--paper-80);
+    }
+    body.dark-mode .filter-pill.active {
+      border-color: var(--paper-40);
+      background: var(--paper-80);
+      color: var(--paper-05);
+    }
+    .filter-pip {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    /* Result count */
+    .result-count {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      padding: 0 16px 8px;
+      flex-shrink: 0;
+    }
+
+    /* Results list */
+    .results-scroll {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .results-scroll::-webkit-scrollbar { display: none; }
+
+    .result-row {
+      display: flex;
+      gap: var(--s-8);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--paper-05);
+      cursor: pointer;
+    }
+    body.dark-mode .result-row {
+      border-bottom-color: var(--paper-80);
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-row:active { background: var(--paper-05); }
+    body.dark-mode .result-row:active { background: var(--paper-80); }
+
+    .result-gutter {
+      padding-top: 5px;
+      flex-shrink: 0;
+    }
+    .result-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .result-body { flex: 1; min-width: 0; }
+    .result-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+      margin-bottom: 4px;
+    }
+    .result-ts {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    .result-type {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    .result-text {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--paper-80);
+      line-height: 1.45;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    body.dark-mode .result-text { color: var(--paper-05); }
+    .result-text mark {
+      background: none;
+      color: var(--amber);
+      font-weight: 500;
+    }
+
+    /* Pro paywall notice */
+    .paywall-notice {
+      flex-shrink: 0;
+      border-top: 1px solid var(--paper-10);
+      padding: var(--s-12) var(--s-16);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-8);
+    }
+    body.dark-mode .paywall-notice {
+      border-top-color: var(--paper-80);
+    }
+    .paywall-text {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-50);
+      line-height: 1.5;
+    }
+    body.dark-mode .paywall-text { color: var(--paper-40); }
+    .paywall-upgrade {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--amber);
+      border: 1px solid var(--amber);
+      background: transparent;
+      border-radius: 3px;
+      padding: 5px 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      min-height: 44px;
+    }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../index.html" class="mark">Log<span class="period">.</span></a>
+    <span class="proto-label">Search Surface — v1</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <div class="stage">
+    <div class="device-frame">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <span class="status-right">100%</span>
+      </div>
+
+      <!-- Search bar -->
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input
+            class="search-input"
+            id="searchInput"
+            type="text"
+            placeholder="Search entries..."
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+            aria-label="Search entries"
+          >
+          <button class="search-clear" id="searchClear" aria-label="Clear search">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter pills -->
+      <div class="filter-row" role="group" aria-label="Filter by intent type">
+        <button class="filter-pill active" data-type="all">All</button>
+        <button class="filter-pill" data-type="thought">
+          <span class="filter-pip" style="background: var(--signal-thought);"></span>
+          Thought
+        </button>
+        <button class="filter-pill" data-type="action">
+          <span class="filter-pip" style="background: var(--signal-action);"></span>
+          Action
+        </button>
+        <button class="filter-pill" data-type="decision">
+          <span class="filter-pip" style="background: var(--signal-decision);"></span>
+          Decision
+        </button>
+        <button class="filter-pill" data-type="reference">
+          <span class="filter-pip" style="background: var(--signal-reference);"></span>
+          Reference
+        </button>
+      </div>
+
+      <!-- Result count -->
+      <div class="result-count" id="resultCount">23 entries found</div>
+
+      <!-- Results -->
+      <div class="results-scroll" id="resultsList">
+        <div class="result-row">
+          <div class="result-gutter">
+            <div class="result-dot" style="background: var(--signal-decision);"></div>
+          </div>
+          <div class="result-body">
+            <div class="result-meta">
+              <span class="result-ts">Feb 17</span>
+              <span class="result-type">Decision</span>
+            </div>
+            <div class="result-text">Going with <mark>last-write-wins</mark> for MVP. Full conflict resolution post-1.0.</div>
+          </div>
+        </div>
+
+        <div class="result-row">
+          <div class="result-gutter">
+            <div class="result-dot" style="background: var(--signal-thought);"></div>
+          </div>
+          <div class="result-body">
+            <div class="result-meta">
+              <span class="result-ts">Feb 15</span>
+              <span class="result-type">Thought</span>
+            </div>
+            <div class="result-text">The <mark>batching</mark> window feels right at 30s but need to test with real usage patterns.</div>
+          </div>
+        </div>
+
+        <div class="result-row">
+          <div class="result-gutter">
+            <div class="result-dot" style="background: var(--signal-action);"></div>
+          </div>
+          <div class="result-body">
+            <div class="result-meta">
+              <span class="result-ts">Feb 14</span>
+              <span class="result-type">Action</span>
+            </div>
+            <div class="result-text">Sent revised <mark>spec</mark> to engineering. Sync conflict resolution flagged unresolved.</div>
+          </div>
+        </div>
+
+        <div class="result-row">
+          <div class="result-gutter">
+            <div class="result-dot" style="background: var(--signal-reference);"></div>
+          </div>
+          <div class="result-body">
+            <div class="result-meta">
+              <span class="result-ts">Feb 12</span>
+              <span class="result-type">Reference</span>
+            </div>
+            <div class="result-text">Supabase Realtime: 100ms typical <mark>sync</mark> latency on cellular per engineering brief.</div>
+          </div>
+        </div>
+
+        <div class="result-row">
+          <div class="result-gutter">
+            <div class="result-dot" style="background: var(--signal-thought);"></div>
+          </div>
+          <div class="result-body">
+            <div class="result-meta">
+              <span class="result-ts">Feb 10</span>
+              <span class="result-type">Thought</span>
+            </div>
+            <div class="result-text">Offline-first means the <mark>sync</mark> layer is an artifact problem, not a real-time problem.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pro paywall indicator -->
+      <div class="paywall-notice">
+        <span class="paywall-text">Showing 100 of 247 results</span>
+        <button class="paywall-upgrade">Upgrade for full search</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/scripts.js"></script>
+  <script>
+    var input = document.getElementById('searchInput');
+    var clearBtn = document.getElementById('searchClear');
+    var pills = document.querySelectorAll('.filter-pill');
+
+    input.addEventListener('input', function () {
+      clearBtn.classList.toggle('visible', input.value.length > 0);
+    });
+
+    clearBtn.addEventListener('click', function () {
+      input.value = '';
+      clearBtn.classList.remove('visible');
+      input.focus();
+    });
+
+    pills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        pills.forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

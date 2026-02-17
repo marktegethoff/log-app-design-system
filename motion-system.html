@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion System — Log• Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="mark">Log<span class="period">.</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="component-state-matrix.html">Components</a>
+      <a href="layout-system.html">Layout</a>
+      <a href="engineer-quick-start.html">Quick Start</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="separator">/</span>Motion System
+    </div>
+
+    <nav class="page-toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#philosophy">Philosophy</a></li>
+        <li><a href="#duration-scale">Duration Scale</a></li>
+        <li><a href="#mechanical-easing">Mechanical Easing Curve</a></li>
+        <li><a href="#animations">All 6 Animations</a></li>
+        <li><a href="#commit-cycle">Commit Cycle (3-Stage)</a></li>
+        <li><a href="#idle-trace-motion">Idle Trace (No Animation)</a></li>
+        <li><a href="#reduced-motion">Reduced Motion</a></li>
+        <li><a href="#prohibited">Prohibited Animations</a></li>
+        <li><a href="#swiftui-motion">SwiftUI Mapping</a></li>
+      </ol>
+    </nav>
+
+    <!-- Philosophy -->
+    <section class="section" id="philosophy">
+      <h2>Motion Philosophy</h2>
+      <p><strong>"Stillness over performance."</strong> Animation in Log serves mechanical feedback only. Every motion represents a physical mechanism: a shutter pressing, tape advancing, a drum turning. No decorative motion. No celebration. The instrument records; it does not perform.</p>
+
+      <div class="info-box">
+        <p><strong>Total animations in Log: 6.</strong> Zero celebration animations. If you're adding a 7th, justify it against the mechanical metaphor.</p>
+      </div>
+    </section>
+
+    <!-- Duration Scale -->
+    <section class="section" id="duration-scale">
+      <h2>Duration Scale</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Animation</th><th>Duration</th><th>Priority</th><th>Can Interrupt?</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Idle trace</td><td>0ms (instant)</td><td>Highest</td><td>N/A</td></tr>
+            <tr><td>Button hover</td><td>150ms</td><td>Low</td><td>Yes</td></tr>
+            <tr><td>Shutter press</td><td>150ms</td><td>High</td><td>No</td></tr>
+            <tr><td>Page load</td><td>300ms</td><td>High</td><td>No</td></tr>
+            <tr><td>Dark mode transition</td><td>300ms</td><td>Medium</td><td>Yes</td></tr>
+            <tr><td>Entry appear</td><td>350ms</td><td>High</td><td>No</td></tr>
+            <tr><td>Modal</td><td>400ms</td><td>Medium</td><td>No</td></tr>
+            <tr><td>Timeline settle</td><td>250ms</td><td>Medium</td><td>Yes</td></tr>
+            <tr><td>Loading</td><td>Infinite</td><td>Low</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>User can type again after 750ms from commit (full append cycle complete).</p>
+    </section>
+
+    <!-- Mechanical Easing -->
+    <section class="section" id="mechanical-easing">
+      <h2>Mechanical Easing Curve</h2>
+      <p><code>cubic-bezier(0.2, 0.8, 0.3, 1.0)</code> — the standard curve for all mechanical actions.</p>
+
+      <div class="info-box">
+        <p><strong>Why this curve:</strong> Quick start (immediate motion after trigger), sharp deceleration (mechanical snap into place). No bounce, no wobble. Mimics physical mechanism.</p>
+      </div>
+
+      <!-- Visual diagram of the curve -->
+      <div style="margin: var(--s-32) 0; padding: var(--s-24); background: var(--paper-00); border: 1px solid var(--paper-10); border-radius: 4px;">
+        <svg viewBox="0 0 200 200" width="200" height="200" style="display: block; margin: 0 auto;">
+          <rect x="0" y="0" width="200" height="200" fill="none" stroke="var(--paper-10)" stroke-width="1"/>
+          <line x1="0" y1="200" x2="200" y2="0" stroke="var(--paper-20)" stroke-width="1" stroke-dasharray="4"/>
+          <path d="M 0,200 C 40,40 60,0 200,0" fill="none" stroke="var(--amber)" stroke-width="2"/>
+          <circle cx="0" cy="200" r="4" fill="var(--paper-80)"/>
+          <circle cx="200" cy="0" r="4" fill="var(--paper-80)"/>
+          <circle cx="40" cy="40" r="3" fill="var(--amber)" opacity="0.6"/>
+          <circle cx="60" cy="0" r="3" fill="var(--amber)" opacity="0.6"/>
+          <text x="100" y="190" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--paper-40)">time</text>
+          <text x="10" y="100" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--paper-40)" transform="rotate(-90, 10, 100)">progress</text>
+        </svg>
+        <p style="text-align: center; font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-top: var(--s-8); margin-bottom: 0;">cubic-bezier(0.2, 0.8, 0.3, 1.0)</p>
+      </div>
+
+      <h3>Prohibited Easings</h3>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Easing</th><th>Why Prohibited</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>linear</code></td><td>Feels robotic, not mechanical</td></tr>
+            <tr><td><code>ease-in-out</code></td><td>Too smooth, feels digital</td></tr>
+            <tr><td>Spring / elastic</td><td>Violates mechanical metaphor</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- All 6 Animations -->
+    <section class="section" id="animations">
+      <h2>All 6 Animations</h2>
+
+      <details>
+        <summary>1. Page Load (300ms)</summary>
+        <div class="details-content">
+          <p>Fade-in from opacity 0 to 1. ease-in-out.</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre>@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.app-container {
+  animation: fadeIn 300ms ease-in-out;
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>2. Modal Appearance (400ms)</summary>
+        <div class="details-content">
+          <p>Slide up from bottom + fade-in overlay (200ms).</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre>@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal {
+  animation: slideUp 400ms ease-out;
+}
+
+.modal-overlay {
+  animation: fadeIn 200ms ease-in-out;
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>3. Button Hover (150ms)</summary>
+        <div class="details-content">
+          <p>Background color transition on hover.</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre>.button {
+  transition: background-color 150ms ease-out;
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>4. Loading Indicator (infinite)</summary>
+        <div class="details-content">
+          <p>Spinning (1.5s linear) or pulsing (1s ease-in-out).</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre>@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.loading-pulse {
+  animation: pulse 1s ease-in-out infinite;
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>5. Dark Mode Transition (300ms)</summary>
+        <div class="details-content">
+          <p>Smooth color property transition.</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre>* {
+  transition: background-color 300ms ease-in-out,
+              color 300ms ease-in-out,
+              border-color 300ms ease-in-out;
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details open>
+        <summary>6. Entry Append Cycle (750ms)</summary>
+        <div class="details-content">
+          <p>Three-stage mechanical sequence. See <a href="#commit-cycle">Commit Cycle</a> for full detail.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- Commit Cycle -->
+    <section class="section" id="commit-cycle">
+      <h2>Commit Cycle — 3-Stage Diagram</h2>
+      <p>Total duration: 750ms. Makes append feel physically inscribed.</p>
+
+      <!-- Stage diagram -->
+      <div style="display: flex; gap: var(--s-16); margin: var(--s-32) 0; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 180px; background: var(--paper-00); border: 1px solid var(--paper-10); border-radius: 4px; padding: var(--s-16); text-align: center;">
+          <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--amber); margin-bottom: var(--s-8);">STAGE 1</div>
+          <div style="font-family: var(--mono); font-size: var(--type-14); font-weight: 600; margin-bottom: var(--s-8);">Shutter</div>
+          <div style="font-family: var(--mono); font-size: var(--type-13); color: var(--paper-40);">150ms</div>
+          <p style="font-size: var(--type-13); margin-top: var(--s-8); margin-bottom: 0;">scale(0.92) ease-out</p>
+        </div>
+        <div style="flex: 1; min-width: 180px; background: var(--paper-00); border: 1px solid var(--paper-10); border-radius: 4px; padding: var(--s-16); text-align: center;">
+          <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--amber); margin-bottom: var(--s-8);">STAGE 2</div>
+          <div style="font-family: var(--mono); font-size: var(--type-14); font-weight: 600; margin-bottom: var(--s-8);">Inscription</div>
+          <div style="font-family: var(--mono); font-size: var(--type-13); color: var(--paper-40);">350ms</div>
+          <p style="font-size: var(--type-13); margin-top: var(--s-8); margin-bottom: 0;">Entry slide + dot pulse<br>mechanical ease</p>
+        </div>
+        <div style="flex: 1; min-width: 180px; background: var(--paper-00); border: 1px solid var(--paper-10); border-radius: 4px; padding: var(--s-16); text-align: center;">
+          <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--amber); margin-bottom: var(--s-8);">STAGE 3</div>
+          <div style="font-family: var(--mono); font-size: var(--type-14); font-weight: 600; margin-bottom: var(--s-8);">Reset</div>
+          <div style="font-family: var(--mono); font-size: var(--type-13); color: var(--paper-40);">250ms</div>
+          <p style="font-size: var(--type-13); margin-top: var(--s-8); margin-bottom: 0;">Scroll settle<br>compose ready</p>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>/* Stage 2: Entry Appear */
+@keyframes entryAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline-entry.appearing {
+  animation: entryAppear 350ms cubic-bezier(0.2, 0.8, 0.3, 1.0);
+  will-change: transform, opacity;
+}
+
+/* Stage 2: Dot Pulse (parallel) */
+@keyframes dotPulse {
+  from { transform: scale(0.85); }
+  to { transform: scale(1.0); }
+}
+
+.timeline-entry.appearing .intent-dot {
+  animation: dotPulse 350ms cubic-bezier(0.2, 0.8, 0.3, 1.0);
+  will-change: transform;
+}
+
+/* Cleanup */
+.timeline-entry:not(.appearing) {
+  will-change: auto;
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// Full orchestration
+function handleCommit(text) {
+  // Stage 1: Shutter (CSS :active handles scale)
+
+  setTimeout(() =&gt; {
+    // Stage 2: Create entry
+    const entry = createEntry(text);
+    entry.classList.add('appearing');
+    timeline.appendChild(entry);
+
+    setTimeout(() =&gt; {
+      entry.classList.remove('appearing');
+
+      // Stage 3: Scroll settle
+      timeline.scrollTo({
+        top: timeline.scrollHeight - timeline.clientHeight,
+        behavior: 'smooth'
+      });
+
+      composeArea.value = '';
+      composeArea.focus();
+    }, 350);
+
+  }, 150);
+}</pre>
+      </div>
+    </section>
+
+    <!-- Idle Trace -->
+    <section class="section" id="idle-trace-motion">
+      <h2>Idle Trace — No Animation</h2>
+      <p>The idle trace appears instantly. No transition, no easing. The trace was already drawn — the drum was turning while you were away.</p>
+
+      <div class="info-box">
+        <p><strong>Height formula:</strong> <code>min(80, 16 + 16 * ln(hours + 1))</code> in points. Label shown for gaps of 1 hour or more. Maximum height: 80pt.</p>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>.idle-trace {
+  width: 1px;
+  background: var(--paper-40);
+  margin: 0 auto;
+  /* NO transition property */
+  /* NO animation */
+  /* Rendered at final height immediately */
+}</pre>
+      </div>
+    </section>
+
+    <!-- Reduced Motion -->
+    <section class="section" id="reduced-motion">
+      <h2>Reduced Motion</h2>
+      <p>All animations become instant for users with motion sensitivity.</p>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .timeline-entry.appearing {
+    animation: none;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .commit-button:active {
+    transform: none;
+  }
+}</pre>
+      </div>
+    </section>
+
+    <!-- Prohibited -->
+    <section class="section" id="prohibited">
+      <h2>Prohibited Animations</h2>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Prohibited</th><th>Reason</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Confetti / celebration</td><td>Violates stillness principle</td></tr>
+            <tr><td>Bounce / spring</td><td>Violates mechanical metaphor</td></tr>
+            <tr><td>Color flash</td><td>Decorative, no structural purpose</td></tr>
+            <tr><td>Content-dependent timing</td><td>Entry length must not affect duration</td></tr>
+            <tr><td>Idle trace animation</td><td>Trace was already drawn</td></tr>
+            <tr><td>Any animation &gt; 1s</td><td>Feels slow for user-triggered actions</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SwiftUI -->
+    <section class="section" id="swiftui-motion">
+      <h2>SwiftUI Animation Mapping</h2>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// Mechanical easing in SwiftUI
+extension Animation {
+  static let mechanical = Animation.timingCurve(0.2, 0.8, 0.3, 1.0, duration: 0.35)
+  static let shutter = Animation.timingCurve(0.2, 0.8, 0.3, 1.0, duration: 0.15)
+}
+
+// Respect reduced motion
+struct LogMotion {
+  @Environment(\.accessibilityReduceMotion) var reduceMotion
+
+  var entryAppear: Animation? {
+    reduceMotion ? nil : .mechanical
+  }
+
+  var shutterPress: Animation? {
+    reduceMotion ? nil : .shutter
+  }
+}</pre>
+      </div>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>CSS</th><th>SwiftUI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>cubic-bezier(0.2, 0.8, 0.3, 1.0)</code></td><td><code>.timingCurve(0.2, 0.8, 0.3, 1.0)</code></td></tr>
+            <tr><td><code>transition: 150ms</code></td><td><code>.animation(.shutter)</code></td></tr>
+            <tr><td><code>animation: 350ms</code></td><td><code>.animation(.mechanical)</code></td></tr>
+            <tr><td><code>prefers-reduced-motion</code></td><td><code>@Environment(\.accessibilityReduceMotion)</code></td></tr>
+            <tr><td><code>will-change: transform</code></td><td><code>.drawingGroup()</code> (if needed)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    Log• Design System &mdash; Motion System
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <script src="assets/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineer Quick Start — Log• Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="mark">Log<span class="period">.</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="component-state-matrix.html">Components</a>
+      <a href="motion-system.html">Motion</a>
+      <a href="layout-system.html">Layout</a>
+      <a href="swiftui-implementation-guide.html">SwiftUI</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="separator">/</span>Engineer Quick Start
+    </div>
+
+    <h1 style="margin-bottom: var(--s-8);">Engineer Quick Start</h1>
+    <p style="color: var(--paper-40); font-family: var(--mono); font-size: var(--type-13); margin-bottom: var(--s-48);">15-20 minute read. Everything you need to start building.</p>
+
+    <nav class="page-toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#tokens">Token Summary</a> (2 min)</li>
+        <li><a href="#states">State Summary</a> (3 min)</li>
+        <li><a href="#motion">Motion Summary</a> (2 min)</li>
+        <li><a href="#layout">Layout Summary</a> (2 min)</li>
+        <li><a href="#accessibility">Accessibility Checklist</a> (3 min)</li>
+        <li><a href="#swiftui">SwiftUI Mapping</a> (3 min)</li>
+        <li><a href="#implementation">Implementation Checklist</a> (2 min)</li>
+        <li><a href="#anti-patterns">Anti-Patterns</a> (2 min)</li>
+      </ol>
+    </nav>
+
+    <!-- 1. Tokens -->
+    <section class="section" id="tokens">
+      <h2>1. Token Summary</h2>
+
+      <h3>Paper Tones</h3>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Token</th><th>Hex</th><th>Role</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>paper-00</code></td><td>#FAFAF8</td><td>Lightest BG, card BG</td></tr>
+            <tr><td><code>paper-05</code></td><td>#F4F1EC</td><td>Primary light BG / dark text</td></tr>
+            <tr><td><code>paper-10</code></td><td>#ECE8E1</td><td>Alt BG, borders (light)</td></tr>
+            <tr><td><code>paper-20</code></td><td>#D9D4CB</td><td>Dividers, borders (light)</td></tr>
+            <tr><td><code>paper-30</code></td><td>#B8B1A6</td><td>Placeholder text</td></tr>
+            <tr><td><code>paper-40</code></td><td>#928A7E</td><td>Timestamps, labels, idle trace</td></tr>
+            <tr><td><code>paper-50</code></td><td>#6E665B</td><td>Tertiary text (dark mode)</td></tr>
+            <tr><td><code>paper-60</code></td><td>#514A40</td><td>Secondary text (light)</td></tr>
+            <tr><td><code>paper-70</code></td><td>#3A342C</td><td>Body text (light)</td></tr>
+            <tr><td><code>paper-80</code></td><td>#26211B</td><td>Primary text (light) / code BG (dark)</td></tr>
+            <tr><td><code>paper-90</code></td><td>#171310</td><td>Header BG (dark)</td></tr>
+            <tr><td><code>paper-95</code></td><td>#0D0B09</td><td>Primary BG (dark)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Signal Colors (constant across light/dark)</h3>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Token</th><th>Hex</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>signal-thought</code></td><td>#6B7B8D</td><td>Reflection</td></tr>
+            <tr><td><code>signal-action</code></td><td>#C4652A</td><td>Action to take</td></tr>
+            <tr><td><code>signal-decision</code></td><td>#8B6E4E</td><td>Decision made</td></tr>
+            <tr><td><code>signal-reference</code></td><td>#5B7A6B</td><td>Reference material</td></tr>
+            <tr><td><code>signal-unknown</code></td><td>#928A7E</td><td>Pending (= paper-40)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Accents</h3>
+      <p><code>amber</code> = #C4652A (= signal-action). <code>archive-accent</code> = #5B5168 (archivist's voice).</p>
+
+      <h3>Fonts</h3>
+      <p><strong>Space Mono</strong> = mechanism (controls, labels, timestamps). <strong>IBM Plex Sans</strong> = tape (user's words, body copy).</p>
+
+      <h3>Spacing (8pt grid)</h3>
+      <p><code>4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128</code> px</p>
+
+      <p style="margin-top: var(--s-16);">Full token file: <a href="design-tokens-swift.swift">design-tokens-swift.swift</a></p>
+    </section>
+
+    <!-- 2. States -->
+    <section class="section" id="states">
+      <h2>2. State Summary</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Component</th><th>Default</th><th>Active/Focus</th><th>Dark Mode</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Commit Button</td><td>paper-20 border, paper-30 dot</td><td>Amber border, scale(0.92)</td><td>paper-70 border</td></tr>
+            <tr><td>Timeline Entry</td><td>paper-00 BG, paper-10 border</td><td>paper-05 hover</td><td>paper-95 BG, paper-80 border</td></tr>
+            <tr><td>Intent Dot</td><td>6px, signal-[type]</td><td>-</td><td>Same (no invert)</td></tr>
+            <tr><td>Search Input</td><td>paper-00 BG, paper-20 border</td><td>Amber border (2px)</td><td>paper-90 BG, paper-70 border</td></tr>
+            <tr><td>Card</td><td>paper-00 BG, paper-10 border</td><td>Amber border hover</td><td>paper-90 BG, paper-80 border</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Full detail: <a href="component-state-matrix.html">Component State Matrix</a> (11 components, 7 states each)</p>
+    </section>
+
+    <!-- 3. Motion -->
+    <section class="section" id="motion">
+      <h2>3. Motion Summary</h2>
+      <p><strong>6 animations total.</strong> Mechanical easing: <code>cubic-bezier(0.2, 0.8, 0.3, 1.0)</code></p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Animation</th><th>Duration</th><th>Easing</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Shutter press</td><td>150ms</td><td>ease-out</td></tr>
+            <tr><td>Entry appear</td><td>350ms</td><td>mechanical</td></tr>
+            <tr><td>Timeline settle</td><td>250ms</td><td>smooth scroll</td></tr>
+            <tr><td>Page load</td><td>300ms</td><td>ease-in-out</td></tr>
+            <tr><td>Dark mode</td><td>300ms</td><td>ease-in-out</td></tr>
+            <tr><td>Modal</td><td>400ms</td><td>ease-out</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Commit cycle:</strong> 150ms shutter + 350ms inscription + 250ms reset = 750ms total.</p>
+      <p><strong>Idle trace:</strong> 0ms. No animation. Appears at final height instantly.</p>
+      <p>Full detail: <a href="motion-system.html">Motion System</a></p>
+    </section>
+
+    <!-- 4. Layout -->
+    <section class="section" id="layout">
+      <h2>4. Layout Summary</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Property</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Timeline max-width</td><td>600px centered</td></tr>
+            <tr><td>Entry padding</td><td>16px H, 12px V</td></tr>
+            <tr><td>Intent dot</td><td>6px, 8px gap to text</td></tr>
+            <tr><td>Idle trace</td><td>1px wide, 16-80pt height</td></tr>
+            <tr><td>Breakpoints</td><td>600px (phone), 768px (tablet)</td></tr>
+            <tr><td>Z-index</td><td>Content 0, Nav 100, Overlay 200, Toast 300</td></tr>
+            <tr><td>Shadows</td><td>Borders preferred. Shadow only for overlays.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Full detail: <a href="layout-system.html">Layout System</a></p>
+    </section>
+
+    <!-- 5. Accessibility -->
+    <section class="section" id="accessibility">
+      <h2>5. Accessibility Checklist</h2>
+
+      <h3>Contrast</h3>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Context</th><th>Light Mode</th><th>Dark Mode</th><th>Ratio</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Body text</td><td>paper-80 on paper-05</td><td>paper-05 on paper-95</td><td>14.17:1 / 17.44:1</td></tr>
+            <tr><td>Secondary text</td><td>paper-60 on paper-05</td><td>paper-20 on paper-95</td><td>~7:1 / ~4.8:1</td></tr>
+            <tr><td>Code text</td><td>paper-80 on paper-00</td><td>paper-05 on paper-80</td><td>15:1 / 12:1</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <p><strong>PROHIBITED:</strong> paper-40 as text on paper-95 or paper-90. Contrast ratio 1.45:1 &mdash; 68% failure against 4.5:1 requirement.</p>
+      </div>
+
+      <h3>Focus</h3>
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>/* Always visible focus indicators */
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+/* NEVER outline: none without alternative */</pre>
+      </div>
+
+      <h3>ARIA</h3>
+      <ul style="margin-left: var(--s-24); margin-bottom: var(--s-16); line-height: 1.8;">
+        <li>Commit button: <code>role="button"</code>, <code>aria-disabled</code>, <code>aria-label="Commit entry"</code></li>
+        <li>Search: <code>role="search"</code>, <code>aria-expanded</code>, <code>aria-live="polite"</code></li>
+        <li>Intent dot: <code>aria-hidden="true"</code> (announced via parent label)</li>
+        <li>Theme toggle: <code>aria-label="Toggle dark mode"</code></li>
+      </ul>
+
+      <h3>Keyboard</h3>
+      <p>Tab / Shift+Tab, Enter/Space for buttons, Cmd+Enter to commit, Escape to close.</p>
+
+      <h3>Reduced Motion</h3>
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+// SwiftUI: @Environment(\.accessibilityReduceMotion)</pre>
+      </div>
+    </section>
+
+    <!-- 6. SwiftUI -->
+    <section class="section" id="swiftui">
+      <h2>6. SwiftUI Mapping</h2>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// Import token file: design-tokens-swift.swift
+// Provides: LogColors, LogTypography, LogSpacing, LogMotion
+
+// Usage
+Text(entry.text)
+    .font(LogTypography.tape(size: LogTypography.Size.entryText))
+    .foregroundColor(LogColors.textPrimary(colorScheme))
+
+// Mechanical easing
+withAnimation(.timingCurve(0.2, 0.8, 0.3, 1.0, duration: 0.35)) { }
+
+// Reduced motion
+@Environment(\.accessibilityReduceMotion) var reduceMotion
+
+// ViewModifiers: LogCommitStyle, LogSecondaryButtonStyle, .logEntryStyle(), .logCardStyle()</pre>
+      </div>
+
+      <p>Full detail: <a href="swiftui-implementation-guide.html">SwiftUI Implementation Guide</a></p>
+    </section>
+
+    <!-- 7. Implementation Checklist -->
+    <section class="section" id="implementation">
+      <h2>7. Implementation Checklist</h2>
+      <ol style="margin-left: var(--s-24); line-height: 2.2; font-size: var(--type-14);">
+        <li>Add <code>design-tokens-swift.swift</code> to Xcode project</li>
+        <li>Register Space Mono and IBM Plex Sans in Info.plist</li>
+        <li>Implement <code>LogColors</code> semantic functions (<code>textPrimary</code>, <code>backgroundPrimary</code>, etc.)</li>
+        <li>Wire <code>@Environment(\.colorScheme)</code> in all views</li>
+        <li>Add <code>@Environment(\.accessibilityReduceMotion)</code> wherever animation exists</li>
+        <li>Verify 44pt minimum touch targets on all interactive elements</li>
+        <li>Verify focus indicators (amber outline) on all focusable elements</li>
+        <li>Test dark mode: no paper-40 on dark backgrounds</li>
+        <li>Test signal colors: same hex in both modes</li>
+        <li>Test reduced motion: all animations become instant</li>
+        <li>Test Dynamic Type: xSmall through xxxLarge</li>
+        <li>Verify idle trace: appears instantly, no animation</li>
+      </ol>
+    </section>
+
+    <!-- 8. Anti-Patterns -->
+    <section class="section" id="anti-patterns">
+      <h2>8. Anti-Patterns</h2>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Don't</th><th>Do</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Hardcode hex values</td><td>Use LogColors / CSS variables</td></tr>
+            <tr><td>Use paper-40 for dark mode text</td><td>Use paper-05 (body) or paper-20 (secondary)</td></tr>
+            <tr><td>Invert signal colors in dark mode</td><td>Keep signals constant</td></tr>
+            <tr><td>Use spring/elastic animations</td><td>Use mechanical easing only</td></tr>
+            <tr><td>Animate the idle trace</td><td>Render at final height instantly</td></tr>
+            <tr><td>Use emoji in UI</td><td>Use SVG with stroke="currentColor"</td></tr>
+            <tr><td>Use IBM Plex Mono</td><td>Use Space Mono for mechanism</td></tr>
+            <tr><td>Add decorative animation</td><td>Only 6 animations allowed</td></tr>
+            <tr><td>Touch targets &lt; 44px</td><td>min-width/height: 44px on all interactive elements</td></tr>
+            <tr><td>Suppress focus outlines</td><td>Always show 2px amber outline</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    Log• Design System &mdash; Engineer Quick Start
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <script src="assets/scripts.js"></script>
+</body>
+</html>

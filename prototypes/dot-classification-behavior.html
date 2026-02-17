@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dot Classification Behavior — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    body { background: var(--paper-05); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      border-bottom: 1px solid var(--paper-15);
+      background: var(--paper-00);
+    }
+    body.dark-mode .proto-header {
+      background: var(--paper-90);
+      border-bottom-color: var(--paper-80);
+    }
+    .proto-header .mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      text-decoration: none;
+    }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.06em;
+    }
+
+    .content {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: var(--s-48) var(--s-24);
+    }
+
+    .page-title {
+      font-family: var(--mono);
+      font-size: var(--type-24);
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      margin-bottom: var(--s-8);
+    }
+    body.dark-mode .page-title { color: var(--paper-05); }
+    .page-subtitle {
+      font-family: var(--sans);
+      font-size: var(--type-15);
+      color: var(--paper-50);
+      margin-bottom: var(--s-48);
+    }
+    body.dark-mode .page-subtitle { color: var(--paper-40); }
+
+    /* Section */
+    .demo-section {
+      margin-bottom: var(--s-48);
+    }
+    .demo-section-title {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--s-16);
+      display: block;
+    }
+
+    /* Intent dot reference row */
+    .dot-row {
+      display: flex;
+      gap: var(--s-16);
+      flex-wrap: wrap;
+      margin-bottom: var(--s-32);
+    }
+    .dot-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--s-8);
+      cursor: pointer;
+      min-width: 60px;
+    }
+    .dot-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dot-name {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-50);
+      text-align: center;
+    }
+    body.dark-mode .dot-name { color: var(--paper-40); }
+    .dot-hex {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-30);
+      text-align: center;
+    }
+    body.dark-mode .dot-hex { color: var(--paper-60); }
+
+    /* Live demo: compose + classification */
+    .compose-demo {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    body.dark-mode .compose-demo {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+
+    .compose-demo-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--s-12);
+      padding: var(--s-16);
+    }
+
+    .demo-dot-wrap {
+      padding-top: 3px;
+      flex-shrink: 0;
+    }
+    .demo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--signal-unknown);
+      transition: background 0.2s;
+    }
+
+    .demo-input-wrap { flex: 1; }
+    .demo-input {
+      width: 100%;
+      font-family: var(--mono);
+      font-size: 15px;
+      color: var(--paper-80);
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      line-height: 1.5;
+      min-height: 80px;
+    }
+    body.dark-mode .demo-input { color: var(--paper-05); }
+    .demo-input::placeholder { color: var(--paper-30); }
+    body.dark-mode .demo-input::placeholder { color: var(--paper-50); }
+
+    .classification-bar {
+      border-top: 1px solid var(--paper-10);
+      padding: var(--s-8) var(--s-16);
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+    }
+    body.dark-mode .classification-bar {
+      border-top-color: var(--paper-80);
+    }
+    .class-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    .class-detected {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-60);
+      font-weight: 700;
+    }
+    body.dark-mode .class-detected { color: var(--paper-30); }
+    .class-confidence {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-30);
+      margin-left: auto;
+    }
+    body.dark-mode .class-confidence { color: var(--paper-50); }
+
+    /* Manual override */
+    .override-row {
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+      padding: var(--s-8) var(--s-16) var(--s-12);
+      border-top: 1px solid var(--paper-10);
+    }
+    body.dark-mode .override-row { border-top-color: var(--paper-80); }
+    .override-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    .override-pills {
+      display: flex;
+      gap: var(--s-4);
+      flex-wrap: wrap;
+    }
+    .override-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 100px;
+      border: 1px solid var(--paper-15);
+      background: transparent;
+      cursor: pointer;
+      min-height: 28px;
+    }
+    body.dark-mode .override-pill { border-color: var(--paper-70); }
+    .override-pill.active { border-color: var(--paper-40); }
+    body.dark-mode .override-pill.active { border-color: var(--paper-40); }
+    .override-pip {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+    .override-pill-text {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-50);
+    }
+    body.dark-mode .override-pill-text { color: var(--paper-40); }
+
+    /* Batching window */
+    .batch-demo {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-radius: 8px;
+      padding: var(--s-16);
+    }
+    body.dark-mode .batch-demo {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+    .batch-track {
+      position: relative;
+      height: 8px;
+      background: var(--paper-10);
+      border-radius: 100px;
+      overflow: hidden;
+      margin: var(--s-12) 0;
+    }
+    body.dark-mode .batch-track { background: var(--paper-80); }
+    .batch-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--amber);
+      border-radius: 100px;
+      width: 0%;
+    }
+    .batch-labels {
+      display: flex;
+      justify-content: space-between;
+    }
+    .batch-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    .batch-desc {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      margin-top: var(--s-8);
+      line-height: 1.5;
+    }
+    body.dark-mode .batch-desc { color: var(--paper-40); }
+    .batch-controls {
+      display: flex;
+      gap: var(--s-8);
+      margin-top: var(--s-12);
+    }
+    .batch-btn {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-60);
+      border: 1px solid var(--paper-15);
+      background: transparent;
+      border-radius: 3px;
+      padding: 5px 10px;
+      cursor: pointer;
+      min-height: 36px;
+    }
+    body.dark-mode .batch-btn {
+      color: var(--paper-30);
+      border-color: var(--paper-70);
+    }
+    .batch-btn.primary {
+      background: var(--amber);
+      border-color: var(--amber);
+      color: var(--paper-00);
+    }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../index.html" class="mark">Log<span class="period">.</span></a>
+    <span class="proto-label">Dot Classification — Behavior</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <div class="content">
+    <div class="page-title">Dot Classification Behavior</div>
+    <p class="page-subtitle">How intent dots are assigned, displayed, and overridden. Not a device prototype — behavior demonstration.</p>
+
+    <!-- Reference: all dot types -->
+    <div class="demo-section">
+      <span class="demo-section-title">Intent Types — Reference</span>
+      <div class="dot-row">
+        <div class="dot-item">
+          <div class="dot-swatch" style="background: var(--signal-thought);"></div>
+          <span class="dot-name">Thought</span>
+          <span class="dot-hex">#6B7B8D</span>
+        </div>
+        <div class="dot-item">
+          <div class="dot-swatch" style="background: var(--signal-action);"></div>
+          <span class="dot-name">Action</span>
+          <span class="dot-hex">#C4652A</span>
+        </div>
+        <div class="dot-item">
+          <div class="dot-swatch" style="background: var(--signal-decision);"></div>
+          <span class="dot-name">Decision</span>
+          <span class="dot-hex">#8B6E4E</span>
+        </div>
+        <div class="dot-item">
+          <div class="dot-swatch" style="background: var(--signal-reference);"></div>
+          <span class="dot-name">Reference</span>
+          <span class="dot-hex">#5B7A6B</span>
+        </div>
+        <div class="dot-item">
+          <div class="dot-swatch" style="background: var(--signal-unknown);"></div>
+          <span class="dot-name">Unknown</span>
+          <span class="dot-hex">#928A7E</span>
+        </div>
+      </div>
+      <p style="font-family: var(--sans); font-size: var(--type-13); color: var(--paper-50); margin: 0; line-height: 1.6;">Signal colors do not invert in dark mode. They are classification signals, not decorative accents — they must remain consistent across modes to preserve meaning.</p>
+    </div>
+
+    <!-- Live classification demo -->
+    <div class="demo-section">
+      <span class="demo-section-title">Auto-Classification — Live Demo</span>
+      <div class="compose-demo">
+        <div class="compose-demo-inner">
+          <div class="demo-dot-wrap">
+            <div class="demo-dot" id="liveDot"></div>
+          </div>
+          <div class="demo-input-wrap">
+            <textarea
+              class="demo-input"
+              id="demoInput"
+              placeholder="Log..."
+              rows="3"
+              aria-label="Demo compose input"
+            ></textarea>
+          </div>
+        </div>
+        <div class="classification-bar">
+          <span class="class-label">Detected:</span>
+          <span class="class-detected" id="classDetected">Unknown</span>
+          <span class="class-confidence" id="classConf">—</span>
+        </div>
+        <div class="override-row">
+          <span class="override-label">Override:</span>
+          <div class="override-pills" id="overridePills">
+            <button class="override-pill" data-type="thought" data-color="var(--signal-thought)" aria-label="Set type to Thought">
+              <span class="override-pip" style="background: var(--signal-thought);"></span>
+              <span class="override-pill-text">Thought</span>
+            </button>
+            <button class="override-pill" data-type="action" data-color="var(--signal-action)" aria-label="Set type to Action">
+              <span class="override-pip" style="background: var(--signal-action);"></span>
+              <span class="override-pill-text">Action</span>
+            </button>
+            <button class="override-pill" data-type="decision" data-color="var(--signal-decision)" aria-label="Set type to Decision">
+              <span class="override-pip" style="background: var(--signal-decision);"></span>
+              <span class="override-pill-text">Decision</span>
+            </button>
+            <button class="override-pill" data-type="reference" data-color="var(--signal-reference)" aria-label="Set type to Reference">
+              <span class="override-pip" style="background: var(--signal-reference);"></span>
+              <span class="override-pill-text">Reference</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p style="font-family: var(--sans); font-size: var(--type-13); color: var(--paper-50); margin-top: var(--s-12); margin-bottom: 0; line-height: 1.6;">Classification is heuristic-based in this demo. Production uses the intent classifier model. Manual override always wins and persists on the entry.</p>
+    </div>
+
+    <!-- Batching window -->
+    <div class="demo-section">
+      <span class="demo-section-title">30-Second Batching Window</span>
+      <div class="batch-demo">
+        <p class="batch-desc">After typing stops, a 30s window opens. Entries added within the window are grouped. The window resets on each keystroke. Committing closes the window immediately.</p>
+        <div class="batch-track">
+          <div class="batch-fill" id="batchFill"></div>
+        </div>
+        <div class="batch-labels">
+          <span class="batch-label">0s</span>
+          <span class="batch-label" id="batchTimer">30s</span>
+        </div>
+        <div class="batch-controls">
+          <button class="batch-btn primary" id="batchStart">Start window</button>
+          <button class="batch-btn" id="batchReset">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/scripts.js"></script>
+  <script>
+    /* --- Classification demo --- */
+    var SIGNALS = {
+      thought:   { color: '#6B7B8D', label: 'Thought' },
+      action:    { color: '#C4652A', label: 'Action' },
+      decision:  { color: '#8B6E4E', label: 'Decision' },
+      reference: { color: '#5B7A6B', label: 'Reference' },
+      unknown:   { color: '#928A7E', label: 'Unknown' }
+    };
+
+    var manualType = null;
+
+    function detectType(text) {
+      var t = text.toLowerCase();
+      if (/\b(decided|going with|chosen|committed to|will use)\b/.test(t)) return { type: 'decision', conf: 'high' };
+      if (/\b(sent|called|emailed|built|finished|completed|deployed|ran|updated)\b/.test(t)) return { type: 'action', conf: 'high' };
+      if (/\b(from|per|source|quote|see|ref|reference|according to)\b/.test(t)) return { type: 'reference', conf: 'medium' };
+      if (/\b(think|wonder|maybe|consider|what if|could be|feeling|not sure)\b/.test(t)) return { type: 'thought', conf: 'medium' };
+      if (text.length > 0) return { type: 'unknown', conf: 'low' };
+      return null;
+    }
+
+    function applyType(type) {
+      var sig = SIGNALS[type] || SIGNALS.unknown;
+      document.getElementById('liveDot').style.background = sig.color;
+      document.getElementById('classDetected').textContent = sig.label;
+    }
+
+    function applyConf(conf) {
+      var map = { high: '0.91', medium: '0.71', low: '—' };
+      document.getElementById('classConf').textContent = conf ? ('confidence ' + (map[conf] || '—')) : '—';
+    }
+
+    document.getElementById('demoInput').addEventListener('input', function () {
+      if (manualType) return;
+      var result = detectType(this.value);
+      if (result) {
+        applyType(result.type);
+        applyConf(result.conf);
+      } else {
+        applyType('unknown');
+        applyConf(null);
+      }
+    });
+
+    document.getElementById('overridePills').addEventListener('click', function (e) {
+      var btn = e.target.closest('.override-pill');
+      if (!btn) return;
+      var type = btn.dataset.type;
+      manualType = type;
+      document.querySelectorAll('.override-pill').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      applyType(type);
+      document.getElementById('classConf').textContent = 'manual override';
+    });
+
+    /* --- Batch window demo --- */
+    var batchInterval = null;
+    var batchElapsed = 0;
+    var BATCH_TOTAL = 30;
+
+    function startBatch() {
+      clearInterval(batchInterval);
+      batchElapsed = 0;
+      document.getElementById('batchFill').style.width = '0%';
+      document.getElementById('batchTimer').textContent = BATCH_TOTAL + 's';
+      batchInterval = setInterval(function () {
+        batchElapsed++;
+        var pct = (batchElapsed / BATCH_TOTAL) * 100;
+        document.getElementById('batchFill').style.width = pct + '%';
+        var remaining = BATCH_TOTAL - batchElapsed;
+        document.getElementById('batchTimer').textContent = remaining + 's';
+        if (batchElapsed >= BATCH_TOTAL) {
+          clearInterval(batchInterval);
+          document.getElementById('batchTimer').textContent = 'Committed';
+          document.getElementById('batchFill').style.background = 'var(--signal-reference)';
+        }
+      }, 1000);
+    }
+
+    document.getElementById('batchStart').addEventListener('click', startBatch);
+    document.getElementById('batchReset').addEventListener('click', function () {
+      clearInterval(batchInterval);
+      batchElapsed = 0;
+      document.getElementById('batchFill').style.width = '0%';
+      document.getElementById('batchFill').style.background = 'var(--amber)';
+      document.getElementById('batchTimer').textContent = BATCH_TOTAL + 's';
+    });
+  </script>
+</body>
+</html>

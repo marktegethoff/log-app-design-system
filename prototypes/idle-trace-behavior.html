@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idle Trace Behavior — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    body { background: var(--paper-05); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      border-bottom: 1px solid var(--paper-15);
+      background: var(--paper-00);
+    }
+    body.dark-mode .proto-header {
+      background: var(--paper-90);
+      border-bottom-color: var(--paper-80);
+    }
+    .proto-header .mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      text-decoration: none;
+    }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.06em;
+    }
+
+    .content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: var(--s-48) var(--s-24);
+    }
+
+    .page-title {
+      font-family: var(--mono);
+      font-size: var(--type-24);
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      margin-bottom: var(--s-8);
+    }
+    body.dark-mode .page-title { color: var(--paper-05); }
+    .page-subtitle {
+      font-family: var(--sans);
+      font-size: var(--type-15);
+      color: var(--paper-50);
+      margin-bottom: var(--s-48);
+      line-height: 1.6;
+    }
+    body.dark-mode .page-subtitle { color: var(--paper-40); }
+
+    /* Formula display */
+    .formula-block {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-left: 3px solid var(--amber);
+      border-radius: 0 4px 4px 0;
+      padding: var(--s-16) var(--s-24);
+      margin-bottom: var(--s-48);
+    }
+    body.dark-mode .formula-block {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+      border-left-color: var(--amber);
+    }
+    .formula-title {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--s-8);
+      display: block;
+    }
+    .formula-text {
+      font-family: var(--mono);
+      font-size: var(--type-16);
+      color: var(--paper-80);
+      margin-bottom: var(--s-8);
+    }
+    body.dark-mode .formula-text { color: var(--paper-05); }
+    .formula-note {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      margin: 0;
+      line-height: 1.5;
+    }
+    body.dark-mode .formula-note { color: var(--paper-40); }
+
+    /* Key rule callout */
+    .key-rule {
+      background: var(--paper-80);
+      border-radius: 4px;
+      padding: var(--s-16) var(--s-24);
+      margin-bottom: var(--s-48);
+    }
+    body.dark-mode .key-rule { background: var(--paper-70); }
+    .key-rule-text {
+      font-family: var(--mono);
+      font-size: var(--type-14);
+      color: var(--paper-05);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .key-rule-sub {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-30);
+      margin: var(--s-8) 0 0;
+    }
+
+    /* Trace demo grid */
+    .section-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--s-24);
+      display: block;
+    }
+
+    /* Timeline column */
+    .timeline-demo {
+      display: flex;
+      gap: var(--s-48);
+      align-items: flex-start;
+      margin-bottom: var(--s-48);
+    }
+
+    .timeline-col {
+      flex: 1;
+    }
+
+    .tl-entry {
+      display: flex;
+      gap: var(--s-12);
+      align-items: flex-start;
+      margin-bottom: var(--s-4);
+    }
+    .tl-gutter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 8px;
+      flex-shrink: 0;
+    }
+    .tl-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal-unknown);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .tl-body { flex: 1; }
+    .tl-ts {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      margin-bottom: 2px;
+    }
+    .tl-text {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-70);
+      line-height: 1.4;
+    }
+    body.dark-mode .tl-text { color: var(--paper-20); }
+
+    /* The trace itself */
+    .tl-trace-wrap {
+      display: flex;
+      gap: var(--s-12);
+      align-items: flex-start;
+    }
+    .tl-trace-gutter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 8px;
+      flex-shrink: 0;
+    }
+    .tl-trace-line {
+      width: 1px;
+      background: var(--paper-20);
+    }
+    body.dark-mode .tl-trace-line { background: var(--paper-70); }
+    .tl-trace-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-top: 2px;
+    }
+    .tl-trace-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-30);
+    }
+    body.dark-mode .tl-trace-label { color: var(--paper-60); }
+    .tl-trace-height {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-30);
+    }
+    body.dark-mode .tl-trace-height { color: var(--paper-60); }
+
+    /* Comparison table */
+    .trace-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--s-48);
+      font-size: var(--type-13);
+    }
+    .trace-table th {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--paper-40);
+      text-align: left;
+      padding: var(--s-8) var(--s-12);
+      border-bottom: 1px solid var(--paper-10);
+      background: transparent;
+      position: static;
+      top: auto;
+    }
+    body.dark-mode .trace-table th {
+      border-bottom-color: var(--paper-80);
+      background: transparent;
+      color: var(--paper-40);
+    }
+    .trace-table td {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      padding: var(--s-8) var(--s-12);
+      border-bottom: 1px solid var(--paper-05);
+      vertical-align: middle;
+    }
+    body.dark-mode .trace-table td { border-bottom-color: var(--paper-80); }
+    .trace-table td:first-child { color: var(--paper-60); }
+    body.dark-mode .trace-table td:first-child { color: var(--paper-30); }
+    .trace-table td:nth-child(2) { color: var(--paper-50); }
+    body.dark-mode .trace-table td:nth-child(2) { color: var(--paper-40); }
+    .trace-table td:nth-child(3) { color: var(--paper-70); font-weight: 700; }
+    body.dark-mode .trace-table td:nth-child(3) { color: var(--paper-10); }
+    .trace-visual {
+      display: flex;
+      align-items: flex-end;
+    }
+    .trace-bar-vis {
+      width: 2px;
+      background: var(--paper-20);
+      display: inline-block;
+    }
+    body.dark-mode .trace-bar-vis { background: var(--paper-60); }
+    .has-label {
+      color: var(--paper-40) !important;
+      font-style: italic;
+    }
+    body.dark-mode .has-label { color: var(--paper-50) !important; }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../index.html" class="mark">Log<span class="period">.</span></a>
+    <span class="proto-label">Idle Trace — Behavior</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <div class="content">
+    <div class="page-title">Idle Trace Behavior</div>
+    <p class="page-subtitle">The idle trace is a gap recorder, not a decorative element. It represents honest time — the instrument running with no input. No animation, no pulse, no guilt. It appears at its final height immediately.</p>
+
+    <!-- Key rule -->
+    <div class="key-rule">
+      <p class="key-rule-text">No animation. Traces appear at final calculated height instantly.</p>
+      <p class="key-rule-sub">Animating the trace would imply measurement in progress. The instrument records; it does not perform.</p>
+    </div>
+
+    <!-- Formula -->
+    <div class="formula-block">
+      <span class="formula-title">Height Formula</span>
+      <div class="formula-text">h = min(80, 16 + 16 &times; ln(hours + 1))</div>
+      <p class="formula-note">Logarithmic scale: large gaps grow slowly. A 1-hour gap (28px) and a 1-week gap (80px) are visually different but neither dominates the timeline. Cap at 80px prevents gaps from overwhelming entry density.</p>
+    </div>
+
+    <!-- Trace scale table -->
+    <span class="section-label">Trace Scale Reference</span>
+    <table class="trace-table">
+      <thead>
+        <tr>
+          <th>Gap Duration</th>
+          <th>Hours</th>
+          <th>Height (px)</th>
+          <th>Label shown</th>
+          <th>Visual</th>
+        </tr>
+      </thead>
+      <tbody id="traceTableBody"></tbody>
+    </table>
+
+    <!-- Live timeline demo -->
+    <span class="section-label">In Context — Timeline Segment</span>
+    <div class="timeline-col" id="timelineDemo"></div>
+
+    <p style="font-family: var(--sans); font-size: var(--type-13); color: var(--paper-50); margin-bottom: 0; line-height: 1.6;">Labels appear only for gaps &ge; 1 hour. Short gaps below threshold are silent — a small trace with no annotation. The instrument records the pause; it does not editorialize it.</p>
+  </div>
+
+  <script src="../assets/scripts.js"></script>
+  <script>
+    function traceHeight(hours) {
+      return Math.min(80, Math.round(16 + 16 * Math.log(hours + 1)));
+    }
+
+    var GAPS = [
+      { label: '5 min',  hours: 5/60 },
+      { label: '30 min', hours: 0.5 },
+      { label: '1 hr',   hours: 1 },
+      { label: '4 hr',   hours: 4 },
+      { label: '12 hr',  hours: 12 },
+      { label: '24 hr',  hours: 24 },
+      { label: '1 week', hours: 168 }
+    ];
+
+    /* Build table */
+    var tbody = document.getElementById('traceTableBody');
+    GAPS.forEach(function (g) {
+      var h = traceHeight(g.hours);
+      var showLabel = g.hours >= 1;
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + g.label + '</td>' +
+        '<td>' + (g.hours < 1 ? (g.hours * 60).toFixed(0) + 'm' : g.hours.toFixed(1) + 'h') + '</td>' +
+        '<td>' + h + 'px</td>' +
+        '<td class="' + (showLabel ? 'has-label' : '') + '">' + (showLabel ? 'Yes — "' + g.label + '"' : 'No') + '</td>' +
+        '<td><div class="trace-visual"><div class="trace-bar-vis" style="height:' + (h / 2) + 'px;"></div></div></td>';
+      tbody.appendChild(tr);
+    });
+
+    /* Build timeline demo */
+    var TIMELINE_ENTRIES = [
+      { ts: '9:14', type: 'thought', text: 'Need to reconsider the batching window approach.' },
+      { gap: { label: '15 min', hours: 0.25 } },
+      { ts: '9:29', type: 'decision', text: 'Going with last-write-wins for MVP.' },
+      { gap: { label: '2 hr', hours: 2 } },
+      { ts: '11:31', type: 'action', text: 'Sent revised sync spec to engineering.' },
+      { gap: { label: '1 day', hours: 24 } },
+      { ts: 'Next day', type: 'reference', text: 'Per brief: 100ms typical sync latency on cellular.' }
+    ];
+
+    var COLORS = {
+      thought: '#6B7B8D',
+      action: '#C4652A',
+      decision: '#8B6E4E',
+      reference: '#5B7A6B',
+      unknown: '#928A7E'
+    };
+
+    var container = document.getElementById('timelineDemo');
+
+    TIMELINE_ENTRIES.forEach(function (item) {
+      if (item.gap) {
+        var h = traceHeight(item.gap.hours);
+        var showLabel = item.gap.hours >= 1;
+        var wrap = document.createElement('div');
+        wrap.className = 'tl-trace-wrap';
+        wrap.innerHTML =
+          '<div class="tl-trace-gutter">' +
+            '<div class="tl-trace-line" style="height:' + h + 'px;"></div>' +
+          '</div>' +
+          '<div class="tl-trace-meta">' +
+            (showLabel ? '<span class="tl-trace-label">' + item.gap.label + '</span>' : '') +
+            '<span class="tl-trace-height">' + h + 'px</span>' +
+          '</div>';
+        container.appendChild(wrap);
+      } else {
+        var entryWrap = document.createElement('div');
+        entryWrap.className = 'tl-entry';
+        entryWrap.innerHTML =
+          '<div class="tl-gutter"><div class="tl-dot" style="background:' + COLORS[item.type] + ';"></div></div>' +
+          '<div class="tl-body">' +
+            '<div class="tl-ts">' + item.ts + '</div>' +
+            '<div class="tl-text">' + item.text + '</div>' +
+          '</div>';
+        container.appendChild(entryWrap);
+      }
+    });
+  </script>
+</body>
+</html>

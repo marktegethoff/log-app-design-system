@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component State Matrix — Log• Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="mark">Log<span class="period">.</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="brand-system.html">Brand</a>
+      <a href="motion-system.html">Motion</a>
+      <a href="layout-system.html">Layout</a>
+      <a href="engineer-quick-start.html">Quick Start</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="separator">/</span>Component State Matrix
+    </div>
+
+    <nav class="page-toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#master-matrix">Master State Matrix</a></li>
+        <li><a href="#commit-button">Commit Button</a></li>
+        <li><a href="#compose-area">Compose Area</a></li>
+        <li><a href="#timeline-entry">Timeline Entry</a></li>
+        <li><a href="#intent-dot">Intent Dot</a></li>
+        <li><a href="#idle-trace">Idle Trace</a></li>
+        <li><a href="#search-input">Search Input</a></li>
+        <li><a href="#nav-item">Navigation Item</a></li>
+        <li><a href="#card">Card</a></li>
+        <li><a href="#badge">Badge</a></li>
+        <li><a href="#archive-annotation">Archive Annotation</a></li>
+        <li><a href="#focus-management">Focus Management</a></li>
+      </ol>
+    </nav>
+
+    <!-- Master Matrix -->
+    <section class="section" id="master-matrix">
+      <h2>Master State Matrix</h2>
+      <p>11 components across 7 states. Every cell defines token values, ARIA attributes, and dark mode behavior. Signal colors remain constant across modes.</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Default</th>
+              <th>Hover</th>
+              <th>Active/Pressed</th>
+              <th>Focus</th>
+              <th>Disabled</th>
+              <th>Dark Mode</th>
+              <th>SwiftUI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Commit Button</strong></td>
+              <td>Border: paper-20<br>Dot: paper-30</td>
+              <td>Cursor: pointer</td>
+              <td>scale(0.92)<br>150ms ease-out</td>
+              <td>2px amber outline<br>offset 2px</td>
+              <td>opacity 0.4<br>no pointer</td>
+              <td>Border: paper-70<br>Dot: paper-30</td>
+              <td>.buttonStyle(LogCommitStyle())</td>
+            </tr>
+            <tr>
+              <td><strong>Secondary Button</strong></td>
+              <td>BG: paper-10<br>Text: paper-80<br>Border: paper-20</td>
+              <td>BG: paper-20</td>
+              <td>BG: paper-30</td>
+              <td>2px amber outline</td>
+              <td>opacity 0.4</td>
+              <td>BG: paper-80<br>Text: paper-05<br>Border: paper-70</td>
+              <td>.buttonStyle(LogSecondaryStyle())</td>
+            </tr>
+            <tr>
+              <td><strong>Timeline Entry</strong></td>
+              <td>BG: paper-00<br>Border-bottom: paper-10</td>
+              <td>BG: paper-05</td>
+              <td>-</td>
+              <td>2px amber outline</td>
+              <td>-</td>
+              <td>BG: paper-95<br>Border: paper-80</td>
+              <td>LogEntryView</td>
+            </tr>
+            <tr>
+              <td><strong>Intent Dot</strong></td>
+              <td>6px circle<br>signal-[type]</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>paper-30</td>
+              <td>Same color (no invert)</td>
+              <td>Circle().fill(LogColors.signal(type))</td>
+            </tr>
+            <tr>
+              <td><strong>Idle Trace</strong></td>
+              <td>1px wide<br>paper-40<br>16-80pt height</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>paper-40 (unchanged)</td>
+              <td>LogIdleTraceView</td>
+            </tr>
+            <tr>
+              <td><strong>Search Input</strong></td>
+              <td>BG: paper-00<br>Border: paper-20<br>Placeholder: paper-30</td>
+              <td>Border: paper-40</td>
+              <td>-</td>
+              <td>Border: amber<br>2px</td>
+              <td>BG: paper-10<br>opacity 0.5</td>
+              <td>BG: paper-90<br>Border: paper-70<br>Placeholder: paper-50</td>
+              <td>TextField + .logInputStyle()</td>
+            </tr>
+            <tr>
+              <td><strong>Compose Area</strong></td>
+              <td>Placeholder: "Log..."<br>mono, paper-30</td>
+              <td>-</td>
+              <td>Blinking amber caret</td>
+              <td>Subtle border highlight</td>
+              <td>-</td>
+              <td>BG: paper-90<br>Text: paper-05</td>
+              <td>TextEditor + .logComposeStyle()</td>
+            </tr>
+            <tr>
+              <td><strong>Nav Item</strong></td>
+              <td>Text: paper-60</td>
+              <td>Text: amber</td>
+              <td>Text: amber</td>
+              <td>2px amber outline</td>
+              <td>Text: paper-30</td>
+              <td>Text: paper-30</td>
+              <td>NavigationLink</td>
+            </tr>
+            <tr>
+              <td><strong>Card</strong></td>
+              <td>BG: paper-00<br>Border: paper-10</td>
+              <td>Border: amber</td>
+              <td>-</td>
+              <td>2px amber outline</td>
+              <td>opacity 0.5</td>
+              <td>BG: paper-90<br>Border: paper-80</td>
+              <td>LogCardView</td>
+            </tr>
+            <tr>
+              <td><strong>Badge</strong></td>
+              <td>BG: signal-[type]<br>Text: paper-00</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>opacity 0.4</td>
+              <td>Same (signals don't invert)</td>
+              <td>.logBadge(type:)</td>
+            </tr>
+            <tr>
+              <td><strong>Archive Annotation</strong></td>
+              <td>BG: archive-accent at 10%<br>Text: archive-accent<br>Border-left: archive-accent</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>Same (archive-accent constant)</td>
+              <td>LogAnnotationView</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Commit Button Detail -->
+    <section class="section" id="commit-button">
+      <h2>Commit Button</h2>
+      <p>The primary action. Disabled when compose area is empty. 44px minimum touch target. The shutter press (scale 0.92, 150ms) initiates the 750ms append cycle.</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>State</th><th>Trigger</th><th>Visual</th><th>Behavior</th><th>ARIA</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Rest</td><td>Compose empty</td><td>Border: paper-20, Dot: paper-30</td><td>Not clickable</td><td>aria-disabled="true"</td></tr>
+            <tr><td>Active</td><td>Text entered</td><td>Border: amber, Dot: amber</td><td>Clickable</td><td>aria-disabled="false"</td></tr>
+            <tr><td>Hover</td><td>Pointer over</td><td>Cursor: pointer</td><td>Visual feedback</td><td>-</td></tr>
+            <tr><td>Focus</td><td>Tab navigation</td><td>2px amber outline, offset 2px</td><td>Keyboard accessible</td><td>role="button", tabindex="0"</td></tr>
+            <tr><td>Pressed</td><td>Click/tap/Enter</td><td>scale(0.92), 150ms</td><td>Commits entry</td><td>aria-label="Commit entry"</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>/* Commit Button — CSS */
+.commit-button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--paper-20);
+  background: transparent;
+  border-radius: 50%;
+  cursor: default;
+  transition: border-color 0.15s ease-out;
+}
+
+.commit-button.ready {
+  border-color: var(--amber);
+  cursor: pointer;
+}
+
+.commit-button:active.ready {
+  transform: scale(0.92);
+  transition: transform 150ms ease-out;
+}
+
+.commit-button:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* Dark mode */
+body.dark-mode .commit-button {
+  border-color: var(--paper-70);
+}
+
+body.dark-mode .commit-button.ready {
+  border-color: var(--amber);
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// SwiftUI — Commit Button
+struct LogCommitStyle: ButtonStyle {
+  var isReady: Bool
+
+  func makeBody(configuration: Configuration) -&gt; some View {
+    configuration.label
+      .frame(width: 44, height: 44)
+      .overlay(Circle().stroke(isReady ? LogColors.amber : LogColors.paper20, lineWidth: 1))
+      .scaleEffect(configuration.isPressed ? 0.92 : 1.0)
+      .animation(.timingCurve(0.2, 0.8, 0.3, 1.0, duration: 0.15), value: configuration.isPressed)
+      .disabled(!isReady)
+      .accessibilityLabel("Commit entry")
+  }
+}</pre>
+      </div>
+    </section>
+
+    <!-- Compose Area -->
+    <section class="section" id="compose-area">
+      <h2>Compose Area</h2>
+      <p>Where the user types. IBM Plex Sans for user text (the tape). Placeholder in Space Mono (the mechanism).</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>State</th><th>Trigger</th><th>Visual</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Empty</td><td>No text</td><td>Placeholder: "Log..." (mono, paper-30)</td></tr>
+            <tr><td>Typing</td><td>User input</td><td>Blinking amber caret, text in sans</td></tr>
+            <tr><td>Focus</td><td>Click or tab</td><td>Subtle border highlight</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Timeline Entry -->
+    <section class="section" id="timeline-entry">
+      <h2>Timeline Entry</h2>
+      <p>Append-only. Each entry shows intent dot, timestamp (mono), and user text (sans). Entries can be edited (with visible correction history) and archived, but never reordered.</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>State</th><th>Visual</th><th>Dark Mode</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Default</td><td>BG: paper-00, border-bottom: paper-10</td><td>BG: paper-95, border: paper-80</td></tr>
+            <tr><td>Hover</td><td>BG: paper-05</td><td>BG: paper-90</td></tr>
+            <tr><td>Appearing</td><td>entryAppear animation, 350ms mechanical ease</td><td>Same animation</td></tr>
+            <tr><td>Edited</td><td>Correction indicator visible</td><td>Same</td></tr>
+            <tr><td>Archived</td><td>Removed from timeline, preserved in archive</td><td>Same</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Intent Dot -->
+    <section class="section" id="intent-dot">
+      <h2>Intent Dot</h2>
+      <p>6px circle. Color indicates intent classification. Signal colors remain constant in dark mode — they represent semantic intent, not UI chrome.</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Type</th><th>Color</th><th>Hex</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="signal-dot" style="background: var(--signal-thought);"></span> Thought</td><td>signal-thought</td><td>#6B7B8D</td><td>Reflection, observation</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-action);"></span> Action</td><td>signal-action</td><td>#C4652A</td><td>Action to take</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-decision);"></span> Decision</td><td>signal-decision</td><td>#8B6E4E</td><td>Decision made</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-reference);"></span> Reference</td><td>signal-reference</td><td>#5B7A6B</td><td>Reference material</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-unknown);"></span> Unknown</td><td>signal-unknown</td><td>#928A7E</td><td>Pending classification</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Rule:</strong> Signal colors never invert in dark mode. They must always be paired with text labels for accessibility. Never use signal colors as the sole indicator.</p>
+      </div>
+    </section>
+
+    <!-- Idle Trace -->
+    <section class="section" id="idle-trace">
+      <h2>Idle Trace</h2>
+      <p>Honest gap in the record. 1px wide, paper-40, height 16-80pt (logarithmic). No animation — the trace was already drawn while you were away.</p>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>/* Idle Trace */
+.idle-trace {
+  width: 1px;
+  background: var(--paper-40);
+  margin: 0 auto;
+  /* NO transition, NO animation */
+  /* Height: min(80, 16 + 16 * ln(hours + 1)) in points */
+}
+
+/* Label only for gaps >= 1 hour */
+.idle-trace-label {
+  font-family: var(--mono);
+  font-size: var(--type-11);
+  color: var(--paper-30);
+  text-align: center;
+}</pre>
+      </div>
+    </section>
+
+    <!-- Search Input -->
+    <section class="section" id="search-input">
+      <h2>Search Input</h2>
+      <p>Standard iOS search pattern. Pro paywall at 100 results.</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>State</th><th>Light Mode</th><th>Dark Mode</th><th>ARIA</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Default</td><td>BG: paper-00, border: paper-20</td><td>BG: paper-90, border: paper-70</td><td>role="search"</td></tr>
+            <tr><td>Focus</td><td>Border: amber (2px)</td><td>Border: amber (2px)</td><td>aria-expanded="true"</td></tr>
+            <tr><td>Has results</td><td>Results list below</td><td>Same</td><td>aria-live="polite"</td></tr>
+            <tr><td>No results</td><td>"No entries found" message</td><td>Same</td><td>-</td></tr>
+            <tr><td>Disabled</td><td>BG: paper-10, opacity 0.5</td><td>BG: paper-80, opacity 0.5</td><td>aria-disabled="true"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Nav Item -->
+    <section class="section" id="nav-item">
+      <h2>Navigation Item</h2>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>State</th><th>Light</th><th>Dark</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Default</td><td>paper-60</td><td>paper-30</td></tr>
+            <tr><td>Hover</td><td>amber</td><td>amber</td></tr>
+            <tr><td>Active</td><td>amber, font-weight 600</td><td>amber, font-weight 600</td></tr>
+            <tr><td>Disabled</td><td>paper-30</td><td>paper-50</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Card -->
+    <section class="section" id="card">
+      <h2>Card</h2>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>State</th><th>Light</th><th>Dark</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Default</td><td>BG: paper-00, border: paper-10</td><td>BG: paper-90, border: paper-80</td></tr>
+            <tr><td>Hover</td><td>Border: amber</td><td>Border: amber</td></tr>
+            <tr><td>Focus</td><td>2px amber outline</td><td>2px amber outline</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Badge -->
+    <section class="section" id="badge">
+      <h2>Badge</h2>
+      <p>Used for intent classification labels. Signal color background with paper-00 text. Always paired with text label.</p>
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>.badge {
+  font-family: var(--mono);
+  font-size: var(--type-11);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--s-4) var(--s-8);
+  border-radius: 3px;
+  color: var(--paper-00);
+}
+
+/* Signal colors do NOT change in dark mode */
+.badge-thought   { background: var(--signal-thought); }
+.badge-action    { background: var(--signal-action); }
+.badge-decision  { background: var(--signal-decision); }
+.badge-reference { background: var(--signal-reference); }
+.badge-unknown   { background: var(--signal-unknown); }</pre>
+      </div>
+    </section>
+
+    <!-- Archive Annotation -->
+    <section class="section" id="archive-annotation">
+      <h2>Archive Annotation</h2>
+      <p>The archivist's voice. Muted purple (#5B5168), always in the margins. Never the user's words.</p>
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>.archive-annotation {
+  background: rgba(91, 81, 104, 0.1); /* archive-accent at 10% */
+  border-left: 3px solid var(--archive-accent);
+  padding: var(--s-12) var(--s-16);
+  color: var(--archive-accent);
+  font-family: var(--sans);
+  font-size: var(--type-14);
+  font-style: italic;
+}
+
+/* Dark mode: archive-accent remains constant */</pre>
+      </div>
+    </section>
+
+    <!-- Focus Management -->
+    <section class="section" id="focus-management">
+      <h2>Focus Management</h2>
+      <p>Focus indicators always visible. Amber outline, never suppressed.</p>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>/* Focus States — Universal */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* NEVER use outline: none without alternative */</pre>
+      </div>
+
+      <h3>Keyboard Navigation</h3>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Key</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Tab</code></td><td>Move focus forward</td></tr>
+            <tr><td><code>Shift+Tab</code></td><td>Move focus backward</td></tr>
+            <tr><td><code>Enter</code></td><td>Activate focused button</td></tr>
+            <tr><td><code>Space</code></td><td>Activate focused button (alternate)</td></tr>
+            <tr><td><code>Cmd/Ctrl+Enter</code></td><td>Commit from compose area</td></tr>
+            <tr><td><code>Escape</code></td><td>Close modals, clear compose area</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    Log• Design System &mdash; Component State Matrix
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <script src="assets/scripts.js"></script>
+</body>
+</html>

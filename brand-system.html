@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand System — Log• Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    /* Brand system page-specific styles */
+    .brand-cover {
+      text-align: center;
+      padding: var(--s-96) var(--s-24);
+      background: var(--paper-80);
+      color: var(--paper-05);
+    }
+
+    body.dark-mode .brand-cover {
+      background: var(--paper-90);
+    }
+
+    .brand-cover .cover-meta {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      letter-spacing: 0.06em;
+      color: var(--paper-30);
+      margin-bottom: var(--s-48);
+    }
+
+    .brand-cover .cover-mark {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 96px;
+      letter-spacing: var(--tracking-tight);
+      line-height: 1;
+      color: var(--paper-05);
+      margin-bottom: var(--s-48);
+    }
+
+    .brand-cover .cover-mark .period {
+      color: var(--amber);
+      margin-left: 1px;
+    }
+
+    .brand-cover .cover-subtitle {
+      font-family: var(--sans);
+      font-size: var(--type-16);
+      line-height: 1.7;
+      color: var(--paper-10);
+      max-width: 600px;
+      margin: 0 auto var(--s-32) auto;
+    }
+
+    .brand-cover .cover-principle {
+      font-family: var(--mono);
+      font-size: var(--type-14);
+      line-height: 1.8;
+      color: var(--paper-20);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 600px) {
+      .brand-cover .cover-mark { font-size: 56px; }
+      .brand-cover { padding: var(--s-48) var(--s-16); }
+    }
+
+    /* Section numbering */
+    .section-num {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--amber);
+      letter-spacing: 0.06em;
+      margin-bottom: var(--s-8);
+    }
+
+    .section-desc {
+      font-family: var(--sans);
+      font-size: var(--type-16);
+      line-height: 1.7;
+      color: var(--paper-60);
+      max-width: 640px;
+      margin-bottom: var(--s-48);
+    }
+
+    body.dark-mode .section-desc {
+      color: var(--paper-20);
+    }
+
+    /* Mark anatomy */
+    .mark-hero {
+      display: flex;
+      justify-content: center;
+      padding: var(--s-64) 0;
+    }
+
+    .mark-hero-inner {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 128px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      line-height: 1;
+    }
+
+    body.dark-mode .mark-hero-inner {
+      color: var(--paper-05);
+    }
+
+    .mark-hero-dot {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: var(--amber);
+      border-radius: 50%;
+      margin-left: 2px;
+      vertical-align: baseline;
+      position: relative;
+      top: -4px;
+    }
+
+    @media (max-width: 600px) {
+      .mark-hero-inner { font-size: 72px; }
+      .mark-hero-dot { width: 10px; height: 10px; top: -2px; }
+    }
+
+    /* Mark spec table */
+    .mark-spec {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-32);
+      margin-bottom: var(--s-48);
+    }
+
+    @media (max-width: 600px) {
+      .mark-spec { grid-template-columns: 1fr; }
+    }
+
+    .mark-spec-item dt {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--paper-40);
+      margin-bottom: var(--s-4);
+    }
+
+    .mark-spec-item dd {
+      font-family: var(--sans);
+      font-size: var(--type-14);
+      color: var(--paper-70);
+      line-height: 1.6;
+    }
+
+    body.dark-mode .mark-spec-item dd {
+      color: var(--paper-20);
+    }
+
+    /* Color swatches */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--s-16);
+      margin: var(--s-32) 0;
+    }
+
+    .swatch {
+      text-align: center;
+    }
+
+    .swatch-block {
+      height: 64px;
+      border-radius: 4px;
+      border: 1px solid var(--paper-10);
+      margin-bottom: var(--s-8);
+    }
+
+    body.dark-mode .swatch-block {
+      border-color: var(--paper-70);
+    }
+
+    .swatch-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+    }
+
+    .swatch-hex {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-60);
+    }
+
+    body.dark-mode .swatch-hex {
+      color: var(--paper-30);
+    }
+
+    /* Signal color swatches */
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--s-16);
+      margin: var(--s-32) 0;
+    }
+
+    @media (max-width: 600px) {
+      .signal-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .signal-swatch-block {
+      height: 48px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--paper-00);
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      letter-spacing: 0.04em;
+    }
+
+    /* Principles */
+    .principle {
+      padding: var(--s-24) 0;
+      border-bottom: 1px solid var(--paper-10);
+    }
+
+    body.dark-mode .principle {
+      border-bottom-color: var(--paper-80);
+    }
+
+    .principle:last-child { border-bottom: none; }
+
+    .principle-num {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-30);
+      margin-bottom: var(--s-4);
+    }
+
+    .principle-text {
+      font-family: var(--sans);
+      font-size: var(--type-18);
+      font-weight: 500;
+      color: var(--paper-70);
+      margin-bottom: var(--s-8);
+    }
+
+    body.dark-mode .principle-text {
+      color: var(--paper-10);
+    }
+
+    .principle-explain {
+      font-size: var(--type-14);
+      color: var(--paper-40);
+      max-width: 540px;
+      line-height: 1.6;
+    }
+
+    body.dark-mode .principle-explain {
+      color: var(--paper-30);
+    }
+
+    /* Type specimen */
+    .type-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-48);
+      margin: var(--s-32) 0;
+    }
+
+    @media (max-width: 600px) {
+      .type-pair { grid-template-columns: 1fr; gap: var(--s-24); }
+    }
+
+    .type-specimen-block {
+      padding: var(--s-24);
+      border: 1px solid var(--paper-10);
+      border-radius: 4px;
+    }
+
+    body.dark-mode .type-specimen-block {
+      border-color: var(--paper-80);
+    }
+
+    .type-specimen-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--amber);
+      margin-bottom: var(--s-16);
+    }
+
+    .type-specimen-role {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      margin-top: var(--s-16);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="mark">Log<span class="period">.</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="component-state-matrix.html">Components</a>
+      <a href="motion-system.html">Motion</a>
+      <a href="layout-system.html">Layout</a>
+      <a href="engineer-quick-start.html">Quick Start</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </nav>
+  </header>
+
+  <!-- Cover -->
+  <div class="brand-cover">
+    <div class="cover-meta">Brand System &mdash; February 2026</div>
+    <div class="cover-mark">Log<span class="period">.</span></div>
+    <div class="cover-subtitle">
+      A thought-capture tool where your words are the artifact and AI is the archivist. The brand is built from the product's own materials &mdash; monospace letterforms, the warm signal of a recording instrument, and the full stop of a thought committed to the record.
+    </div>
+    <div class="cover-principle">
+      Your words are the artifact. The AI is the archivist.<br>
+      The tape is the tape. The card catalog is in the margins.
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="breadcrumb" style="margin-top: var(--s-24);">
+      <a href="index.html">Home</a><span class="separator">/</span>Brand System
+    </div>
+
+    <nav class="page-toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#the-mark">The Mark</a></li>
+        <li><a href="#color-system">Color System</a></li>
+        <li><a href="#typography">Typography</a></li>
+        <li><a href="#signal-colors">Signal Colors</a></li>
+        <li><a href="#idle-trace">The Idle Trace</a></li>
+        <li><a href="#principles">Seven Brand Principles</a></li>
+        <li><a href="#constraints">Design Constraints</a></li>
+      </ol>
+    </nav>
+
+    <!-- 01 — The Mark -->
+    <section class="section" id="the-mark">
+      <div class="section-num">01</div>
+      <h2>The Mark</h2>
+      <div class="section-desc">
+        The Log mark is the word "Log" in the product's monospace typeface, followed by a round period in the brand's amber accent. The period is the full stop &mdash; a thought completed, an entry committed to the record.
+      </div>
+
+      <div class="mark-hero">
+        <div class="mark-hero-inner">Log<span class="mark-hero-dot"></span></div>
+      </div>
+
+      <dl class="mark-spec">
+        <div class="mark-spec-item">
+          <dt>Typeface</dt>
+          <dd>Space Mono, 600 weight</dd>
+        </div>
+        <div class="mark-spec-item">
+          <dt>Tracking</dt>
+          <dd>-0.035em</dd>
+        </div>
+        <div class="mark-spec-item">
+          <dt>Period Color</dt>
+          <dd>#C4652A (amber)</dd>
+        </div>
+        <div class="mark-spec-item">
+          <dt>Period Spacing</dt>
+          <dd>1px between "g" and period</dd>
+        </div>
+        <div class="mark-spec-item">
+          <dt>Animation</dt>
+          <dd>None. The mark never animates.</dd>
+        </div>
+        <div class="mark-spec-item">
+          <dt>Smallest Scale</dt>
+          <dd>Period alone serves as favicon / notification badge</dd>
+        </div>
+      </dl>
+
+      <div class="info-box">
+        <p><strong>The period, not the cursor.</strong> A cursor signals anticipation. The period signals permanence. It is the stamp, the impression, the final character in every log entry.</p>
+      </div>
+    </section>
+
+    <!-- 02 — Color System -->
+    <section class="section" id="color-system">
+      <div class="section-num">02</div>
+      <h2>Color System</h2>
+      <div class="section-desc">
+        "Monochrome until it means something." The paper tone system is a warm-neutral 12-step scale. Color appears only as signal &mdash; never decoration.
+      </div>
+
+      <h3>Paper Tones</h3>
+      <div class="color-grid">
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-00);"></div>
+          <div class="swatch-label">paper-00</div>
+          <div class="swatch-hex">#FAFAF8</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-05);"></div>
+          <div class="swatch-label">paper-05</div>
+          <div class="swatch-hex">#F4F1EC</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-10);"></div>
+          <div class="swatch-label">paper-10</div>
+          <div class="swatch-hex">#ECE8E1</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-20);"></div>
+          <div class="swatch-label">paper-20</div>
+          <div class="swatch-hex">#D9D4CB</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-30);"></div>
+          <div class="swatch-label">paper-30</div>
+          <div class="swatch-hex">#B8B1A6</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-40);"></div>
+          <div class="swatch-label">paper-40</div>
+          <div class="swatch-hex">#928A7E</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-50);"></div>
+          <div class="swatch-label">paper-50</div>
+          <div class="swatch-hex">#6E665B</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-60);"></div>
+          <div class="swatch-label">paper-60</div>
+          <div class="swatch-hex">#514A40</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-70);"></div>
+          <div class="swatch-label">paper-70</div>
+          <div class="swatch-hex">#3A342C</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-80);"></div>
+          <div class="swatch-label">paper-80</div>
+          <div class="swatch-hex">#26211B</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-90);"></div>
+          <div class="swatch-label">paper-90</div>
+          <div class="swatch-hex">#171310</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-block" style="background: var(--paper-95);"></div>
+          <div class="swatch-label">paper-95</div>
+          <div class="swatch-hex">#0D0B09</div>
+        </div>
+      </div>
+
+      <h3>Dark Mode</h3>
+      <p>Dark mode inverts the paper scale, not the signal colors. Body text becomes paper-05 on paper-95 (17.44:1 contrast). Signal colors remain constant — they represent semantic intent, not UI chrome.</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Element</th><th>Light Mode</th><th>Dark Mode</th><th>Rule</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Body text</td><td>paper-80</td><td>paper-05</td><td>Invert</td></tr>
+            <tr><td>Background</td><td>paper-05</td><td>paper-95</td><td>Invert</td></tr>
+            <tr><td>Borders</td><td>paper-20</td><td>paper-80</td><td>Adjust (4 steps)</td></tr>
+            <tr><td>Signal colors</td><td>Original</td><td>Original</td><td>No change</td></tr>
+            <tr><td>Amber accent</td><td>#C4652A</td><td>#C4652A</td><td>No change</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 03 — Typography -->
+    <section class="section" id="typography">
+      <div class="section-num">03</div>
+      <h2>Typography</h2>
+      <div class="section-desc">
+        Two fonts, two roles. This distinction is structural, not decorative. The mechanism speaks in monospace. The tape speaks in sans.
+      </div>
+
+      <div class="type-pair">
+        <div class="type-specimen-block">
+          <div class="type-specimen-label">The Mechanism</div>
+          <div style="font-family: var(--mono); font-size: 24px; font-weight: 600; letter-spacing: var(--tracking-tight); margin-bottom: var(--s-8);">Space Mono</div>
+          <div style="font-family: var(--mono); font-size: var(--type-14); color: var(--paper-60); line-height: 1.8;">
+            ABCDEFGHIJKLM<br>
+            NOPQRSTUVWXYZ<br>
+            abcdefghijklm<br>
+            nopqrstuvwxyz<br>
+            0123456789
+          </div>
+          <div class="type-specimen-role">Controls, labels, timestamps, compose placeholder, the mark</div>
+        </div>
+
+        <div class="type-specimen-block">
+          <div class="type-specimen-label">The Tape</div>
+          <div style="font-family: var(--sans); font-size: 24px; font-weight: 600; margin-bottom: var(--s-8);">IBM Plex Sans</div>
+          <div style="font-family: var(--sans); font-size: var(--type-14); color: var(--paper-60); line-height: 1.8;">
+            ABCDEFGHIJKLM<br>
+            NOPQRSTUVWXYZ<br>
+            abcdefghijklm<br>
+            nopqrstuvwxyz<br>
+            0123456789
+          </div>
+          <div class="type-specimen-role">User's words, body copy, annotations</div>
+        </div>
+      </div>
+
+      <h3>Type Scale</h3>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Size</th><th>Use</th><th>Font</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>11px</td><td>Monospace baseline, labels</td><td>Space Mono</td></tr>
+            <tr><td>13px</td><td>Monospace labels, nav</td><td>Space Mono</td></tr>
+            <tr><td>14px</td><td>Secondary body</td><td>IBM Plex Sans</td></tr>
+            <tr><td>15px</td><td>Entry text</td><td>IBM Plex Sans</td></tr>
+            <tr><td>16px</td><td>Body</td><td>IBM Plex Sans</td></tr>
+            <tr><td>18px</td><td>h4</td><td>Space Mono</td></tr>
+            <tr><td>24px</td><td>h3</td><td>Space Mono</td></tr>
+            <tr><td>28px</td><td>Hero</td><td>Space Mono</td></tr>
+            <tr><td>32px</td><td>h2</td><td>Space Mono</td></tr>
+            <tr><td>40px</td><td>h1</td><td>Space Mono</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 04 — Signal Colors -->
+    <section class="section" id="signal-colors">
+      <div class="section-num">04</div>
+      <h2>Signal Colors</h2>
+      <div class="section-desc">
+        Signal colors classify semantic intent. They are not status indicators (error/success). They never invert in dark mode. Always pair with text labels for accessibility.
+      </div>
+
+      <div class="signal-grid">
+        <div class="swatch">
+          <div class="signal-swatch-block" style="background: var(--signal-thought);">THOUGHT</div>
+          <div class="swatch-hex" style="margin-top: var(--s-8);">#6B7B8D</div>
+        </div>
+        <div class="swatch">
+          <div class="signal-swatch-block" style="background: var(--signal-action);">ACTION</div>
+          <div class="swatch-hex" style="margin-top: var(--s-8);">#C4652A</div>
+        </div>
+        <div class="swatch">
+          <div class="signal-swatch-block" style="background: var(--signal-decision);">DECISION</div>
+          <div class="swatch-hex" style="margin-top: var(--s-8);">#8B6E4E</div>
+        </div>
+        <div class="swatch">
+          <div class="signal-swatch-block" style="background: var(--signal-reference);">REFERENCE</div>
+          <div class="swatch-hex" style="margin-top: var(--s-8);">#5B7A6B</div>
+        </div>
+        <div class="swatch">
+          <div class="signal-swatch-block" style="background: var(--signal-unknown);">UNKNOWN</div>
+          <div class="swatch-hex" style="margin-top: var(--s-8);">#928A7E</div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <p><strong>signal-unknown = paper-40.</strong> Intentional. The "unclassified" state maps to the middle of the paper scale — a neutral, undecided position.</p>
+      </div>
+
+      <h3>Accent Colors</h3>
+      <div class="signal-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="swatch">
+          <div class="signal-swatch-block" style="background: var(--amber);">AMBER</div>
+          <div class="swatch-hex" style="margin-top: var(--s-8);">#C4652A &mdash; primary accent = signal-action</div>
+        </div>
+        <div class="swatch">
+          <div class="signal-swatch-block" style="background: var(--archive-accent);">ARCHIVE</div>
+          <div class="swatch-hex" style="margin-top: var(--s-8);">#5B5168 &mdash; archivist's voice</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 — Idle Trace -->
+    <section class="section" id="idle-trace">
+      <div class="section-num">05</div>
+      <h2>The Idle Trace</h2>
+      <div class="section-desc">
+        Real recording instruments don't stop when you walk away. A seismograph keeps turning its drum. The idle trace is the gap in the record &mdash; it tells you the instrument was running. No guilt, no "welcome back," just the honest record of silence.
+      </div>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Property</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Width</td><td>1px</td></tr>
+            <tr><td>Color</td><td>paper-40</td></tr>
+            <tr><td>Height formula</td><td><code>min(80, 16 + 16 * ln(hours + 1))</code> in points</td></tr>
+            <tr><td>Max height</td><td>80pt</td></tr>
+            <tr><td>Label</td><td>Shown for gaps of 1 hour or more</td></tr>
+            <tr><td>Animation</td><td>None. The trace was already drawn.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 06 — Seven Principles -->
+    <section class="section" id="principles">
+      <div class="section-num">06</div>
+      <h2>Seven Brand Principles</h2>
+
+      <div class="principle">
+        <div class="principle-num">01</div>
+        <div class="principle-text">The brand is the surface, not a symbol applied to it.</div>
+        <div class="principle-explain">The app itself is the brand expression. No external logo stamping. The timeline, the compose area, the idle trace &mdash; these are the brand.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">02</div>
+        <div class="principle-text">The period, not the cursor.</div>
+        <div class="principle-explain">Permanence over potential. The period says "the record is made." The cursor says "we're waiting." Log records; it doesn't wait.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">03</div>
+        <div class="principle-text">Monochrome until it means something.</div>
+        <div class="principle-explain">Color is signal, never decoration. The warm-neutral paper scale handles all structural needs. Color appears only when carrying semantic information.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">04</div>
+        <div class="principle-text">Stillness over performance.</div>
+        <div class="principle-explain">No decorative animation. No celebration. The instrument records faithfully. Motion exists only as mechanical feedback: shutter press, tape advance, mechanism reset.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">05</div>
+        <div class="principle-text">The mechanism and the tape.</div>
+        <div class="principle-explain">Monospace (Space Mono) is the mechanism: controls, labels, timestamps. Sans (IBM Plex Sans) is the tape: your words, what was recorded. This distinction teaches the system's philosophy through typography.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">06</div>
+        <div class="principle-text">The drum turns between entries.</div>
+        <div class="principle-explain">The idle trace records the gap honestly. No streak guilt. No "welcome back." The instrument was running. The tape just shows where you weren't writing.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">07</div>
+        <div class="principle-text">The tape gets wider but the instrument stays the same.</div>
+        <div class="principle-explain">New inputs (voice, images, locations) can be accepted. The recording mechanism &mdash; its feel, its colors, its rhythms &mdash; remains stable.</div>
+      </div>
+    </section>
+
+    <!-- 07 — Design Constraints -->
+    <section class="section" id="constraints">
+      <div class="section-num">07</div>
+      <h2>Design Constraints</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Rule</th><th>Detail</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>No emoji in UI</td><td>Use SVG icons. stroke="currentColor", 1.5px stroke at 24px canvas.</td></tr>
+            <tr><td>No decorative color</td><td>Color is signal only.</td></tr>
+            <tr><td>No animation on mark</td><td>The mark never animates.</td></tr>
+            <tr><td>Standard iOS patterns</td><td>For standard actions. No custom metaphors for common operations.</td></tr>
+            <tr><td>Light + dark mode</td><td>All elements must have both. 100% coverage before any design presentation.</td></tr>
+            <tr><td>44pt touch targets</td><td>Minimum for all interactive elements.</td></tr>
+            <tr><td>1.5px icon stroke</td><td>At 24px canvas. SVG icons only.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    Log• Design System &mdash; Brand System
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <script src="assets/scripts.js"></script>
+</body>
+</html>

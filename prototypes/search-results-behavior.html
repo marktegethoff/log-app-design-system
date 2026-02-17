@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results Behavior — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    body { background: var(--paper-05); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      border-bottom: 1px solid var(--paper-15);
+      background: var(--paper-00);
+    }
+    body.dark-mode .proto-header {
+      background: var(--paper-90);
+      border-bottom-color: var(--paper-80);
+    }
+    .proto-header .mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      text-decoration: none;
+    }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.06em;
+    }
+
+    .content {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: var(--s-48) var(--s-24);
+    }
+
+    .page-title {
+      font-family: var(--mono);
+      font-size: var(--type-24);
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      margin-bottom: var(--s-8);
+    }
+    body.dark-mode .page-title { color: var(--paper-05); }
+    .page-subtitle {
+      font-family: var(--sans);
+      font-size: var(--type-15);
+      color: var(--paper-50);
+      margin-bottom: var(--s-48);
+      line-height: 1.6;
+    }
+    body.dark-mode .page-subtitle { color: var(--paper-40); }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--s-16);
+      margin-top: var(--s-48);
+      display: block;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* Live search demo */
+    .search-demo {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: var(--s-32);
+    }
+    body.dark-mode .search-demo {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+
+    .search-demo-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+      padding: var(--s-12) var(--s-16);
+      border-bottom: 1px solid var(--paper-10);
+    }
+    body.dark-mode .search-demo-bar { border-bottom-color: var(--paper-80); }
+    .search-demo-bar svg { stroke: var(--paper-40); flex-shrink: 0; }
+    .search-demo-input {
+      flex: 1;
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--paper-80);
+      background: transparent;
+      border: none;
+      outline: none;
+    }
+    body.dark-mode .search-demo-input { color: var(--paper-05); }
+    .search-demo-input::placeholder { color: var(--paper-30); }
+    body.dark-mode .search-demo-input::placeholder { color: var(--paper-50); }
+
+    /* Filter pills in demo */
+    .demo-filters {
+      display: flex;
+      gap: var(--s-8);
+      padding: var(--s-8) var(--s-16);
+      border-bottom: 1px solid var(--paper-10);
+      overflow-x: auto;
+    }
+    body.dark-mode .demo-filters { border-bottom-color: var(--paper-80); }
+    .demo-filters::-webkit-scrollbar { display: none; }
+    .demo-pill {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-60);
+      border: 1px solid var(--paper-15);
+      background: transparent;
+      border-radius: 100px;
+      padding: 4px 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    body.dark-mode .demo-pill { color: var(--paper-40); border-color: var(--paper-70); }
+    .demo-pill.active {
+      border-color: var(--paper-50);
+      background: var(--paper-05);
+      color: var(--paper-80);
+    }
+    body.dark-mode .demo-pill.active {
+      border-color: var(--paper-40);
+      background: var(--paper-80);
+      color: var(--paper-05);
+    }
+    .demo-pip {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    /* Count bar */
+    .count-bar {
+      padding: var(--s-8) var(--s-16);
+      border-bottom: 1px solid var(--paper-05);
+    }
+    body.dark-mode .count-bar { border-bottom-color: var(--paper-80); }
+    .count-text {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+
+    /* Result items */
+    .demo-result {
+      display: flex;
+      gap: var(--s-8);
+      padding: var(--s-12) var(--s-16);
+      border-bottom: 1px solid var(--paper-05);
+      cursor: pointer;
+      align-items: flex-start;
+    }
+    body.dark-mode .demo-result { border-bottom-color: var(--paper-80); }
+    .demo-result:last-of-type { border-bottom: none; }
+    .demo-result:hover { background: var(--paper-05); }
+    body.dark-mode .demo-result:hover { background: var(--paper-80); }
+    .demo-result-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .demo-result-body { flex: 1; min-width: 0; }
+    .demo-result-meta {
+      display: flex;
+      gap: var(--s-8);
+      margin-bottom: 3px;
+    }
+    .demo-result-ts {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    .demo-result-type {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    .demo-result-text {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--paper-80);
+      line-height: 1.4;
+    }
+    body.dark-mode .demo-result-text { color: var(--paper-05); }
+    .demo-result-text mark {
+      background: none;
+      color: var(--amber);
+      font-weight: 500;
+    }
+    .demo-result-chevron {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+    .demo-result-chevron svg { stroke: var(--paper-30); }
+    body.dark-mode .demo-result-chevron svg { stroke: var(--paper-60); }
+
+    /* Paywall banner */
+    .paywall-banner {
+      background: var(--paper-05);
+      border: 1px solid var(--paper-10);
+      border-radius: 6px;
+      padding: var(--s-16);
+      margin-bottom: var(--s-32);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-16);
+    }
+    body.dark-mode .paywall-banner {
+      background: var(--paper-80);
+      border-color: var(--paper-70);
+    }
+    .paywall-banner-text {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--paper-60);
+      line-height: 1.5;
+    }
+    body.dark-mode .paywall-banner-text { color: var(--paper-30); }
+    .paywall-banner-btn {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-00);
+      background: var(--amber);
+      border: none;
+      border-radius: 3px;
+      padding: var(--s-8) var(--s-12);
+      cursor: pointer;
+      white-space: nowrap;
+      min-height: 44px;
+    }
+
+    /* Behavior rules */
+    .rules-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 var(--s-48);
+    }
+    .rules-list li {
+      display: flex;
+      gap: var(--s-12);
+      padding: var(--s-12) 0;
+      border-bottom: 1px solid var(--paper-10);
+      font-family: var(--sans);
+      font-size: var(--type-14);
+      color: var(--paper-70);
+      line-height: 1.5;
+    }
+    body.dark-mode .rules-list li {
+      border-bottom-color: var(--paper-80);
+      color: var(--paper-20);
+    }
+    .rules-list li:last-child { border-bottom: none; }
+    .rules-list .rule-key {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      white-space: nowrap;
+      padding-top: 3px;
+      min-width: 90px;
+    }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../index.html" class="mark">Log<span class="period">.</span></a>
+    <span class="proto-label">Search Results — Behavior</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <div class="content">
+    <div class="page-title">Search Results Behavior</div>
+    <p class="page-subtitle">Type-ahead filtering, intent filters, navigation to entries, and the Pro paywall at 100 results.</p>
+
+    <!-- Live search demo -->
+    <span class="section-label">Live Search Demo</span>
+    <div class="search-demo">
+      <div class="search-demo-bar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input
+          class="search-demo-input"
+          id="liveSearch"
+          type="text"
+          placeholder="Search entries..."
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+          aria-label="Search entries"
+        >
+      </div>
+      <div class="demo-filters" role="group" aria-label="Filter by intent">
+        <button class="demo-pill active" data-filter="all">All</button>
+        <button class="demo-pill" data-filter="thought">
+          <span class="demo-pip" style="background: var(--signal-thought);"></span>Thought
+        </button>
+        <button class="demo-pill" data-filter="action">
+          <span class="demo-pip" style="background: var(--signal-action);"></span>Action
+        </button>
+        <button class="demo-pill" data-filter="decision">
+          <span class="demo-pip" style="background: var(--signal-decision);"></span>Decision
+        </button>
+        <button class="demo-pill" data-filter="reference">
+          <span class="demo-pip" style="background: var(--signal-reference);"></span>Reference
+        </button>
+      </div>
+      <div class="count-bar">
+        <span class="count-text" id="countText">Type to search...</span>
+      </div>
+      <div id="resultsContainer"></div>
+    </div>
+
+    <!-- Paywall example -->
+    <span class="section-label">Pro Paywall — At 100 Results</span>
+    <div class="paywall-banner">
+      <span class="paywall-banner-text">Showing 100 of 247 results.<br>Upgrade for full search.</span>
+      <button class="paywall-banner-btn">Upgrade to Pro</button>
+    </div>
+
+    <!-- Behavior rules -->
+    <span class="section-label">Behavior Rules</span>
+    <ul class="rules-list">
+      <li>
+        <span class="rule-key">Type-ahead</span>
+        Results filter on every keystroke with no debounce delay. Minimum 1 character to show results.
+      </li>
+      <li>
+        <span class="rule-key">Filter pills</span>
+        Intent filter is additive with search query — AND logic. Tapping active filter deactivates it. One filter active at a time.
+      </li>
+      <li>
+        <span class="rule-key">Tap result</span>
+        Navigates to the entry in the timeline, scrolled into view with the entry highlighted. Back navigation returns to search with state preserved.
+      </li>
+      <li>
+        <span class="rule-key">Paywall</span>
+        Free tier: first 100 results returned. At 100, paywall notice appears below last result. Query still executes against full corpus; only display is capped.
+      </li>
+      <li>
+        <span class="rule-key">Keyboard</span>
+        Return key closes keyboard and commits query. Search field retains focus on filter tap. Clear button (x) appears when field has text.
+      </li>
+      <li>
+        <span class="rule-key">Empty state</span>
+        No results: "No entries found for [query]" in mono at paper-40. No illustration or decorative empty state.
+      </li>
+    </ul>
+  </div>
+
+  <script src="../assets/scripts.js"></script>
+  <script>
+    var CORPUS = [
+      { ts: 'Feb 17', type: 'decision', color: '#8B6E4E', text: 'Going with last-write-wins for MVP. Full conflict resolution is post-1.0.' },
+      { ts: 'Feb 17', type: 'thought', color: '#6B7B8D', text: 'Need to reconsider the batching window — 30s might be too aggressive for longer thoughts.' },
+      { ts: 'Feb 17', type: 'action', color: '#C4652A', text: 'Sent revised spec to engineering. Flagged sync conflict resolution as unresolved.' },
+      { ts: 'Feb 15', type: 'reference', color: '#5B7A6B', text: 'From brief: Supabase Realtime has 100ms typical sync latency on cellular.' },
+      { ts: 'Feb 15', type: 'thought', color: '#6B7B8D', text: 'The tape metaphor might be doing too much work. Seismograph is more honest about idle gaps.' },
+      { ts: 'Feb 14', type: 'decision', color: '#8B6E4E', text: 'Offline-first is non-negotiable. Sync is best-effort, not blocking.' },
+      { ts: 'Feb 13', type: 'action', color: '#C4652A', text: 'Updated brand spec with dark mode contrast audit fixes. All Track A items resolved.' },
+      { ts: 'Feb 12', type: 'thought', color: '#6B7B8D', text: 'Space Mono for mechanism, IBM Plex Sans for tape — this distinction keeps working.' },
+      { ts: 'Feb 10', type: 'reference', color: '#5B7A6B', text: 'iOS minimum touch target is 44x44pt per HIG. Non-negotiable for compose controls.' },
+      { ts: 'Feb 9', type: 'action', color: '#C4652A', text: 'Locked 14 architectural decisions. Engineering timeline starts Feb 24.' }
+    ];
+
+    var filterType = 'all';
+    var searchEl = document.getElementById('liveSearch');
+    var countEl = document.getElementById('countText');
+    var resultsEl = document.getElementById('resultsContainer');
+
+    function highlight(text, query) {
+      if (!query) return text;
+      var escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return text.replace(new RegExp('(' + escaped + ')', 'gi'), '<mark>$1</mark>');
+    }
+
+    function renderResults() {
+      var q = searchEl.value.trim().toLowerCase();
+      if (!q) {
+        countEl.textContent = 'Type to search...';
+        resultsEl.innerHTML = '';
+        return;
+      }
+      var filtered = CORPUS.filter(function (e) {
+        var typeMatch = filterType === 'all' || e.type === filterType;
+        var textMatch = e.text.toLowerCase().includes(q);
+        return typeMatch && textMatch;
+      });
+
+      countEl.textContent = filtered.length + ' entr' + (filtered.length === 1 ? 'y' : 'ies') + ' found';
+
+      if (filtered.length === 0) {
+        resultsEl.innerHTML = '<div style="padding: 20px 16px; font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40);">No entries found for &ldquo;' + q + '&rdquo;</div>';
+        return;
+      }
+
+      resultsEl.innerHTML = filtered.map(function (e) {
+        return '<div class="demo-result">' +
+          '<div class="demo-result-dot" style="background:' + e.color + ';"></div>' +
+          '<div class="demo-result-body">' +
+            '<div class="demo-result-meta">' +
+              '<span class="demo-result-ts">' + e.ts + '</span>' +
+              '<span class="demo-result-type">' + e.type.charAt(0).toUpperCase() + e.type.slice(1) + '</span>' +
+            '</div>' +
+            '<div class="demo-result-text">' + highlight(e.text, searchEl.value.trim()) + '</div>' +
+          '</div>' +
+          '<div class="demo-result-chevron">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    searchEl.addEventListener('input', renderResults);
+
+    document.querySelectorAll('.demo-pill').forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        document.querySelectorAll('.demo-pill').forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+        filterType = pill.dataset.filter;
+        renderResults();
+      });
+    });
+  </script>
+</body>
+</html>

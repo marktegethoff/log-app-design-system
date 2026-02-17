@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout System — Log• Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="mark">Log<span class="period">.</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="component-state-matrix.html">Components</a>
+      <a href="motion-system.html">Motion</a>
+      <a href="engineer-quick-start.html">Quick Start</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="separator">/</span>Layout System
+    </div>
+
+    <nav class="page-toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#spacing-scale">Spacing Scale</a></li>
+        <li><a href="#timeline-layout">Timeline Layout</a></li>
+        <li><a href="#device-layouts">Device Layouts</a></li>
+        <li><a href="#safe-areas">Safe Areas</a></li>
+        <li><a href="#scroll-behavior">Scroll Behavior</a></li>
+        <li><a href="#z-index">Z-Index Scale</a></li>
+        <li><a href="#elevation">Elevation</a></li>
+        <li><a href="#swiftui-layout">SwiftUI Layout Mapping</a></li>
+      </ol>
+    </nav>
+
+    <!-- Spacing Scale -->
+    <section class="section" id="spacing-scale">
+      <h2>Spacing Scale</h2>
+      <p>8pt grid system. All spacing values are multiples or fractions of 8. CSS uses px; iOS uses pt (1pt = 1px on standard, 2px on @2x Retina).</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Token</th><th>Value</th><th>iOS pt</th><th>Use Case</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>--s-4</code></td><td>4px</td><td>2pt</td><td>Inline spacing, icon gap</td></tr>
+            <tr><td><code>--s-8</code></td><td>8px</td><td>4pt</td><td>Minimum gap between interactive elements</td></tr>
+            <tr><td><code>--s-12</code></td><td>12px</td><td>6pt</td><td>Compact padding</td></tr>
+            <tr><td><code>--s-16</code></td><td>16px</td><td>8pt</td><td>Standard padding, list item spacing</td></tr>
+            <tr><td><code>--s-24</code></td><td>24px</td><td>12pt</td><td>Section padding, card padding</td></tr>
+            <tr><td><code>--s-32</code></td><td>32px</td><td>16pt</td><td>Large gap, group spacing</td></tr>
+            <tr><td><code>--s-48</code></td><td>48px</td><td>24pt</td><td>Section gap (mobile)</td></tr>
+            <tr><td><code>--s-64</code></td><td>64px</td><td>32pt</td><td>Major section spacing</td></tr>
+            <tr><td><code>--s-80</code></td><td>80px</td><td>40pt</td><td>Idle trace ceiling</td></tr>
+            <tr><td><code>--s-96</code></td><td>96px</td><td>48pt</td><td>Section gap (desktop)</td></tr>
+            <tr><td><code>--s-128</code></td><td>128px</td><td>64pt</td><td>Hero spacing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Visual ruler -->
+      <div style="margin: var(--s-32) 0;">
+        <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-bottom: var(--s-8);">VISUAL RULER</div>
+        <div style="display: flex; flex-direction: column; gap: var(--s-8);">
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">4px</code>
+            <div style="height: 8px; width: 4px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">8px</code>
+            <div style="height: 8px; width: 8px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">16px</code>
+            <div style="height: 8px; width: 16px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">24px</code>
+            <div style="height: 8px; width: 24px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">32px</code>
+            <div style="height: 8px; width: 32px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">48px</code>
+            <div style="height: 8px; width: 48px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">64px</code>
+            <div style="height: 8px; width: 64px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">96px</code>
+            <div style="height: 8px; width: 96px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--s-12);">
+            <code style="min-width: 50px; font-size: var(--type-11);">128px</code>
+            <div style="height: 8px; width: 128px; background: var(--amber); border-radius: 1px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Layout -->
+    <section class="section" id="timeline-layout">
+      <h2>Timeline Layout</h2>
+      <p>The timeline is the primary surface. Append-only, scrolls vertically, max-width 600px centered. Entries stack newest at top.</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Property</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Max width</td><td>600px (centered)</td></tr>
+            <tr><td>Entry padding</td><td>16px horizontal, 12px vertical</td></tr>
+            <tr><td>Entry separator</td><td>1px solid paper-10 (paper-80 dark)</td></tr>
+            <tr><td>Intent dot size</td><td>6px circle</td></tr>
+            <tr><td>Dot-to-text gap</td><td>8px</td></tr>
+            <tr><td>Timestamp font</td><td>Space Mono, 11px, paper-40</td></tr>
+            <tr><td>Entry text font</td><td>IBM Plex Sans, 15px, paper-80 (paper-05 dark)</td></tr>
+            <tr><td>Idle trace width</td><td>1px, centered</td></tr>
+            <tr><td>Idle trace max height</td><td>80pt</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>/* Timeline structure */
+.timeline {
+  max-width: 600px;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+.timeline-entry {
+  display: flex;
+  gap: var(--s-8);
+  padding: var(--s-12) var(--s-16);
+  border-bottom: 1px solid var(--paper-10);
+}
+
+body.dark-mode .timeline-entry {
+  border-bottom-color: var(--paper-80);
+}
+
+.timeline-entry .intent-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+.timeline-entry .timestamp {
+  font-family: var(--mono);
+  font-size: var(--type-11);
+  color: var(--paper-40);
+}
+
+.timeline-entry .entry-text {
+  font-family: var(--sans);
+  font-size: var(--type-15);
+  color: var(--paper-80);
+  line-height: 1.6;
+}
+
+body.dark-mode .timeline-entry .entry-text {
+  color: var(--paper-05);
+}</pre>
+      </div>
+    </section>
+
+    <!-- Device Layouts -->
+    <section class="section" id="device-layouts">
+      <h2>Device Layouts</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Device</th><th>Width</th><th>Behavior</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>iPhone (compact)</td><td>375pt</td><td>Full-width timeline, single column, bottom compose</td></tr>
+            <tr><td>iPhone Pro Max</td><td>428pt</td><td>Same as compact, slightly wider margins</td></tr>
+            <tr><td>iPad</td><td>768pt+</td><td>Centered timeline (600px max), sidebar possible</td></tr>
+            <tr><td>macOS</td><td>1024pt+</td><td>Centered timeline, generous margins</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Responsive Breakpoints</h3>
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>/* Breakpoints */
+/* Compact: 0 - 600px (phone) */
+/* Regular: 601px - 768px (large phone / small tablet) */
+/* Wide: 769px+ (tablet / desktop) */
+
+@media (max-width: 600px) {
+  /* Phone-specific: full-width, compact spacing */
+}
+
+@media (max-width: 768px) {
+  /* Tablet-and-below: single column, reduced spacing */
+}
+
+@media (min-width: 769px) {
+  /* Desktop: max-width containers, generous spacing */
+}</pre>
+      </div>
+    </section>
+
+    <!-- Safe Areas -->
+    <section class="section" id="safe-areas">
+      <h2>Safe Areas (iOS)</h2>
+      <p>Account for notch, Dynamic Island, home indicator, and status bar.</p>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Area</th><th>Concern</th><th>Solution</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Status bar</td><td>Content overlap</td><td><code>.safeAreaInset(edge: .top)</code></td></tr>
+            <tr><td>Home indicator</td><td>Bottom content obscured</td><td><code>.safeAreaInset(edge: .bottom)</code></td></tr>
+            <tr><td>Notch / Dynamic Island</td><td>Horizontal content clipping</td><td>Use <code>.ignoresSafeArea()</code> only for backgrounds</td></tr>
+            <tr><td>Keyboard</td><td>Compose area hidden</td><td>ScrollView + keyboard avoidance</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// SwiftUI safe area handling
+struct TimelineView: View {
+  var body: some View {
+    ScrollView {
+      LazyVStack(spacing: 0) {
+        ForEach(entries) { entry in
+          LogEntryView(entry: entry)
+        }
+      }
+    }
+    .safeAreaInset(edge: .bottom) {
+      ComposeView()
+    }
+  }
+}</pre>
+      </div>
+    </section>
+
+    <!-- Scroll Behavior -->
+    <section class="section" id="scroll-behavior">
+      <h2>Scroll Behavior</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Scenario</th><th>Behavior</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>New entry committed</td><td>Auto-scroll to show new entry + compose area (250ms smooth)</td></tr>
+            <tr><td>User scrolled up</td><td>Position preserved. No auto-scroll on new entry if user is reading history</td></tr>
+            <tr><td>App resume</td><td>Return to previous scroll position</td></tr>
+            <tr><td>Search result tap</td><td>Scroll to entry in timeline</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// SwiftUI scroll management
+ScrollViewReader { proxy in
+  ScrollView {
+    LazyVStack(spacing: 0) {
+      ForEach(entries) { entry in
+        LogEntryView(entry: entry)
+          .id(entry.id)
+      }
+    }
+  }
+  .onChange(of: latestEntryId) { id in
+    if isNearBottom {
+      withAnimation(.mechanical) {
+        proxy.scrollTo(id, anchor: .bottom)
+      }
+    }
+  }
+}</pre>
+      </div>
+    </section>
+
+    <!-- Z-Index -->
+    <section class="section" id="z-index">
+      <h2>Z-Index Scale</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Layer</th><th>Z-Index</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Content</td><td>0</td><td>Timeline entries, cards</td></tr>
+            <tr><td>Sticky nav</td><td>100</td><td>Site header, tab bar</td></tr>
+            <tr><td>Overlay</td><td>200</td><td>Modal backdrop, search overlay</td></tr>
+            <tr><td>Toast</td><td>300</td><td>Notifications, copy feedback</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Elevation -->
+    <section class="section" id="elevation">
+      <h2>Elevation</h2>
+      <p>Minimal shadows. Log uses borders and background color shifts for depth, not drop shadows. Shadows reserved for overlays only.</p>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>/* Elevation: borders over shadows */
+.card {
+  border: 1px solid var(--paper-10);
+  /* No box-shadow for cards */
+}
+
+/* Overlay shadow (modals, dropdowns only) */
+.overlay {
+  box-shadow: 0 4px 24px rgba(38, 33, 27, 0.15); /* paper-80 at 15% */
+}
+
+body.dark-mode .overlay {
+  box-shadow: 0 4px 24px rgba(13, 11, 9, 0.4); /* paper-95 at 40% */
+}</pre>
+      </div>
+    </section>
+
+    <!-- SwiftUI Layout -->
+    <section class="section" id="swiftui-layout">
+      <h2>SwiftUI Layout Mapping</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>CSS</th><th>SwiftUI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>display: flex; flex-direction: column</code></td><td><code>VStack</code></td></tr>
+            <tr><td><code>display: flex; flex-direction: row</code></td><td><code>HStack</code></td></tr>
+            <tr><td><code>max-width: 600px</code></td><td><code>.frame(maxWidth: 600)</code></td></tr>
+            <tr><td><code>gap: 8px</code></td><td><code>VStack(spacing: 8)</code></td></tr>
+            <tr><td><code>padding: 16px</code></td><td><code>.padding(16)</code></td></tr>
+            <tr><td><code>overflow-y: auto</code></td><td><code>ScrollView(.vertical)</code></td></tr>
+            <tr><td><code>position: sticky</code></td><td><code>.safeAreaInset(edge:)</code></td></tr>
+            <tr><td><code>z-index: 100</code></td><td><code>.zIndex(100)</code> or overlay order</td></tr>
+            <tr><td><code>@media (max-width: 600px)</code></td><td><code>@Environment(\.horizontalSizeClass)</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// Layout constants
+enum LogLayout {
+  static let timelineMaxWidth: CGFloat = 600
+  static let entryPaddingH: CGFloat = 16
+  static let entryPaddingV: CGFloat = 12
+  static let dotSize: CGFloat = 6
+  static let dotTextGap: CGFloat = 8
+  static let idleTraceWidth: CGFloat = 1
+  static let idleTraceMaxHeight: CGFloat = 80
+}</pre>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    Log• Design System &mdash; Layout System
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <script src="assets/scripts.js"></script>
+</body>
+</html>

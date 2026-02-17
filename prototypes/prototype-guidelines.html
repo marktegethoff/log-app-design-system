@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototype Guidelines — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    body { background: var(--paper-05); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      border-bottom: 1px solid var(--paper-15);
+      background: var(--paper-00);
+    }
+    body.dark-mode .proto-header {
+      background: var(--paper-90);
+      border-bottom-color: var(--paper-80);
+    }
+    .proto-header .mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      text-decoration: none;
+    }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.06em;
+    }
+
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--s-48) var(--s-24) var(--s-96);
+    }
+
+    .page-title {
+      font-family: var(--mono);
+      font-size: var(--type-28);
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      margin-bottom: var(--s-8);
+    }
+    body.dark-mode .page-title { color: var(--paper-05); }
+    .page-subtitle {
+      font-family: var(--sans);
+      font-size: var(--type-15);
+      color: var(--paper-50);
+      margin-bottom: var(--s-48);
+      line-height: 1.6;
+    }
+    body.dark-mode .page-subtitle { color: var(--paper-40); }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--s-16);
+      margin-top: var(--s-48);
+      display: block;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* Two-column rule table */
+    .rules-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--paper-10);
+      border: 1px solid var(--paper-10);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: var(--s-32);
+    }
+    body.dark-mode .rules-table {
+      background: var(--paper-80);
+      border-color: var(--paper-80);
+    }
+    @media (max-width: 600px) {
+      .rules-table { grid-template-columns: 1fr; }
+    }
+    .rules-col {
+      background: var(--paper-00);
+      padding: var(--s-24);
+    }
+    body.dark-mode .rules-col { background: var(--paper-90); }
+    .rules-col-header {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--s-16);
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+    }
+    .rules-col-header.may-change { color: var(--signal-thought); }
+    .rules-col-header.must-not { color: var(--signal-action); }
+    .rules-col-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .rules-col-icon svg { display: block; }
+    .rules-col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .rules-col li {
+      font-family: var(--sans);
+      font-size: var(--type-14);
+      color: var(--paper-60);
+      line-height: 1.5;
+      padding: var(--s-8) 0;
+      border-bottom: 1px solid var(--paper-10);
+    }
+    body.dark-mode .rules-col li {
+      color: var(--paper-30);
+      border-bottom-color: var(--paper-80);
+    }
+    .rules-col li:last-child { border-bottom: none; }
+
+    /* Naming convention */
+    .naming-block {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-radius: 6px;
+      padding: var(--s-24);
+      margin-bottom: var(--s-32);
+    }
+    body.dark-mode .naming-block {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+    .naming-pattern {
+      font-family: var(--mono);
+      font-size: var(--type-16);
+      color: var(--paper-80);
+      margin-bottom: var(--s-16);
+    }
+    body.dark-mode .naming-pattern { color: var(--paper-05); }
+    .naming-pattern .token {
+      color: var(--amber);
+    }
+    .naming-examples {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .naming-examples li {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      padding: var(--s-4) 0;
+    }
+    body.dark-mode .naming-examples li { color: var(--paper-40); }
+    .naming-note {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      margin-top: var(--s-16);
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+    body.dark-mode .naming-note { color: var(--paper-40); }
+
+    /* Graduation criteria */
+    .graduation-steps {
+      counter-reset: graduation;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 var(--s-32);
+    }
+    .graduation-steps li {
+      counter-increment: graduation;
+      display: flex;
+      gap: var(--s-16);
+      padding: var(--s-16) 0;
+      border-bottom: 1px solid var(--paper-10);
+    }
+    body.dark-mode .graduation-steps li { border-bottom-color: var(--paper-80); }
+    .graduation-steps li:last-child { border-bottom: none; }
+    .graduation-steps li::before {
+      content: counter(graduation);
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-00);
+      background: var(--paper-50);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    body.dark-mode .graduation-steps li::before { background: var(--paper-50); }
+    .graduation-steps .step-title {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--paper-80);
+      font-weight: 700;
+      margin-bottom: var(--s-4);
+    }
+    body.dark-mode .graduation-steps .step-title { color: var(--paper-05); }
+    .graduation-steps .step-desc {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      line-height: 1.5;
+      margin: 0;
+    }
+    body.dark-mode .graduation-steps .step-desc { color: var(--paper-40); }
+
+    /* Prototype index table */
+    .proto-index {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: var(--s-32);
+    }
+    body.dark-mode .proto-index {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+    .proto-index-row {
+      display: flex;
+      align-items: center;
+      gap: var(--s-16);
+      padding: var(--s-12) var(--s-16);
+      border-bottom: 1px solid var(--paper-05);
+    }
+    body.dark-mode .proto-index-row { border-bottom-color: var(--paper-80); }
+    .proto-index-row:last-child { border-bottom: none; }
+    .proto-index-type {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .proto-index-link {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--amber);
+      text-decoration: none;
+      flex: 1;
+    }
+    .proto-index-link:hover { text-decoration: underline; }
+    .proto-index-desc {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      flex: 2;
+    }
+    body.dark-mode .proto-index-desc { color: var(--paper-40); }
+
+    /* Versioning note */
+    .versioning-block {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-left: 3px solid var(--amber);
+      border-radius: 0 4px 4px 0;
+      padding: var(--s-16) var(--s-24);
+      margin-bottom: var(--s-48);
+    }
+    body.dark-mode .versioning-block {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+      border-left-color: var(--amber);
+    }
+    .versioning-block p {
+      font-family: var(--sans);
+      font-size: var(--type-14);
+      color: var(--paper-60);
+      margin-bottom: var(--s-8);
+      line-height: 1.6;
+    }
+    body.dark-mode .versioning-block p { color: var(--paper-30); }
+    .versioning-block p:last-child { margin-bottom: 0; }
+    .versioning-block code {
+      font-size: var(--type-11);
+      background: var(--paper-05);
+      padding: 2px 5px;
+      border-radius: 2px;
+    }
+    body.dark-mode .versioning-block code {
+      background: var(--paper-80);
+      color: var(--paper-05);
+    }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../index.html" class="mark">Log<span class="period">.</span></a>
+    <span class="proto-label">Prototype Guidelines</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <div class="content">
+
+    <div class="page-title">Prototype Guidelines</div>
+    <p class="page-subtitle">Rules for creating, versioning, and graduating Log• prototypes. The system is the source of truth. Prototypes explore within it, not around it.</p>
+
+    <!-- What may / may not change -->
+    <span class="section-label">Prototype Territory</span>
+    <div class="rules-table">
+      <div class="rules-col">
+        <div class="rules-col-header may-change">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="#6B7B8D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          May change
+        </div>
+        <ul>
+          <li>Layout and content density</li>
+          <li>Navigation flow between surfaces</li>
+          <li>Copy and placeholder text</li>
+          <li>Sample data and entry content</li>
+          <li>Prototype-specific layout (device frames, stage backgrounds)</li>
+          <li>Number of items in lists or grids</li>
+          <li>Order of elements within a surface</li>
+          <li>Interaction patterns (swipe vs. long-press)</li>
+          <li>Prose in archivist annotations</li>
+        </ul>
+      </div>
+      <div class="rules-col">
+        <div class="rules-col-header must-not">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6l12 12" stroke="#C4652A" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Must not change
+        </div>
+        <ul>
+          <li>Color tokens (paper tones, signal colors, amber)</li>
+          <li>Signal colors in dark mode — they do not invert</li>
+          <li>Font families: Space Mono = mechanism, IBM Plex Sans = tape</li>
+          <li>Spacing grid (8pt — use CSS variables only)</li>
+          <li>Intent dot size: 6px, border-radius 50%</li>
+          <li>Idle trace: no animation, instant at final height</li>
+          <li>Touch targets: 44px minimum</li>
+          <li>Icon stroke: 1.5px at 24px canvas, currentColor</li>
+          <li>The mark: "Log" + amber period, Space Mono 600</li>
+          <li>No emoji in UI — SVG only</li>
+          <li>Dark mode: 100% coverage before presentation</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Naming convention -->
+    <span class="section-label">Naming Convention</span>
+    <div class="naming-block">
+      <div class="naming-pattern">
+        [<span class="token">name</span>]-surface-v[<span class="token">N</span>].html
+        &nbsp;&nbsp;or&nbsp;&nbsp;
+        [<span class="token">name</span>]-behavior.html
+      </div>
+      <ul class="naming-examples">
+        <li>timeline-surface-v1.html &rarr; timeline-surface-v2.html</li>
+        <li>entry-detail-surface-v1.html</li>
+        <li>search-surface-v1.html</li>
+        <li>idle-trace-behavior.html</li>
+        <li>dot-classification-behavior.html</li>
+      </ul>
+      <p class="naming-note">Surface prototypes are device-framed UI mockups. Behavior prototypes demonstrate a specific interaction pattern without a device frame. Both types live in <code>prototypes/</code>.</p>
+    </div>
+
+    <!-- Versioning -->
+    <span class="section-label">Versioning</span>
+    <div class="versioning-block">
+      <p>Increment N for each new version: <code>timeline-surface-v1.html</code> &rarr; <code>timeline-surface-v2.html</code>. Never overwrite an existing version — old versions are the record.</p>
+      <p>Behavior files do not version (they document rules, not designs). If a rule changes, update the behavior file in place and note the change in a comment.</p>
+      <p>The working version is always the highest N. If multiple versions exist, the oldest may be archived to <code>prototypes/archive/</code> but never deleted.</p>
+    </div>
+
+    <!-- Graduation criteria -->
+    <span class="section-label">Graduation Criteria</span>
+    <p style="font-family: var(--sans); font-size: var(--type-14); color: var(--paper-60); margin-bottom: var(--s-16); line-height: 1.6;">A prototype graduates to a system component when all five are true:</p>
+    <ol class="graduation-steps">
+      <li>
+        <div>
+          <div class="step-title">Dark mode complete</div>
+          <p class="step-desc">Every element has a verified dark mode state. No paper-40 text on paper-90/95 backgrounds.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Tokens only</div>
+          <p class="step-desc">No hardcoded hex values. All colors, spacing, and type sizes reference CSS custom properties from the shared stylesheet.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Accessibility verified</div>
+          <p class="step-desc">Touch targets at 44px minimum. Text contrast passes WCAG AA. SVG icons have aria-labels. Interactive elements have focus states.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Specifier reviewed</div>
+          <p class="step-desc">A specifier pass has produced a formal component specification with all states, measurements, and behavior rules documented.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="step-title">Ethos gate passed</div>
+          <p class="step-desc">All five calibration questions answered without uncertainty: necessary, coherent, simplest correct, nothing to remove, consistent with system.</p>
+        </div>
+      </li>
+    </ol>
+
+    <!-- Prototype index -->
+    <span class="section-label">Current Prototypes</span>
+    <div class="proto-index">
+      <div class="proto-index-row">
+        <span class="proto-index-type">Surface</span>
+        <a class="proto-index-link" href="timeline-surface-v1.html">timeline-surface-v1</a>
+        <span class="proto-index-desc">Main timeline with intent dots, idle traces, compose area, annotation panel</span>
+      </div>
+      <div class="proto-index-row">
+        <span class="proto-index-type">Surface</span>
+        <a class="proto-index-link" href="entry-detail-surface-v1.html">entry-detail-surface-v1</a>
+        <span class="proto-index-desc">Single entry expanded view with archivist annotation and correction history</span>
+      </div>
+      <div class="proto-index-row">
+        <span class="proto-index-type">Surface</span>
+        <a class="proto-index-link" href="search-surface-v1.html">search-surface-v1</a>
+        <span class="proto-index-desc">Search input, results list, intent filters, Pro paywall indicator</span>
+      </div>
+      <div class="proto-index-row">
+        <span class="proto-index-type">Surface</span>
+        <a class="proto-index-link" href="edit-surface-v1.html">edit-surface-v1</a>
+        <span class="proto-index-desc">Correction surface with original display, editable area, visual diff</span>
+      </div>
+      <div class="proto-index-row">
+        <span class="proto-index-type">Behavior</span>
+        <a class="proto-index-link" href="dot-classification-behavior.html">dot-classification-behavior</a>
+        <span class="proto-index-desc">Intent dot types, auto-classification demo, manual override, 30s batching</span>
+      </div>
+      <div class="proto-index-row">
+        <span class="proto-index-type">Behavior</span>
+        <a class="proto-index-link" href="idle-trace-behavior.html">idle-trace-behavior</a>
+        <span class="proto-index-desc">Logarithmic height formula, trace scale table, in-context timeline demo</span>
+      </div>
+      <div class="proto-index-row">
+        <span class="proto-index-type">Behavior</span>
+        <a class="proto-index-link" href="edit-flow-behavior.html">edit-flow-behavior</a>
+        <span class="proto-index-desc">3-step edit interaction, correction pattern, edit model principles</span>
+      </div>
+      <div class="proto-index-row">
+        <span class="proto-index-type">Behavior</span>
+        <a class="proto-index-link" href="search-results-behavior.html">search-results-behavior</a>
+        <span class="proto-index-desc">Live type-ahead demo, filter interaction, paywall, behavior rules</span>
+      </div>
+      <div class="proto-index-row">
+        <span class="proto-index-type">Guidelines</span>
+        <a class="proto-index-link" href="prototype-guidelines.html">prototype-guidelines</a>
+        <span class="proto-index-desc">This page — naming, versioning, territory rules, graduation criteria</span>
+      </div>
+    </div>
+
+    <p style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-bottom: 0;">
+      &larr; <a href="../index.html" style="color: var(--paper-40); text-decoration: none;">Back to index</a>
+    </p>
+
+  </div>
+
+  <script src="../assets/scripts.js"></script>
+</body>
+</html>

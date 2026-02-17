@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Flow Behavior — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    body { background: var(--paper-05); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      border-bottom: 1px solid var(--paper-15);
+      background: var(--paper-00);
+    }
+    body.dark-mode .proto-header {
+      background: var(--paper-90);
+      border-bottom-color: var(--paper-80);
+    }
+    .proto-header .mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      text-decoration: none;
+    }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.06em;
+    }
+
+    .content {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: var(--s-48) var(--s-24);
+    }
+
+    .page-title {
+      font-family: var(--mono);
+      font-size: var(--type-24);
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      margin-bottom: var(--s-8);
+    }
+    body.dark-mode .page-title { color: var(--paper-05); }
+    .page-subtitle {
+      font-family: var(--sans);
+      font-size: var(--type-15);
+      color: var(--paper-50);
+      margin-bottom: var(--s-48);
+      line-height: 1.6;
+    }
+    body.dark-mode .page-subtitle { color: var(--paper-40); }
+
+    /* Steps */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-24);
+      margin-bottom: var(--s-48);
+    }
+    @media (max-width: 600px) {
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+
+    .step-card {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    body.dark-mode .step-card {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+    .step-header {
+      padding: var(--s-12) var(--s-16);
+      border-bottom: 1px solid var(--paper-10);
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+    }
+    body.dark-mode .step-header { border-bottom-color: var(--paper-80); }
+    .step-number {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      font-weight: 700;
+      color: var(--paper-00);
+      background: var(--paper-60);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    body.dark-mode .step-number { background: var(--paper-50); }
+    .step-title {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--paper-70);
+      font-weight: 700;
+    }
+    body.dark-mode .step-title { color: var(--paper-20); }
+    .step-body { padding: var(--s-16); }
+
+    /* Step 1: Entry row with swipe affordance */
+    .entry-swipe-row {
+      display: flex;
+      align-items: center;
+      gap: var(--s-8);
+      background: var(--paper-05);
+      border-radius: 6px;
+      padding: var(--s-8) var(--s-12);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--paper-10);
+    }
+    body.dark-mode .entry-swipe-row {
+      background: var(--paper-80);
+      border-color: var(--paper-70);
+    }
+    .swipe-action {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--s-12);
+      background: var(--paper-70);
+      border-radius: 0 6px 6px 0;
+      gap: var(--s-4);
+    }
+    body.dark-mode .swipe-action { background: var(--paper-60); }
+    .swipe-icon {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-05);
+    }
+    .entry-row-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal-decision);
+      flex-shrink: 0;
+    }
+    .entry-row-content { flex: 1; }
+    .entry-row-ts {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+    }
+    .entry-row-text {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-70);
+      line-height: 1.4;
+    }
+    body.dark-mode .entry-row-text { color: var(--paper-20); }
+    .step-note {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      margin-top: var(--s-12);
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+    body.dark-mode .step-note { color: var(--paper-40); }
+
+    /* Step 2: Inline edit */
+    .edit-inline-demo {
+      background: var(--paper-05);
+      border: 1.5px solid var(--amber);
+      border-radius: 6px;
+      padding: var(--s-12);
+    }
+    body.dark-mode .edit-inline-demo {
+      background: var(--paper-80);
+    }
+    .edit-inline-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--amber);
+      margin-bottom: var(--s-8);
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .edit-inline-text {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-80);
+      line-height: 1.5;
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      min-height: 60px;
+    }
+    body.dark-mode .edit-inline-text { color: var(--paper-05); }
+    .edit-inline-actions {
+      display: flex;
+      gap: var(--s-8);
+      margin-top: var(--s-8);
+      padding-top: var(--s-8);
+      border-top: 1px solid var(--paper-15);
+    }
+    body.dark-mode .edit-inline-actions { border-top-color: var(--paper-70); }
+    .edit-inline-save {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-00);
+      background: var(--amber);
+      border: none;
+      border-radius: 3px;
+      padding: 4px 10px;
+      cursor: pointer;
+      min-height: 28px;
+    }
+    .edit-inline-cancel {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-50);
+      background: transparent;
+      border: 1px solid var(--paper-20);
+      border-radius: 3px;
+      padding: 4px 10px;
+      cursor: pointer;
+      min-height: 28px;
+    }
+    body.dark-mode .edit-inline-cancel { color: var(--paper-40); border-color: var(--paper-60); }
+
+    /* Step 3: Correction result */
+    .corrected-entry {
+      background: var(--paper-05);
+      border: 1px solid var(--paper-10);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    body.dark-mode .corrected-entry {
+      background: var(--paper-80);
+      border-color: var(--paper-70);
+    }
+    .corrected-current {
+      padding: var(--s-8) var(--s-12);
+      border-bottom: 1px solid var(--paper-10);
+    }
+    body.dark-mode .corrected-current { border-bottom-color: var(--paper-70); }
+    .corrected-ts {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+      margin-bottom: 3px;
+    }
+    .corrected-text {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-70);
+      line-height: 1.4;
+    }
+    body.dark-mode .corrected-text { color: var(--paper-20); }
+    .correction-history-mini {
+      padding: var(--s-8) var(--s-12);
+      background: var(--paper-00);
+    }
+    body.dark-mode .correction-history-mini { background: var(--paper-90); }
+    .correction-label-mini {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--s-4);
+      display: block;
+    }
+    .correction-orig-mini {
+      font-family: var(--sans);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      text-decoration: line-through;
+      line-height: 1.4;
+      display: block;
+      margin-bottom: 3px;
+    }
+    body.dark-mode .correction-orig-mini { color: var(--paper-60); }
+    .correction-new-mini {
+      font-family: var(--sans);
+      font-size: var(--type-11);
+      color: var(--paper-60);
+      line-height: 1.4;
+      display: block;
+    }
+    body.dark-mode .correction-new-mini { color: var(--paper-40); }
+    .correction-when-mini {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-30);
+      margin-top: var(--s-4);
+      display: block;
+    }
+    body.dark-mode .correction-when-mini { color: var(--paper-60); }
+
+    /* Principles section */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-16);
+      margin-bottom: var(--s-48);
+    }
+    @media (max-width: 600px) {
+      .principles-grid { grid-template-columns: 1fr; }
+    }
+    .principle-item {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-10);
+      border-radius: 4px;
+      padding: var(--s-16);
+    }
+    body.dark-mode .principle-item {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+    .principle-title {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--paper-80);
+      font-weight: 700;
+      margin-bottom: var(--s-8);
+    }
+    body.dark-mode .principle-title { color: var(--paper-05); }
+    .principle-desc {
+      font-family: var(--sans);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      line-height: 1.5;
+      margin: 0;
+    }
+    body.dark-mode .principle-desc { color: var(--paper-40); }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--s-16);
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../index.html" class="mark">Log<span class="period">.</span></a>
+    <span class="proto-label">Edit Flow — Behavior</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <div class="content">
+    <div class="page-title">Edit Flow Behavior</div>
+    <p class="page-subtitle">Corrections are recorded, not erased. The original is preserved. The edit model treats entries as immutable records with an append-only correction layer.</p>
+
+    <!-- 3-step flow -->
+    <span class="section-label">Interaction Flow — 3 Steps</span>
+    <div class="steps-grid">
+
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">1</div>
+          <span class="step-title">Reveal action</span>
+        </div>
+        <div class="step-body">
+          <div class="entry-swipe-row" id="swipeRow">
+            <div class="entry-row-dot"></div>
+            <div class="entry-row-content">
+              <div class="entry-row-ts">9:29</div>
+              <div class="entry-row-text">Going with last-write-wins for MVP.</div>
+            </div>
+            <div class="swipe-action">
+              <span class="swipe-icon">Edit</span>
+            </div>
+          </div>
+          <p class="step-note">Long-press or leading swipe reveals the edit action. Standard iOS swipe pattern — no custom gesture required.</p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">2</div>
+          <span class="step-title">Edit mode</span>
+        </div>
+        <div class="step-body">
+          <div class="edit-inline-demo">
+            <span class="edit-inline-label">Correcting</span>
+            <textarea class="edit-inline-text" rows="3">Going with last-write-wins for MVP. Full conflict resolution is post-1.0.</textarea>
+            <div class="edit-inline-actions">
+              <button class="edit-inline-save">Save</button>
+              <button class="edit-inline-cancel">Cancel</button>
+            </div>
+          </div>
+          <p class="step-note">Entry becomes an editable field in place. Amber border signals active correction state.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">3</div>
+          <span class="step-title">Correction saved</span>
+        </div>
+        <div class="step-body">
+          <div class="corrected-entry">
+            <div class="corrected-current">
+              <div class="corrected-ts">9:29 &mdash; corrected 10:14</div>
+              <div class="corrected-text">Going with last-write-wins for MVP. Full conflict resolution is post-1.0. The operational overhead of CRDT at this scale is disproportionate to the actual risk.</div>
+            </div>
+            <div class="correction-history-mini">
+              <span class="correction-label-mini">Original</span>
+              <span class="correction-orig-mini">Going with last-write-wins for MVP.</span>
+              <span class="correction-new-mini">Going with last-write-wins for MVP. Full conflict resolution is post-1.0. The operational overhead...</span>
+              <span class="correction-when-mini">Corrected Feb 17 — 10:14</span>
+            </div>
+          </div>
+          <p class="step-note">Original text preserved with struck-through rendering. New text appears below. Timestamp of correction is recorded separately from original timestamp.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit model principles -->
+    <span class="section-label">Edit Model Principles</span>
+    <div class="principles-grid">
+      <div class="principle-item">
+        <div class="principle-title">Records, not drafts</div>
+        <p class="principle-desc">An entry at time T is a fact. It cannot be erased, only corrected. The correction is itself a new fact.</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-title">Original always visible</div>
+        <p class="principle-desc">The struck-through original is always accessible in entry detail. Archivist notes may reference either version.</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-title">Timestamp immutable</div>
+        <p class="principle-desc">The original entry timestamp cannot change. The correction carries its own timestamp. Time of thought and time of correction are separate data.</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-title">No deletion</div>
+        <p class="principle-desc">MVP does not support deletion. The drum turns; it does not rewind. Deletion is a post-1.0 question with significant design surface of its own.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/scripts.js"></script>
+</body>
+</html>

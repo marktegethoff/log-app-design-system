@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftUI Implementation Guide — Log• Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="mark">Log<span class="period">.</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="component-state-matrix.html">Components</a>
+      <a href="layout-system.html">Layout</a>
+      <a href="engineer-quick-start.html">Quick Start</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="separator">/</span>SwiftUI Implementation Guide
+    </div>
+
+    <nav class="page-toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#token-usage">Token Usage Rules</a></li>
+        <li><a href="#state-mapping">State Mapping</a></li>
+        <li><a href="#motion-mapping">Motion Mapping</a></li>
+        <li><a href="#layout-mapping">Layout Mapping</a></li>
+        <li><a href="#accessibility">Accessibility Modifiers</a></li>
+        <li><a href="#view-modifiers">ViewModifier Patterns</a></li>
+        <li><a href="#anti-patterns">Anti-Patterns</a></li>
+      </ol>
+    </nav>
+
+    <!-- Token Usage -->
+    <section class="section" id="token-usage">
+      <h2>Token Usage Rules</h2>
+      <p>All design values come from <code>design-tokens-swift.swift</code>. Never hardcode hex values, font names, or spacing numbers in views.</p>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// CORRECT: Use token structs
+Text(entry.text)
+    .font(LogTypography.tape(size: LogTypography.Size.entryText))
+    .foregroundColor(LogColors.textPrimary(colorScheme))
+    .padding(LogSpacing.md)
+
+// WRONG: Hardcoded values
+Text(entry.text)
+    .font(.custom("IBMPlexSans", size: 15))
+    .foregroundColor(Color(hex: "26211B"))
+    .padding(16)</pre>
+      </div>
+
+      <h3>Color Scheme Access</h3>
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>struct LogEntryView: View {
+    @Environment(\.colorScheme) var colorScheme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: LogSpacing.sm) {
+            // Semantic color functions handle light/dark automatically
+            Text(entry.text)
+                .foregroundColor(LogColors.textPrimary(colorScheme))
+
+            Text(entry.timestamp)
+                .foregroundColor(LogColors.textTertiary(colorScheme))
+        }
+        .background(LogColors.backgroundPrimary(colorScheme))
+    }
+}</pre>
+      </div>
+    </section>
+
+    <!-- State Mapping -->
+    <section class="section" id="state-mapping">
+      <h2>State Mapping</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>CSS / Web State</th><th>SwiftUI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>:hover</td><td><code>.onHover { }</code> (macOS only)</td></tr>
+            <tr><td>:active</td><td><code>configuration.isPressed</code> in ButtonStyle</td></tr>
+            <tr><td>:focus</td><td><code>@FocusState</code></td></tr>
+            <tr><td>:disabled</td><td><code>.disabled(true)</code></td></tr>
+            <tr><td>aria-expanded</td><td><code>@State var isExpanded</code> + <code>DisclosureGroup</code></td></tr>
+            <tr><td>class="dark-mode"</td><td><code>@Environment(\.colorScheme)</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// Focus state management
+struct ComposeView: View {
+    @State private var text = ""
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        TextEditor(text: $text)
+            .focused($isFocused)
+            .font(LogTypography.tape(size: LogTypography.Size.entryText))
+            .overlay(
+                Group {
+                    if text.isEmpty {
+                        Text("Log...")
+                            .font(LogTypography.mechanism(size: LogTypography.Size.entryText))
+                            .foregroundColor(LogColors.paper30)
+                    }
+                },
+                alignment: .topLeading
+            )
+    }
+}</pre>
+      </div>
+    </section>
+
+    <!-- Motion Mapping -->
+    <section class="section" id="motion-mapping">
+      <h2>Motion Mapping</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>CSS</th><th>SwiftUI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>transition: 150ms ease-out</code></td><td><code>withAnimation(.shutter) { }</code></td></tr>
+            <tr><td><code>animation: entryAppear 350ms</code></td><td><code>.transition(.opacity.combined(with: .move(edge: .top)))</code> + <code>.animation(.mechanical)</code></td></tr>
+            <tr><td><code>cubic-bezier(0.2, 0.8, 0.3, 1.0)</code></td><td><code>.timingCurve(0.2, 0.8, 0.3, 1.0)</code></td></tr>
+            <tr><td><code>prefers-reduced-motion</code></td><td><code>@Environment(\.accessibilityReduceMotion)</code></td></tr>
+            <tr><td><code>will-change: transform</code></td><td><code>.drawingGroup()</code> (if needed for perf)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// Reduced motion support
+struct AnimatedEntryView: View {
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+    let entry: LogEntry
+
+    var body: some View {
+        LogEntryView(entry: entry)
+            .transition(reduceMotion ? .identity : .opacity.combined(with: .move(edge: .top)))
+            .animation(reduceMotion ? nil : .mechanical, value: entry.id)
+    }
+}</pre>
+      </div>
+    </section>
+
+    <!-- Layout Mapping -->
+    <section class="section" id="layout-mapping">
+      <h2>Layout Mapping</h2>
+
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>CSS</th><th>SwiftUI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>display: flex; flex-direction: column</code></td><td><code>VStack(spacing:)</code></td></tr>
+            <tr><td><code>display: flex; flex-direction: row</code></td><td><code>HStack(spacing:)</code></td></tr>
+            <tr><td><code>max-width: 600px; margin: 0 auto</code></td><td><code>.frame(maxWidth: 600).frame(maxWidth: .infinity)</code></td></tr>
+            <tr><td><code>overflow-y: auto</code></td><td><code>ScrollView(.vertical)</code></td></tr>
+            <tr><td><code>position: sticky; bottom: 0</code></td><td><code>.safeAreaInset(edge: .bottom)</code></td></tr>
+            <tr><td><code>@media (max-width: 600px)</code></td><td><code>@Environment(\.horizontalSizeClass)</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// Timeline layout structure
+struct TimelineView: View {
+    @Environment(\.horizontalSizeClass) var sizeClass
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(entries) { entry in
+                        LogEntryView(entry: entry)
+                            .id(entry.id)
+                    }
+                }
+                .frame(maxWidth: 600)
+                .frame(maxWidth: .infinity)
+            }
+            .safeAreaInset(edge: .bottom) {
+                ComposeView(onCommit: { text in
+                    // Append cycle here
+                })
+            }
+        }
+    }
+}</pre>
+      </div>
+    </section>
+
+    <!-- Accessibility -->
+    <section class="section" id="accessibility">
+      <h2>Accessibility Modifiers</h2>
+
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre>// Entry accessibility
+LogEntryView(entry: entry)
+    .accessibilityLabel("\(entry.intentType.rawValue) entry: \(entry.text)")
+    .accessibilityHint("Double-tap to view details")
+
+// Commit button
+CommitButton(isReady: !text.isEmpty)
+    .accessibilityLabel(text.isEmpty ? "Commit button, disabled" : "Commit entry")
+    .accessibilityAddTraits(.isButton)
+    .accessibilityRemoveTraits(text.isEmpty ? .isButton : [])
+
+// Intent dot — not interactive, decorative unless labeled
+Circle()
+    .fill(LogColors.signal(entry.intentType))
+    .frame(width: 6, height: 6)
+    .accessibilityHidden(true) // Announced via parent label
+
+// Dynamic Type support
+Text(entry.text)
+    .font(LogTypography.tape(size: LogTypography.Size.entryText))
+    .dynamicTypeSize(.xSmall ... .xxxLarge)</pre>
+      </div>
+    </section>
+
+    <!-- ViewModifier Patterns -->
+    <section class="section" id="view-modifiers">
+      <h2>ViewModifier Patterns</h2>
+
+      <details>
+        <summary>LogButtonStyle</summary>
+        <div class="details-content">
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre>struct LogCommitStyle: ButtonStyle {
+    var isReady: Bool
+    @Environment(\.colorScheme) var colorScheme
+
+    func makeBody(configuration: Configuration) -&gt; some View {
+        configuration.label
+            .frame(width: 44, height: 44)
+            .overlay(
+                Circle()
+                    .stroke(isReady ? LogColors.amber : LogColors.divider(colorScheme), lineWidth: 1)
+            )
+            .scaleEffect(configuration.isPressed &amp;&amp; isReady ? 0.92 : 1.0)
+            .animation(LogMotion.shutter, value: configuration.isPressed)
+            .disabled(!isReady)
+    }
+}
+
+struct LogSecondaryButtonStyle: ButtonStyle {
+    @Environment(\.colorScheme) var colorScheme
+
+    func makeBody(configuration: Configuration) -&gt; some View {
+        configuration.label
+            .font(LogTypography.mechanism(size: LogTypography.Size.monoLabel))
+            .foregroundColor(LogColors.textPrimary(colorScheme))
+            .padding(.horizontal, LogSpacing.md)
+            .padding(.vertical, LogSpacing.sm)
+            .background(LogColors.backgroundSecondary(colorScheme))
+            .overlay(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(LogColors.divider(colorScheme), lineWidth: 1)
+            )
+    }
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>LogEntryStyle</summary>
+        <div class="details-content">
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre>struct LogEntryModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+
+    func body(content: Content) -&gt; some View {
+        content
+            .padding(.horizontal, LogSpacing.md)
+            .padding(.vertical, LogSpacing.sm + 4)
+            .background(LogColors.backgroundPrimary(colorScheme))
+            .overlay(
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(LogColors.border(colorScheme)),
+                alignment: .bottom
+            )
+    }
+}
+
+extension View {
+    func logEntryStyle() -&gt; some View {
+        modifier(LogEntryModifier())
+    }
+}</pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>LogCardStyle</summary>
+        <div class="details-content">
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre>struct LogCardModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+
+    func body(content: Content) -&gt; some View {
+        content
+            .padding(LogSpacing.lg)
+            .background(LogColors.backgroundSecondary(colorScheme))
+            .overlay(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(LogColors.border(colorScheme), lineWidth: 1)
+            )
+    }
+}
+
+extension View {
+    func logCardStyle() -&gt; some View {
+        modifier(LogCardModifier())
+    }
+}</pre>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- Anti-Patterns -->
+    <section class="section" id="anti-patterns">
+      <h2>Anti-Patterns</h2>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Anti-Pattern</th><th>Why</th><th>Correct Approach</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Inverting signal colors in dark mode</td><td>Signals are semantic, not chrome</td><td>Use <code>LogColors.signal(type)</code> in all modes</td></tr>
+            <tr><td>Using paper-40 for dark mode text</td><td>1.45:1 on paper-95 — fails WCAG AA</td><td>Use <code>LogColors.textPrimary(scheme)</code> (paper-05)</td></tr>
+            <tr><td>Spring animations</td><td>Violates mechanical metaphor</td><td>Use <code>LogMotion.mechanical</code></td></tr>
+            <tr><td>Hardcoded hex values</td><td>Breaks token system, no dark mode</td><td>Use <code>LogColors</code> struct</td></tr>
+            <tr><td>Custom font strings</td><td>Typo-prone, not centralized</td><td>Use <code>LogTypography.tape()</code> / <code>.mechanism()</code></td></tr>
+            <tr><td>Ignoring reduced motion</td><td>Accessibility violation</td><td>Check <code>accessibilityReduceMotion</code></td></tr>
+            <tr><td>Touch targets &lt; 44pt</td><td>WCAG 2.1 failure</td><td>Use <code>.frame(minWidth: 44, minHeight: 44)</code></td></tr>
+            <tr><td>Decorative animation</td><td>"Stillness over performance"</td><td>Only 6 allowed animations</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    Log• Design System &mdash; SwiftUI Implementation Guide
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <script src="assets/scripts.js"></script>
+</body>
+</html>
