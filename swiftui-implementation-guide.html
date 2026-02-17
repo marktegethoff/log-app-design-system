@@ -10,13 +10,18 @@
 <body>
 
   <header class="site-header">
-    <a href="index.html" class="mark">Log<span class="period">.</span></a>
-    <nav class="site-nav">
+    <a href="index.html" class="mark">Log<span class="period">•</span></a>
+    <div class="site-header-controls">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span class="nav-toggle-icon"></span></button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </div>
+    <nav class="site-nav" aria-label="Main navigation">
       <a href="index.html">Home</a>
+      <a href="brand-system.html">Brand</a>
       <a href="component-state-matrix.html">Components</a>
+      <a href="motion-system.html">Motion</a>
       <a href="layout-system.html">Layout</a>
       <a href="engineer-quick-start.html">Quick Start</a>
-      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
     </nav>
   </header>
 

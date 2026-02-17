@@ -108,20 +108,12 @@
     }
 
     .mark-hero-dot {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      background: var(--amber);
-      border-radius: 50%;
+      color: var(--amber);
       margin-left: 2px;
-      vertical-align: baseline;
-      position: relative;
-      top: -4px;
     }
 
     @media (max-width: 600px) {
       .mark-hero-inner { font-size: 72px; }
-      .mark-hero-dot { width: 10px; height: 10px; top: -2px; }
     }
 
     /* Mark spec table */
@@ -303,21 +295,25 @@
 <body>
 
   <header class="site-header">
-    <a href="index.html" class="mark">Log<span class="period">.</span></a>
-    <nav class="site-nav">
+    <a href="index.html" class="mark">Log<span class="period">•</span></a>
+    <div class="site-header-controls">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span class="nav-toggle-icon"></span></button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </div>
+    <nav class="site-nav" aria-label="Main navigation">
       <a href="index.html">Home</a>
+      <a href="brand-system.html">Brand</a>
       <a href="component-state-matrix.html">Components</a>
       <a href="motion-system.html">Motion</a>
       <a href="layout-system.html">Layout</a>
       <a href="engineer-quick-start.html">Quick Start</a>
-      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
     </nav>
   </header>
 
   <!-- Cover -->
   <div class="brand-cover">
     <div class="cover-meta">Brand System &mdash; February 2026</div>
-    <div class="cover-mark">Log<span class="period">.</span></div>
+    <div class="cover-mark">Log<span class="period">•</span></div>
     <div class="cover-subtitle">
       A thought-capture tool where your words are the artifact and AI is the archivist. The brand is built from the product's own materials &mdash; monospace letterforms, the warm signal of a recording instrument, and the full stop of a thought committed to the record.
     </div>
@@ -354,7 +350,7 @@
       </div>
 
       <div class="mark-hero">
-        <div class="mark-hero-inner">Log<span class="mark-hero-dot"></span></div>
+        <div class="mark-hero-inner">Log<span class="mark-hero-dot">•</span></div>
       </div>
 
       <dl class="mark-spec">

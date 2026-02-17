@@ -229,7 +229,11 @@ body.dark-mode .site-header {
   border-bottom-color: var(--paper-80);
 }
 
-.site-header .mark {
+/* ---- BRAND MARK (Issue 5) ----
+   Period is "•" character in amber, with optical sizing per MARK_ANATOMY_SPECIFICATION.md.
+   At small sizes (≤20px), period is enlarged ~1.3em for visibility.
+   1px gap from "g". */
+.mark {
   font-family: var(--mono);
   font-weight: 600;
   font-size: 20px;
@@ -239,37 +243,98 @@ body.dark-mode .site-header {
   line-height: 1;
 }
 
-body.dark-mode .site-header .mark {
+body.dark-mode .mark {
   color: var(--paper-05);
 }
 
-.site-header .mark .period {
+.mark .period {
   color: var(--amber);
   margin-left: 1px;
+  /* Optical sizing: at 20px mark size (small UI), enlarge period for visibility */
+  font-size: 1.3em;
+  vertical-align: -0.1em;
 }
 
+/* Header-specific nav controls */
+.site-header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--s-16);
+}
+
+/* ---- HAMBURGER BUTTON (Issue 1) ---- */
+.nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--paper-20);
+  background: var(--paper-05);
+  border-radius: 4px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+body.dark-mode .nav-toggle {
+  background: var(--paper-80);
+  border-color: var(--paper-70);
+}
+
+.nav-toggle-icon {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--paper-60);
+  position: relative;
+}
+
+body.dark-mode .nav-toggle-icon {
+  background: var(--paper-30);
+}
+
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: inherit;
+  position: absolute;
+  left: 0;
+  transition: transform 0.2s ease;
+}
+
+.nav-toggle-icon::before { top: -6px; }
+.nav-toggle-icon::after  { top: 6px; }
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-icon {
+  background: transparent;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-icon::before {
+  top: 0;
+  transform: rotate(45deg);
+  background: var(--paper-60);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-icon::after {
+  top: 0;
+  transform: rotate(-45deg);
+  background: var(--paper-60);
+}
+
+body.dark-mode .nav-toggle[aria-expanded="true"] .nav-toggle-icon::before,
+body.dark-mode .nav-toggle[aria-expanded="true"] .nav-toggle-icon::after {
+  background: var(--paper-30);
+}
+
+/* ---- SITE NAV ---- */
 .site-nav {
   display: flex;
   gap: var(--s-24);
   align-items: center;
-}
-
-@media (max-width: 768px) {
-  .site-nav {
-    gap: var(--s-16);
-  }
-}
-
-@media (max-width: 600px) {
-  .site-header {
-    padding: var(--s-12) var(--s-16);
-  }
-
-  .site-nav {
-    gap: var(--s-12);
-    font-size: var(--type-13);
-    flex-wrap: wrap;
-  }
 }
 
 .site-nav a {
@@ -292,13 +357,87 @@ body.dark-mode .site-nav a:hover {
   color: var(--amber);
 }
 
+/* ---- ACTIVE PAGE (Issue 3) ---- */
+.site-nav a.active {
+  color: var(--amber);
+  border-bottom: 2px solid var(--amber);
+  padding-bottom: 2px;
+}
+
+body.dark-mode .site-nav a.active {
+  color: var(--amber);
+}
+
+/* ---- MOBILE NAV (Issue 1) ---- */
+@media (max-width: 768px) {
+  .site-header {
+    flex-wrap: wrap;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .site-nav {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    order: 3;
+    border-top: 1px solid var(--paper-10);
+    margin-top: var(--s-12);
+    padding-top: var(--s-8);
+  }
+
+  body.dark-mode .site-nav {
+    border-top-color: var(--paper-80);
+  }
+
+  .site-nav.open {
+    display: flex;
+  }
+
+  .site-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--s-8) 0;
+    border-bottom: 1px solid var(--paper-10);
+    font-size: var(--type-14);
+  }
+
+  body.dark-mode .site-nav a {
+    border-bottom-color: var(--paper-80);
+  }
+
+  .site-nav a:last-child {
+    border-bottom: none;
+  }
+
+  .site-nav a.active {
+    border-bottom-color: var(--paper-10);
+    border-left: 2px solid var(--amber);
+    padding-left: var(--s-12);
+  }
+
+  body.dark-mode .site-nav a.active {
+    border-bottom-color: var(--paper-80);
+  }
+
+  .theme-toggle {
+    order: -1;
+  }
+}
+
 /* ---- BREADCRUMB ---- */
+/* Issue 4: Consistent spacing below header across all pages */
 .breadcrumb {
   font-family: var(--mono);
   font-size: var(--type-13);
   color: var(--paper-60);
-  padding: var(--s-12) 0;
-  margin-bottom: var(--s-32);
+  padding: var(--s-16) 0 var(--s-8);
+  margin-bottom: var(--s-24);
 }
 
 body.dark-mode .breadcrumb {
