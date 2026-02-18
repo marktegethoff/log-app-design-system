@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — Empty — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <style>
+    body { background: var(--paper-10); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header { display: flex; align-items: center; justify-content: space-between; padding: var(--s-16) var(--s-24); border-bottom: 1px solid var(--paper-15); background: var(--paper-00); }
+    body.dark-mode .proto-header { background: var(--paper-90); border-bottom-color: var(--paper-80); }
+    .proto-header .mark { font-family: var(--mono); font-weight: 600; font-size: 18px; letter-spacing: var(--tracking-tight); color: var(--paper-80); text-decoration: none; }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; }
+
+    .stage { display: flex; justify-content: center; padding: var(--s-48) var(--s-24); }
+
+    .device-frame { width: 390px; height: 844px; background: var(--paper-00); border-radius: 48px; border: 8px solid var(--paper-70); overflow: hidden; flex-shrink: 0; display: flex; flex-direction: column; box-shadow: 0 24px 64px rgba(0,0,0,0.18); }
+    body.dark-mode .device-frame { background: var(--paper-90); border-color: var(--paper-60); }
+
+    .status-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px 8px; flex-shrink: 0; }
+    .status-time { font-family: var(--mono); font-size: var(--type-11); font-weight: 700; color: var(--paper-80); }
+    body.dark-mode .status-time { color: var(--paper-05); }
+    .status-signals { display: flex; align-items: center; gap: 5px; }
+    .signal-bar { width: 3px; background: var(--paper-70); border-radius: 1px; }
+    body.dark-mode .signal-bar { background: var(--paper-20); }
+    .signal-bar:nth-child(1) { height: 5px; }
+    .signal-bar:nth-child(2) { height: 8px; }
+    .signal-bar:nth-child(3) { height: 11px; }
+    .signal-bar:nth-child(4) { height: 14px; }
+    .signal-battery { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-70); margin-left: 4px; }
+    body.dark-mode .signal-battery { color: var(--paper-30); }
+
+    .search-bar-wrap { padding: 8px 16px 12px; flex-shrink: 0; }
+    .search-bar { display: flex; align-items: center; gap: var(--s-8); background: var(--paper-05); border: 1px solid var(--paper-15); border-radius: 10px; padding: 0 12px; height: 44px; }
+    body.dark-mode .search-bar { background: var(--paper-80); border-color: var(--paper-70); }
+    .search-bar svg { stroke: var(--paper-40); flex-shrink: 0; }
+    .search-input { flex: 1; font-family: var(--mono); font-size: 15px; color: var(--paper-80); background: transparent; border: none; outline: none; }
+    body.dark-mode .search-input { color: var(--paper-05); }
+    .search-input::placeholder { color: var(--paper-30); }
+    body.dark-mode .search-input::placeholder { color: var(--paper-50); }
+
+    .empty-state { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .empty-state-text { font-family: var(--sans); font-size: var(--type-15); color: var(--paper-40); }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../../index.html" class="mark">Log<span class="period">•</span></a>
+    <span class="proto-label">Search — Empty</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+  <div class="stage">
+    <div class="device-frame">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-signals">
+          <div class="signal-bar"></div><div class="signal-bar"></div><div class="signal-bar"></div><div class="signal-bar"></div>
+          <span class="signal-battery">100%</span>
+        </div>
+      </div>
+
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input class="search-input" type="text" placeholder="Search entries..." autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Search entries">
+        </div>
+      </div>
+
+      <div class="empty-state">
+        <span class="empty-state-text">Search your entries</span>
+      </div>
+    </div>
+  </div>
+  <script>window.LOG_NAV_PREFIX = '../../';</script>
+  <script src="../../assets/scripts.js"></script>
+</body>
+</html>

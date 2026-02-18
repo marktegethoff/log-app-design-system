@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Surface v1 — Log•</title>
+  <title>Edit Surface v1 — Keyboard Up — Log•</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="../assets/styles.css">
@@ -83,7 +83,6 @@
       color: var(--paper-40);
     }
 
-    /* Nav */
     .app-nav {
       display: flex;
       align-items: center;
@@ -139,107 +138,74 @@
       margin-top: var(--s-24);
       display: block;
     }
+    .section-label:first-child { margin-top: 0; }
 
-    /* Original text display */
     .original-text-block {
       background: var(--paper-05);
       border: 1px solid var(--paper-10);
       border-radius: 4px;
-      padding: var(--s-12) var(--s-16);
+      padding: var(--s-8) var(--s-16);
       margin-bottom: var(--s-4);
     }
     body.dark-mode .original-text-block {
       background: var(--paper-80);
       border-color: var(--paper-70);
     }
-    .original-ts {
-      font-family: var(--mono);
-      font-size: var(--type-11);
-      color: var(--paper-40);
-      margin-bottom: var(--s-8);
-      display: block;
-    }
     .original-text {
       font-family: var(--sans);
-      font-size: 15px;
+      font-size: var(--type-13);
       color: var(--paper-50);
-      line-height: 1.55;
+      line-height: 1.45;
       margin: 0;
     }
     body.dark-mode .original-text { color: var(--paper-40); }
 
-    /* Editable textarea */
     .edit-textarea {
       width: 100%;
       font-family: var(--sans);
       font-size: 15px;
       color: var(--paper-80);
       background: var(--paper-00);
-      border: 1.5px solid var(--paper-20);
+      border: 1.5px solid var(--amber);
       border-radius: 4px;
       padding: var(--s-12) var(--s-16);
       resize: none;
       outline: none;
       line-height: 1.6;
-      min-height: 120px;
+      min-height: 140px;
     }
     body.dark-mode .edit-textarea {
       background: var(--paper-80);
-      border-color: var(--paper-60);
+      border-color: var(--amber);
       color: var(--paper-05);
     }
-    .edit-textarea:focus {
-      border-color: var(--amber);
-    }
 
-
-    /* Visual diff / history */
-    .diff-block {
-      background: var(--paper-05);
-      border: 1px solid var(--paper-10);
-      border-radius: 4px;
-      padding: var(--s-12) var(--s-16);
-      margin-bottom: var(--s-8);
+    .keyboard-placeholder {
+      flex-shrink: 0;
+      height: 291px;
+      background: var(--paper-10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top: 1px solid var(--paper-15);
     }
-    body.dark-mode .diff-block {
+    body.dark-mode .keyboard-placeholder {
       background: var(--paper-80);
-      border-color: var(--paper-70);
-    }
-    .diff-meta {
-      font-family: var(--mono);
-      font-size: var(--type-11);
-      color: var(--paper-40);
-      margin-bottom: var(--s-8);
-    }
-    .diff-original {
-      font-family: var(--sans);
-      font-size: var(--type-13);
-      color: var(--paper-40);
-      text-decoration: line-through;
-      line-height: 1.5;
-      display: block;
-      margin-bottom: var(--s-8);
-    }
-    body.dark-mode .diff-original { color: var(--paper-50); }
-    .diff-new {
-      font-family: var(--sans);
-      font-size: var(--type-13);
-      color: var(--paper-70);
-      line-height: 1.5;
-      display: block;
-      padding-top: var(--s-8);
-      border-top: 1px solid var(--paper-10);
-    }
-    body.dark-mode .diff-new {
-      color: var(--paper-20);
       border-top-color: var(--paper-70);
     }
+    .keyboard-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-30);
+      letter-spacing: 0.06em;
+    }
+    body.dark-mode .keyboard-label { color: var(--paper-50); }
   </style>
 </head>
 <body>
   <header class="proto-header">
     <a href="../index.html" class="mark">Log<span class="period">•</span></a>
-    <span class="proto-label">Edit Surface — v1</span>
+    <span class="proto-label">Edit Surface — Keyboard Up</span>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
       <span id="themeIcon">&#9728;</span>
     </button>
@@ -253,37 +219,26 @@
       </div>
 
       <div class="app-nav">
-        <button class="nav-cancel" id="cancelBtn">Cancel</button>
+        <button class="nav-cancel">Cancel</button>
         <span class="nav-title">Correct Entry</span>
-        <button class="nav-save" id="saveBtn">Save</button>
+        <button class="nav-save">Save</button>
       </div>
 
       <div class="edit-scroll">
-
-        <!-- Original text -->
         <span class="section-label">Original</span>
         <div class="original-text-block">
-          <span class="original-ts">Feb 17, 2026 — 9:29</span>
-          <p class="original-text" id="originalText">Going with last-write-wins for MVP. Full conflict resolution is post-1.0.</p>
+          <p class="original-text">Going with last-write-wins for MVP. Full conflict resolution is post-1.0.</p>
         </div>
 
-        <!-- Editable area -->
         <span class="section-label">Correction</span>
         <textarea
           class="edit-textarea"
-          id="editArea"
           aria-label="Corrected entry text"
         >Going with last-write-wins for MVP. Full conflict resolution is post-1.0. The operational overhead of CRDT at this scale is disproportionate to the actual risk — solo users don't generate conflicting writes in practice.</textarea>
+      </div>
 
-        <!-- Correction history -->
-        <span class="section-label" style="margin-top: var(--s-32);">Correction history</span>
-
-        <div class="diff-block">
-          <div class="diff-meta">Corrected Feb 17, 2026 — 10:14</div>
-          <span class="diff-original">Going with last-write-wins for MVP. Full conflict resolution is post-1.0.</span>
-          <span class="diff-new">Going with last-write-wins for MVP. Full conflict resolution is post-1.0. The operational overhead of CRDT at this scale is disproportionate to the actual risk — solo users don't generate conflicting writes in practice.</span>
-        </div>
-
+      <div class="keyboard-placeholder">
+        <span class="keyboard-label">Keyboard — 291px</span>
       </div>
     </div>
   </div>

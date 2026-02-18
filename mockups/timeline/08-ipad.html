@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline — iPad — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <style>
+    body { background: var(--paper-10); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      border-bottom: 1px solid var(--paper-15); background: var(--paper-00);
+    }
+    body.dark-mode .proto-header { background: var(--paper-90); border-bottom-color: var(--paper-80); }
+    .proto-header .mark { font-family: var(--mono); font-weight: 600; font-size: 18px; letter-spacing: var(--tracking-tight); color: var(--paper-80); text-decoration: none; }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; }
+
+    .stage { display: flex; justify-content: center; padding: var(--s-48) var(--s-24); }
+
+    .device-frame {
+      width: 820px; height: 1180px; background: var(--paper-00);
+      border-radius: 24px; border: 8px solid var(--paper-70);
+      overflow: hidden; flex-shrink: 0; display: flex; flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    body.dark-mode .device-frame { background: var(--paper-90); border-color: var(--paper-60); }
+
+    .status-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px 8px; flex-shrink: 0; }
+    .status-time { font-family: var(--mono); font-size: var(--type-11); font-weight: 700; color: var(--paper-80); }
+    body.dark-mode .status-time { color: var(--paper-05); }
+    .status-signals { display: flex; align-items: center; gap: 5px; }
+    .signal-bar { width: 3px; background: var(--paper-70); border-radius: 1px; }
+    body.dark-mode .signal-bar { background: var(--paper-20); }
+    .signal-bar:nth-child(1) { height: 5px; }
+    .signal-bar:nth-child(2) { height: 8px; }
+    .signal-bar:nth-child(3) { height: 11px; }
+    .signal-bar:nth-child(4) { height: 14px; }
+    .signal-battery { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-70); margin-left: 4px; }
+    body.dark-mode .signal-battery { color: var(--paper-30); }
+
+    .app-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 20px 12px; flex-shrink: 0; }
+    .app-nav-title { font-family: var(--mono); font-size: var(--type-16); font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--paper-80); }
+    body.dark-mode .app-nav-title { color: var(--paper-05); }
+    .app-nav-title .period { color: var(--amber); margin-left: 1px; }
+    .app-nav-action { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .app-nav-action svg { stroke: var(--paper-60); }
+    body.dark-mode .app-nav-action svg { stroke: var(--paper-30); }
+
+    .timeline-scroll { flex: 1; overflow-y: auto; padding: 0 20px; -webkit-overflow-scrolling: touch; max-width: 600px; margin: 0 auto; }
+    .timeline-scroll::-webkit-scrollbar { display: none; }
+
+    .entry-row { display: flex; gap: 10px; padding: 10px 0; cursor: pointer; position: relative; }
+    .entry-row:active { opacity: 0.7; }
+    .entry-gutter { display: flex; flex-direction: column; align-items: center; width: 16px; flex-shrink: 0; padding-top: 5px; }
+    .intent-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .dot-thought { background: var(--signal-thought); }
+    .dot-action { background: var(--signal-action); }
+    .dot-decision { background: var(--signal-decision); }
+    .dot-reference { background: var(--signal-reference); }
+    .dot-unknown { background: var(--signal-unknown); }
+
+    .entry-body { flex: 1; min-width: 0; }
+    .entry-timestamp { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-bottom: 3px; }
+    body.dark-mode .entry-timestamp { color: var(--paper-30); }
+    .entry-text { font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-80); margin: 0; }
+    body.dark-mode .entry-text { color: var(--paper-05); }
+
+    .idle-trace { display: flex; align-items: center; gap: 8px; padding: 4px 0; margin: 2px 0; }
+    .idle-trace-bar { width: 1px; background: var(--paper-20); margin-left: 7px; flex-shrink: 0; }
+    body.dark-mode .idle-trace-bar { background: var(--paper-70); }
+    .idle-trace-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30); white-space: nowrap; }
+    body.dark-mode .idle-trace-label { color: var(--paper-50); }
+
+    .compose-area { flex-shrink: 0; border-top: 1px solid var(--paper-15); padding: 12px 20px 20px; background: var(--paper-00); }
+    body.dark-mode .compose-area { background: var(--paper-90); border-top-color: var(--paper-80); }
+    .compose-inner { display: flex; align-items: flex-end; gap: 10px; max-width: 600px; margin: 0 auto; }
+    .compose-input-wrap { flex: 1; }
+    .compose-input { width: 100%; min-height: 40px; font-family: var(--mono); font-size: 15px; color: var(--paper-80); background: transparent; border: none; outline: none; resize: none; padding: 0; line-height: 1.5; }
+    body.dark-mode .compose-input { color: var(--paper-05); }
+    .compose-input::placeholder { color: var(--paper-30); }
+    body.dark-mode .compose-input::placeholder { color: var(--paper-50); }
+    .compose-commit { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--paper-20); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+    body.dark-mode .compose-commit { border-color: var(--paper-60); }
+    .compose-commit.has-text { border-color: var(--amber); }
+    .compose-commit svg { color: var(--paper-30); }
+    .compose-commit.has-text svg { color: var(--amber); }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../../index.html" class="mark">Log<span class="period">•</span></a>
+    <span class="proto-label">Timeline — iPad</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+  <div class="stage">
+    <div class="device-frame">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-signals">
+          <div class="signal-bar"></div><div class="signal-bar"></div><div class="signal-bar"></div><div class="signal-bar"></div>
+          <span class="signal-battery">100%</span>
+        </div>
+      </div>
+      <div class="app-nav">
+        <span class="app-nav-title">Log<span class="period">•</span></span>
+        <div class="app-nav-action">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="timeline-scroll">
+        <div class="entry-row">
+          <div class="entry-gutter"><div class="intent-dot dot-thought"></div></div>
+          <div class="entry-body">
+            <div class="entry-timestamp">9:14</div>
+            <p class="entry-text">Need to reconsider the batching window — 30s might be too aggressive for longer thoughts that pause mid-sentence.</p>
+          </div>
+        </div>
+        <div class="entry-row">
+          <div class="entry-gutter"><div class="intent-dot dot-action"></div></div>
+          <div class="entry-body">
+            <div class="entry-timestamp">9:17</div>
+            <p class="entry-text">Sent revised spec to engineering. Flagged the sync conflict resolution as unresolved.</p>
+          </div>
+        </div>
+        <div class="idle-trace">
+          <div class="idle-trace-bar" style="height: 40px;"></div>
+        </div>
+        <div class="entry-row">
+          <div class="entry-gutter"><div class="intent-dot dot-decision"></div></div>
+          <div class="entry-body">
+            <div class="entry-timestamp">9:29</div>
+            <p class="entry-text">Going with last-write-wins for MVP. Full conflict resolution is post-1.0.</p>
+          </div>
+        </div>
+        <div class="entry-row">
+          <div class="entry-gutter"><div class="intent-dot dot-reference"></div></div>
+          <div class="entry-body">
+            <div class="entry-timestamp">9:31</div>
+            <p class="entry-text">From the engineering brief: "Supabase Realtime has 100ms typical sync latency on cellular."</p>
+          </div>
+        </div>
+        <div class="entry-row">
+          <div class="entry-gutter"><div class="intent-dot dot-unknown"></div></div>
+          <div class="entry-body">
+            <div class="entry-timestamp">9:33</div>
+            <p class="entry-text">What if the tape metaphor is doing too much work? Seismograph is more honest about idle gaps.</p>
+          </div>
+        </div>
+        <div class="entry-row">
+          <div class="entry-gutter"><div class="intent-dot dot-action"></div></div>
+          <div class="entry-body">
+            <div class="entry-timestamp">10:05</div>
+            <p class="entry-text">Scheduled design review for Wednesday. Need to finalize the compose area behavior.</p>
+          </div>
+        </div>
+      </div>
+      <div class="compose-area">
+        <div class="compose-inner">
+          <div class="compose-input-wrap">
+            <textarea class="compose-input" placeholder="Log..." rows="1" aria-label="Compose entry"></textarea>
+          </div>
+          <button class="compose-commit" aria-label="Commit entry">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="3" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>window.LOG_NAV_PREFIX = '../../';</script>
+  <script src="../../assets/scripts.js"></script>
+</body>
+</html>

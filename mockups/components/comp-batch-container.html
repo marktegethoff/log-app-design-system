@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component — Batch Container — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <style>
+    body { background: var(--paper-05); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header { display: flex; align-items: center; justify-content: space-between; padding: var(--s-16) var(--s-24); border-bottom: 1px solid var(--paper-15); background: var(--paper-00); }
+    body.dark-mode .proto-header { background: var(--paper-90); border-bottom-color: var(--paper-80); }
+    .proto-header .mark { font-family: var(--mono); font-weight: 600; font-size: 18px; letter-spacing: var(--tracking-tight); color: var(--paper-80); text-decoration: none; }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; }
+
+    .sheet { max-width: 960px; margin: 0 auto; padding: var(--s-48) var(--s-24); }
+    .sheet-title { font-family: var(--mono); font-size: var(--type-24); font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--paper-80); margin-bottom: var(--s-8); }
+    body.dark-mode .sheet-title { color: var(--paper-05); }
+    .sheet-desc { font-family: var(--sans); font-size: var(--type-14); color: var(--paper-50); margin-bottom: var(--s-48); line-height: 1.5; }
+    body.dark-mode .sheet-desc { color: var(--paper-40); }
+
+    .pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-24); margin-bottom: var(--s-48); }
+    .pair-col { padding: var(--s-24); border-radius: 4px; }
+    .pair-col.light-bg { background: var(--paper-00); border: 1px solid var(--paper-10); }
+    .pair-col.dark-bg { background: var(--paper-90); border: 1px solid var(--paper-80); }
+    .pair-title { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--s-16); }
+    .pair-col.dark-bg .pair-title { color: var(--paper-50); }
+
+    .specimen { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .specimen-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.06em; }
+    .pair-col.dark-bg .specimen-label { color: var(--paper-50); }
+
+    .section-heading { font-family: var(--mono); font-size: var(--type-14); font-weight: 700; color: var(--paper-80); margin-bottom: var(--s-16); margin-top: var(--s-24); }
+    body.dark-mode .section-heading { color: var(--paper-05); }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../../index.html" class="mark">Log<span class="period">•</span></a>
+    <span class="proto-label">Component — Batch Container</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+  <div class="sheet">
+    <h1 class="sheet-title">Batch Container</h1>
+    <p class="sheet-desc">Groups entries within a 30-second batching window. First entry has dot + timestamp. Continuation entries have text only — no dot, no timestamp, no indent. The absence of a timestamp is the grouping signal.</p>
+
+    <div class="pair-grid">
+      <div class="pair-col light-bg">
+        <div class="pair-title">Light</div>
+        <!-- First entry: normal -->
+        <div style="display: flex; gap: 10px; padding: 10px 0;">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 16px; flex-shrink: 0; padding-top: 5px;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-thought);"></div>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-bottom: 3px;">9:14</div>
+            <p style="font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-80); margin: 0;">Need to reconsider the batching window.</p>
+          </div>
+        </div>
+        <!-- Continuation entry: text only, no dot, no timestamp -->
+        <div style="display: flex; gap: 10px; padding: 2px 0 10px;">
+          <div style="width: 16px; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <p style="font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-80); margin: 0;">The 30s window makes sense for pause-and-continue.</p>
+          </div>
+        </div>
+        <!-- Continuation entry -->
+        <div style="display: flex; gap: 10px; padding: 2px 0 10px;">
+          <div style="width: 16px; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <p style="font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-80); margin: 0;">People don't type continuously.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pair-col dark-bg">
+        <div class="pair-title">Dark</div>
+        <!-- First entry: normal -->
+        <div style="display: flex; gap: 10px; padding: 10px 0;">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 16px; flex-shrink: 0; padding-top: 5px;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-thought);"></div>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-50); margin-bottom: 3px;">9:14</div>
+            <p style="font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-05); margin: 0;">Need to reconsider the batching window.</p>
+          </div>
+        </div>
+        <!-- Continuation entry: text only -->
+        <div style="display: flex; gap: 10px; padding: 2px 0 10px;">
+          <div style="width: 16px; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <p style="font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-05); margin: 0;">The 30s window makes sense for pause-and-continue.</p>
+          </div>
+        </div>
+        <!-- Continuation entry -->
+        <div style="display: flex; gap: 10px; padding: 2px 0 10px;">
+          <div style="width: 16px; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <p style="font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-05); margin: 0;">People don't type continuously.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>window.LOG_NAV_PREFIX = '../../';</script>
+  <script src="../../assets/scripts.js"></script>
+</body>
+</html>

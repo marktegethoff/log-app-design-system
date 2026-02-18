@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component — Intent Dot — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <style>
+    body { background: var(--paper-05); }
+    body.dark-mode { background: var(--paper-95); }
+
+    .proto-header { display: flex; align-items: center; justify-content: space-between; padding: var(--s-16) var(--s-24); border-bottom: 1px solid var(--paper-15); background: var(--paper-00); }
+    body.dark-mode .proto-header { background: var(--paper-90); border-bottom-color: var(--paper-80); }
+    .proto-header .mark { font-family: var(--mono); font-weight: 600; font-size: 18px; letter-spacing: var(--tracking-tight); color: var(--paper-80); text-decoration: none; }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; }
+
+    .sheet { max-width: 960px; margin: 0 auto; padding: var(--s-48) var(--s-24); }
+    .sheet-title { font-family: var(--mono); font-size: var(--type-24); font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--paper-80); margin-bottom: var(--s-8); }
+    body.dark-mode .sheet-title { color: var(--paper-05); }
+    .sheet-desc { font-family: var(--sans); font-size: var(--type-14); color: var(--paper-50); margin-bottom: var(--s-48); line-height: 1.5; }
+    body.dark-mode .sheet-desc { color: var(--paper-40); }
+
+    .pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-24); margin-bottom: var(--s-48); }
+    .pair-col { padding: var(--s-24); border-radius: 4px; }
+    .pair-col.light-bg { background: var(--paper-00); border: 1px solid var(--paper-10); }
+    .pair-col.dark-bg { background: var(--paper-90); border: 1px solid var(--paper-80); }
+    .pair-title { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--s-16); }
+    .pair-col.dark-bg .pair-title { color: var(--paper-50); }
+
+    .specimen { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .specimen-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.06em; }
+    .pair-col.dark-bg .specimen-label { color: var(--paper-50); }
+
+    .section-heading { font-family: var(--mono); font-size: var(--type-14); font-weight: 700; color: var(--paper-80); margin-bottom: var(--s-16); margin-top: var(--s-24); }
+    body.dark-mode .section-heading { color: var(--paper-05); }
+
+    .specimen-row { display: flex; flex-direction: row; gap: 12px; align-items: center; }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../../index.html" class="mark">Log<span class="period">•</span></a>
+    <span class="proto-label">Component — Intent Dot</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+  <div class="sheet">
+    <h1 class="sheet-title">Intent Dot</h1>
+    <p class="sheet-desc">6px signal dot indicating entry intent classification. Five types, constant across light and dark modes.</p>
+
+    <div class="pair-grid">
+      <div class="pair-col light-bg">
+        <div class="pair-title">Light Mode</div>
+
+        <div class="section-heading">Dot</div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-thought);"></div>
+            <span class="specimen-label">Thought</span>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-action);"></div>
+            <span class="specimen-label">Action</span>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-decision);"></div>
+            <span class="specimen-label">Decision</span>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-reference);"></div>
+            <span class="specimen-label">Reference</span>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-unknown);"></div>
+            <span class="specimen-label">Unknown</span>
+          </div>
+        </div>
+
+        <div class="section-heading">Badge Variant</div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-thought);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Thought</span>
+          </span>
+          <span class="specimen-label">Thought Badge</span>
+        </div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-action);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Action</span>
+          </span>
+          <span class="specimen-label">Action Badge</span>
+        </div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-decision);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Decision</span>
+          </span>
+          <span class="specimen-label">Decision Badge</span>
+        </div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-reference);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Reference</span>
+          </span>
+          <span class="specimen-label">Reference Badge</span>
+        </div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-unknown);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Unknown</span>
+          </span>
+          <span class="specimen-label">Unknown Badge</span>
+        </div>
+      </div>
+
+      <div class="pair-col dark-bg">
+        <div class="pair-title">Dark Mode</div>
+
+        <div class="section-heading">Dot</div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-thought);"></div>
+            <span class="specimen-label">Thought</span>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-action);"></div>
+            <span class="specimen-label">Action</span>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-decision);"></div>
+            <span class="specimen-label">Decision</span>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-reference);"></div>
+            <span class="specimen-label">Reference</span>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <div class="specimen-row">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--signal-unknown);"></div>
+            <span class="specimen-label">Unknown</span>
+          </div>
+        </div>
+
+        <div class="section-heading">Badge Variant</div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-thought);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Thought</span>
+          </span>
+          <span class="specimen-label">Thought Badge</span>
+        </div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-action);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Action</span>
+          </span>
+          <span class="specimen-label">Action Badge</span>
+        </div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-decision);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Decision</span>
+          </span>
+          <span class="specimen-label">Decision Badge</span>
+        </div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-reference);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Reference</span>
+          </span>
+          <span class="specimen-label">Reference Badge</span>
+        </div>
+
+        <div class="specimen">
+          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 3px; background: var(--signal-unknown);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--paper-00); opacity: 0.85;"></span>
+            <span style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-00); text-transform: uppercase; letter-spacing: 0.06em;">Unknown</span>
+          </span>
+          <span class="specimen-label">Unknown Badge</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>window.LOG_NAV_PREFIX = '../../';</script>
+  <script src="../../assets/scripts.js"></script>
+</body>
+</html>

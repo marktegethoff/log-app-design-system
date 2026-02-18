@@ -23,7 +23,10 @@
   function updateThemeIcon() {
     var icon = document.getElementById('themeIcon');
     if (!icon) return;
-    icon.textContent = document.body.classList.contains('dark-mode') ? '\u25D0' : '\u2600';
+    var isDark = document.body.classList.contains('dark-mode');
+    icon.innerHTML = isDark
+      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
   }
 
   // ---- Navigation Injection (Issue 2) ----
@@ -41,7 +44,7 @@
 
     var isPrototype = window.location.pathname.indexOf('/prototypes/') !== -1 ||
                       window.location.pathname.indexOf('/prototypes\\') !== -1;
-    var prefix = isPrototype ? '../' : '';
+    var prefix = window.LOG_NAV_PREFIX || (isPrototype ? '../' : '');
 
     // Authoritative nav items
     var navItems = [
