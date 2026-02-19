@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compose Flow — Log• Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="../index.html" class="mark">Log<span class="period">•</span></a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <div class="flow-meta">
+    <h1 class="flow-title">Compose & Commit</h1>
+    <p class="flow-desc">Timeline to entry: the primary compose path.</p>
+  </div>
+
+  <div class="flow-strip">
+    <div class="flow-step">
+      <span class="flow-step-label">Timeline</span>
+      <div class="flow-frame-wrap">
+        <iframe src="../mockups/timeline/02-populated.html" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <div class="flow-connector">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+    <div class="flow-step">
+      <span class="flow-step-label">Compose</span>
+      <div class="flow-frame-wrap">
+        <iframe src="../mockups/entry/10-blank-compose.html" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <div class="flow-connector">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+    <div class="flow-step">
+      <span class="flow-step-label">Typing</span>
+      <div class="flow-frame-wrap">
+        <iframe src="../mockups/entry/11b-keyboard-up.html" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <div class="flow-connector">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+    <div class="flow-step">
+      <span class="flow-step-label">Entry Detail</span>
+      <div class="flow-frame-wrap">
+        <iframe src="../mockups/entry/12-post-commit.html" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>window.LOG_NAV_PREFIX = '../';</script>
+  <script src="../assets/scripts.js"></script>
+</body>
+</html>

@@ -215,7 +215,7 @@ body.dark-mode a:hover {
 .site-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--s-16);
   padding: var(--s-16) var(--s-24);
   border-bottom: 1px solid var(--paper-10);
   background: var(--paper-00);
@@ -241,6 +241,7 @@ body.dark-mode .site-header {
   color: var(--paper-80);
   text-decoration: none;
   line-height: 1;
+  margin-right: auto;
 }
 
 body.dark-mode .mark {
@@ -979,6 +980,34 @@ body.dark-mode .card:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ---- FLOW PAGES ---- */
+.flow-meta { max-width: 1200px; margin: 0 auto; padding: var(--s-48) var(--s-24) var(--s-24); }
+.flow-title { font-family: var(--mono); font-size: var(--type-24); font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--paper-80); margin: 0 0 var(--s-8); }
+body.dark-mode .flow-title { color: var(--paper-05); }
+.flow-desc { font-family: var(--sans); font-size: var(--type-14); color: var(--paper-50); margin: 0; line-height: 1.5; }
+body.dark-mode .flow-desc { color: var(--paper-40); }
+
+.flow-strip { display: flex; align-items: flex-start; overflow-x: auto; padding: var(--s-32) var(--s-24) var(--s-48); -webkit-overflow-scrolling: touch; }
+.flow-strip::-webkit-scrollbar { display: none; }
+
+.flow-step { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.flow-step-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; margin-bottom: var(--s-12); text-align: center; text-transform: uppercase; }
+
+.flow-frame-wrap { width: 223px; height: 484px; overflow: hidden; flex-shrink: 0; pointer-events: none; }
+.flow-frame-wrap iframe { width: 406px; height: 880px; border: none; transform: scale(0.55); transform-origin: top left; }
+
+.flow-connector { display: flex; align-items: center; justify-content: center; width: 40px; flex-shrink: 0; padding-top: 28px; }
+.flow-connector svg { stroke: var(--paper-30); }
+body.dark-mode .flow-connector svg { stroke: var(--paper-50); }
+
+@media (max-width: 768px) {
+  .flow-strip { flex-direction: column; align-items: center; overflow-x: visible; padding: var(--s-24) var(--s-16); }
+  .flow-frame-wrap { width: 195px; height: 423px; }
+  .flow-frame-wrap iframe { transform: scale(0.48); }
+  .flow-connector { width: auto; height: 32px; padding-top: 0; }
+  .flow-connector svg { transform: rotate(90deg); }
 }
 
 /* ---- PRINT ---- */

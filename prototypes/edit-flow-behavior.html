@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Flow Behavior — Log•</title>
+  <title>Correction Flow Behavior — Log•</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="../assets/styles.css">
@@ -117,61 +117,54 @@
     body.dark-mode .step-title { color: var(--paper-20); }
     .step-body { padding: var(--s-16); }
 
-    /* Step 1: Entry row with swipe affordance */
-    .entry-swipe-row {
+    /* Step 1: Detail view with Correct button */
+    .detail-nav-demo {
       display: flex;
       align-items: center;
       gap: var(--s-8);
       background: var(--paper-05);
       border-radius: 6px;
       padding: var(--s-8) var(--s-12);
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
       border: 1px solid var(--paper-10);
+      margin-bottom: var(--s-8);
     }
-    body.dark-mode .entry-swipe-row {
+    body.dark-mode .detail-nav-demo {
       background: var(--paper-80);
       border-color: var(--paper-70);
     }
-    .swipe-action {
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      display: flex;
-      align-items: center;
-      padding: 0 var(--s-12);
-      background: var(--paper-70);
-      border-radius: 0 6px 6px 0;
-      gap: var(--s-4);
-    }
-    body.dark-mode .swipe-action { background: var(--paper-60); }
-    .swipe-icon {
+    .detail-nav-back {
       font-family: var(--mono);
-      font-size: var(--type-11);
-      color: var(--paper-05);
+      font-size: var(--type-13);
+      color: var(--amber);
     }
-    .entry-row-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--signal-decision);
-      flex-shrink: 0;
-    }
-    .entry-row-content { flex: 1; }
-    .entry-row-ts {
+    .detail-nav-title {
       font-family: var(--mono);
-      font-size: var(--type-11);
-      color: var(--paper-40);
+      font-size: var(--type-13);
+      color: var(--paper-70);
+      flex: 1;
     }
-    .entry-row-text {
+    body.dark-mode .detail-nav-title { color: var(--paper-20); }
+    .detail-nav-correct {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--amber);
+      font-weight: 400;
+    }
+    .detail-entry-text {
       font-family: var(--sans);
       font-size: var(--type-13);
       color: var(--paper-70);
-      line-height: 1.4;
+      line-height: 1.5;
+      background: var(--paper-05);
+      border: 1px solid var(--paper-10);
+      border-radius: 6px;
+      padding: var(--s-12);
     }
-    body.dark-mode .entry-row-text { color: var(--paper-20); }
+    body.dark-mode .detail-entry-text {
+      background: var(--paper-80);
+      border-color: var(--paper-70);
+      color: var(--paper-20);
+    }
     .step-note {
       font-family: var(--sans);
       font-size: var(--type-13);
@@ -182,7 +175,7 @@
     }
     body.dark-mode .step-note { color: var(--paper-40); }
 
-    /* Step 2: Inline edit */
+    /* Step 2: Correction compose */
     .edit-inline-demo {
       background: var(--paper-05);
       border: 1.5px solid var(--amber);
@@ -367,15 +360,15 @@
 <body>
   <header class="proto-header">
     <a href="../index.html" class="mark">Log<span class="period">•</span></a>
-    <span class="proto-label">Edit Flow — Behavior</span>
+    <span class="proto-label">Correction Flow — Behavior</span>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
       <span id="themeIcon">&#9728;</span>
     </button>
   </header>
 
   <div class="content">
-    <div class="page-title">Edit Flow Behavior</div>
-    <p class="page-subtitle">Corrections are recorded, not erased. The original is preserved. The edit model treats entries as immutable records with an append-only correction layer.</p>
+    <div class="page-title">Correction Flow Behavior</div>
+    <p class="page-subtitle">Corrections are recorded, not erased. The original is preserved. Observation precedes correction — you read the record before you amend it. One path: tap entry, read detail, correct.</p>
 
     <!-- 3-step flow -->
     <span class="section-label">Interaction Flow — 3 Steps</span>
@@ -385,20 +378,16 @@
       <div class="step-card">
         <div class="step-header">
           <div class="step-number">1</div>
-          <span class="step-title">Reveal action</span>
+          <span class="step-title">Read the record</span>
         </div>
         <div class="step-body">
-          <div class="entry-swipe-row" id="swipeRow">
-            <div class="entry-row-dot"></div>
-            <div class="entry-row-content">
-              <div class="entry-row-ts">9:29</div>
-              <div class="entry-row-text">Going with last-write-wins for MVP.</div>
-            </div>
-            <div class="swipe-action">
-              <span class="swipe-icon">Edit</span>
-            </div>
+          <div class="detail-nav-demo">
+            <span class="detail-nav-back">&larr;</span>
+            <span class="detail-nav-title">Entry</span>
+            <span class="detail-nav-correct">Correct</span>
           </div>
-          <p class="step-note">Long-press or leading swipe reveals the edit action. Standard iOS swipe pattern — no custom gesture required.</p>
+          <div class="detail-entry-text">Going with last-write-wins for MVP.</div>
+          <p class="step-note">Tap an entry in the timeline to open its detail view. The "Correct" button is visible only after you've observed the record. Observation precedes correction.</p>
         </div>
       </div>
 
@@ -406,7 +395,7 @@
       <div class="step-card">
         <div class="step-header">
           <div class="step-number">2</div>
-          <span class="step-title">Edit mode</span>
+          <span class="step-title">Compose correction</span>
         </div>
         <div class="step-body">
           <div class="edit-inline-demo">
@@ -417,7 +406,7 @@
               <button class="edit-inline-cancel">Cancel</button>
             </div>
           </div>
-          <p class="step-note">Entry becomes an editable field in place. Amber border signals active correction state.</p>
+          <p class="step-note">Tapping "Correct" pushes to the correction surface. Original text visible above, compose field below. Amber border signals active correction state.</p>
         </div>
       </div>
 
@@ -446,7 +435,7 @@
     </div>
 
     <!-- Edit model principles -->
-    <span class="section-label">Edit Model Principles</span>
+    <span class="section-label">Correction Model Principles</span>
     <div class="principles-grid">
       <div class="principle-item">
         <div class="principle-title">Records, not drafts</div>

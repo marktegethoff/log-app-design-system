@@ -183,6 +183,39 @@ body.dark-mode .timeline-entry .entry-text {
   color: var(--paper-05);
 }</pre>
       </div>
+
+      <!-- Idle Trace Height Comparison -->
+      <div id="idle-trace-specimens" style="margin-top: var(--s-32);">
+        <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-16);">Idle Trace — Height Comparison</div>
+        <p style="font-size: var(--type-13); color: var(--paper-40); margin-bottom: var(--s-16);">Formula: <code>min(80, 16 + 16 × ln(hours + 1))</code>. 1px wide, paper-40. No animation.</p>
+
+        <div style="display: flex; gap: var(--s-32); flex-wrap: wrap; padding: var(--s-24); background: var(--paper-00); border: 1px solid var(--paper-10); border-radius: 4px;">
+          <!-- 5 min → 16pt -->
+          <div style="flex: 1; min-width: 60px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+            <div style="width: 1px; height: 16px; background: var(--paper-40);"></div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-top: var(--s-8);">5 min</div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30);">16pt</div>
+          </div>
+          <!-- 1 hr → 27pt -->
+          <div style="flex: 1; min-width: 60px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+            <div style="width: 1px; height: 27px; background: var(--paper-40);"></div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-top: var(--s-8);">1 hr</div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30);">27pt</div>
+          </div>
+          <!-- 6 hr → 47pt -->
+          <div style="flex: 1; min-width: 60px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+            <div style="width: 1px; height: 47px; background: var(--paper-40);"></div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-top: var(--s-8);">6 hr</div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30);">47pt</div>
+          </div>
+          <!-- 24 hr → 68pt -->
+          <div style="flex: 1; min-width: 60px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+            <div style="width: 1px; height: 68px; background: var(--paper-40);"></div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-top: var(--s-8);">24 hr</div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30);">68pt</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Device Layouts -->

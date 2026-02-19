@@ -215,16 +215,71 @@
     });
   }
 
+  // ---- Iframe Embed Mode ----
+  // When a mockup page is embedded in a flow iframe, hide the header and
+  // minimize stage padding so the device frame fills the viewport.
+  // Also listens for theme postMessages from the parent flow page.
+  function initIframeEmbed() {
+    if (window === window.top) return;
+
+    // Hide the site header (injected by initNav)
+    var header = document.querySelector('.site-header');
+    if (header) header.style.display = 'none';
+
+    // Minimize stage padding so device frame fills iframe viewport
+    var stage = document.querySelector('.stage');
+    if (stage) {
+      stage.style.padding = '0';
+      stage.style.margin = '0';
+    }
+
+    // Listen for theme sync from parent flow page
+    window.addEventListener('message', function (e) {
+      if (!e.data || e.data.type !== 'log-theme') return;
+      if (e.data.dark) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+      updateThemeIcon();
+    });
+  }
+
+  // ---- Flow Page iframe Theme Sync ----
+  // Patches toggleTheme to broadcast dark mode to embedded mockup iframes.
+  // Also sends initial theme on load. Only activates when flow iframes are present.
+  function initFlowIframeSync() {
+    var iframes = document.querySelectorAll('.flow-frame-wrap iframe');
+    if (!iframes.length) return;
+
+    function broadcastTheme() {
+      var dark = document.body.classList.contains('dark-mode');
+      iframes.forEach(function (f) {
+        f.contentWindow.postMessage({ type: 'log-theme', dark: dark }, '*');
+      });
+    }
+
+    var origToggle = window.toggleTheme;
+    window.toggleTheme = function () {
+      origToggle();
+      broadcastTheme();
+    };
+
+    window.addEventListener('load', broadcastTheme);
+  }
+
   // ---- Init ----
   function init() {
     initTheme();
     initNav();
+    initIframeEmbed();
     initActiveNav();
     initHamburger();
     initCollapsibles();
     initSmoothScroll();
     initCopyButtons();
     initBackToTop();
+    initFlowIframeSync();
   }
 
   // Expose toggle for inline onclick

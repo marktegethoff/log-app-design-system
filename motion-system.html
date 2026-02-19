@@ -106,6 +106,35 @@
         <p style="text-align: center; font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-top: var(--s-8); margin-bottom: 0;">cubic-bezier(0.2, 0.8, 0.3, 1.0)</p>
       </div>
 
+      <!-- Easing Comparison Demo -->
+      <div style="margin: var(--s-32) 0; padding: var(--s-24); background: var(--paper-00); border: 1px solid var(--paper-10); border-radius: 4px;">
+        <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-16);">Easing Comparison — Simultaneous Playback</div>
+
+        <div style="display: flex; gap: var(--s-32); flex-wrap: wrap;">
+          <!-- Mechanical -->
+          <div style="flex: 1; min-width: 180px;">
+            <div style="font-family: var(--mono); font-size: var(--type-13); font-weight: 600; margin-bottom: var(--s-8);">Mechanical (Log•)</div>
+            <div style="position: relative; height: 8px; background: var(--paper-10); border-radius: 4px; overflow: visible;">
+              <div id="easingBoxMechanical" style="position: absolute; top: -4px; left: 0; width: 16px; height: 16px; background: var(--amber); border-radius: 3px; transition: none;"></div>
+            </div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30); margin-top: var(--s-8);">cubic-bezier(0.2, 0.8, 0.3, 1.0)</div>
+          </div>
+
+          <!-- Standard -->
+          <div style="flex: 1; min-width: 180px;">
+            <div style="font-family: var(--mono); font-size: var(--type-13); font-weight: 600; margin-bottom: var(--s-8);">ease-in-out (standard)</div>
+            <div style="position: relative; height: 8px; background: var(--paper-10); border-radius: 4px; overflow: visible;">
+              <div id="easingBoxStandard" style="position: absolute; top: -4px; left: 0; width: 16px; height: 16px; background: var(--paper-40); border-radius: 3px; transition: none;"></div>
+            </div>
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30); margin-top: var(--s-8);">ease-in-out</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--s-16);">
+          <button id="easingPlayBtn" onclick="playEasingComparison()" style="font-family: var(--mono); font-size: var(--type-13); color: var(--paper-60); background: none; border: 1px solid var(--paper-20); padding: var(--s-8) var(--s-16); border-radius: 3px; cursor: pointer;">Play</button>
+        </div>
+      </div>
+
       <h3>Prohibited Easings</h3>
       <div class="table-scroll">
         <table class="spec-table">
@@ -162,6 +191,29 @@
   animation: fadeIn 200ms ease-in-out;
 }</pre>
           </div>
+
+          <!-- Modal Slide-Up Demo -->
+          <div style="margin-top: var(--s-16); padding: var(--s-16); background: var(--paper-05); border: 1px solid var(--paper-10); border-radius: 4px;">
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-12);">Live Demo</div>
+            <div id="modalDemoContainer" style="position: relative; height: 200px; background: var(--paper-00); border: 1px solid var(--paper-10); border-radius: 4px; overflow: hidden;">
+              <!-- Overlay -->
+              <div id="modalDemoOverlay" style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0; transition: none; pointer-events: none;"></div>
+              <!-- Panel -->
+              <div id="modalDemoPanel" style="position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: var(--paper-00); border-top: 1px solid var(--paper-10); transform: translateY(100%); transition: none; padding: var(--s-16); pointer-events: none;">
+                <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-bottom: var(--s-8);">MODAL CONTENT</div>
+                <div style="font-family: var(--sans); font-size: var(--type-14); color: var(--paper-60);">Panel slides up 400ms ease-out</div>
+              </div>
+              <!-- Timing labels -->
+              <div style="position: absolute; top: var(--s-8); left: var(--s-8); font-family: var(--mono); font-size: var(--type-11);">
+                <span id="modalTimingOverlay" style="color: var(--paper-30);">overlay: 200ms</span>
+                <span style="color: var(--paper-20); margin: 0 4px;">+</span>
+                <span id="modalTimingPanel" style="color: var(--paper-30);">panel: 400ms</span>
+              </div>
+            </div>
+            <div style="text-align: center; margin-top: var(--s-8);">
+              <button id="modalShowBtn" onclick="playModalDemo()" style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-60); background: none; border: 1px solid var(--paper-20); padding: var(--s-4) var(--s-8); border-radius: 3px; cursor: pointer;">Show</button>
+            </div>
+          </div>
         </div>
       </details>
 
@@ -201,6 +253,27 @@
 .loading-pulse {
   animation: pulse 1s ease-in-out infinite;
 }</pre>
+          </div>
+
+          <!-- Loading Indicator Demo -->
+          <style>
+            @keyframes demoSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            @keyframes demoPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+          </style>
+          <div style="margin-top: var(--s-16); padding: var(--s-16); background: var(--paper-05); border: 1px solid var(--paper-10); border-radius: 4px;">
+            <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-12);">Live Demo</div>
+            <div style="display: flex; gap: var(--s-48); justify-content: center; align-items: center;">
+              <!-- Spinner -->
+              <div style="text-align: center;">
+                <div style="width: 24px; height: 24px; border: 2px solid var(--paper-10); border-top-color: var(--amber); border-radius: 50%; animation: demoSpin 1.5s linear infinite; margin: 0 auto var(--s-8);"></div>
+                <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40);">Spin · 1.5s linear</div>
+              </div>
+              <!-- Pulse -->
+              <div style="text-align: center;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--amber); animation: demoPulse 1s ease-in-out infinite; margin: 0 auto var(--s-8);"></div>
+                <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40);">Pulse · 1s ease-in-out</div>
+              </div>
+            </div>
           </div>
         </div>
       </details>
@@ -252,6 +325,38 @@
           <div style="font-family: var(--mono); font-size: var(--type-14); font-weight: 600; margin-bottom: var(--s-8);">Reset</div>
           <div style="font-family: var(--mono); font-size: var(--type-13); color: var(--paper-40);">250ms</div>
           <p style="font-size: var(--type-13); margin-top: var(--s-8); margin-bottom: 0;">Scroll settle<br>compose ready</p>
+        </div>
+      </div>
+
+      <!-- Live Commit Cycle Demo -->
+      <div class="demo-box" style="margin: var(--s-32) 0; padding: var(--s-24); background: var(--paper-00); border: 1px solid var(--paper-10); border-radius: 4px;">
+        <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-16);">TRY IT — Full 750ms Commit Cycle</div>
+
+        <!-- Demo area -->
+        <div id="commitDemoArea" style="max-width: 400px; margin: 0 auto;">
+          <!-- Timeline container -->
+          <div id="commitDemoTimeline" style="min-height: 60px; margin-bottom: var(--s-16); overflow: hidden;">
+          </div>
+
+          <!-- Compose + Commit -->
+          <div style="display: flex; align-items: center; gap: var(--s-8); padding: var(--s-12) var(--s-16); background: var(--paper-05); border: 1px solid var(--paper-10); border-radius: 4px;">
+            <span id="commitDemoPlaceholder" style="font-family: var(--mono); font-size: var(--type-14); color: var(--paper-30); flex: 1;">Log...</span>
+            <button id="commitDemoBtn" onclick="playCommitDemo()" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--amber); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 150ms ease-out;" aria-label="Play commit demo">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--amber); display: block;"></span>
+            </button>
+          </div>
+
+          <!-- Stage labels -->
+          <div id="commitDemoStages" style="display: flex; gap: var(--s-8); margin-top: var(--s-12); font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30);">
+            <span id="stageLabel1" style="flex: 1; text-align: center; padding: var(--s-4); border-radius: 2px;">1 · Shutter · 150ms</span>
+            <span id="stageLabel2" style="flex: 1; text-align: center; padding: var(--s-4); border-radius: 2px;">2 · Inscription · 350ms</span>
+            <span id="stageLabel3" style="flex: 1; text-align: center; padding: var(--s-4); border-radius: 2px;">3 · Reset · 250ms</span>
+          </div>
+
+          <!-- Speed toggle -->
+          <div style="text-align: center; margin-top: var(--s-12);">
+            <button id="commitDemoSpeed" onclick="toggleCommitSpeed()" style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); background: none; border: 1px solid var(--paper-20); padding: var(--s-4) var(--s-8); border-radius: 3px; cursor: pointer;">1× speed</button>
+          </div>
         </div>
       </div>
 
@@ -441,5 +546,160 @@ struct LogMotion {
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
 
   <script src="assets/scripts.js"></script>
+  <script>
+    /* ---- Commit Cycle Demo ---- */
+    var commitDemoRunning = false;
+    var commitSpeedMultiplier = 1;
+    var commitEntryCount = 0;
+
+    function toggleCommitSpeed() {
+      commitSpeedMultiplier = commitSpeedMultiplier === 1 ? 4 : 1;
+      document.getElementById('commitDemoSpeed').textContent = commitSpeedMultiplier === 1 ? '1× speed' : '0.25× speed';
+    }
+
+    function highlightStage(n) {
+      for (var i = 1; i <= 3; i++) {
+        var el = document.getElementById('stageLabel' + i);
+        el.style.background = i === n ? 'var(--amber)' : '';
+        el.style.color = i === n ? 'var(--paper-00)' : '';
+      }
+    }
+
+    function clearStageHighlights() {
+      for (var i = 1; i <= 3; i++) {
+        var el = document.getElementById('stageLabel' + i);
+        el.style.background = '';
+        el.style.color = '';
+      }
+    }
+
+    function playCommitDemo() {
+      if (commitDemoRunning) return;
+      commitDemoRunning = true;
+
+      var btn = document.getElementById('commitDemoBtn');
+      var timeline = document.getElementById('commitDemoTimeline');
+      var placeholder = document.getElementById('commitDemoPlaceholder');
+      var m = commitSpeedMultiplier;
+
+      // Reset
+      timeline.innerHTML = '';
+      placeholder.textContent = 'Reviewed the motion spec...';
+      placeholder.style.fontFamily = 'var(--sans)';
+      placeholder.style.color = 'var(--paper-80)';
+
+      // Stage 1: Shutter press
+      highlightStage(1);
+      btn.style.transform = 'scale(0.92)';
+
+      setTimeout(function() {
+        btn.style.transform = 'scale(1)';
+
+        // Stage 2: Entry inscription
+        highlightStage(2);
+        var entry = document.createElement('div');
+        entry.style.cssText = 'display:flex;gap:8px;align-items:flex-start;padding:8px 12px;border-bottom:1px solid var(--paper-10);opacity:0;transform:translateY(-12px);';
+        entry.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--signal-thought);margin-top:7px;flex-shrink:0;"></span>' +
+          '<div><span style="font-family:var(--mono);font-size:var(--type-11);color:var(--paper-40);">just now</span>' +
+          '<div style="font-family:var(--sans);font-size:var(--type-14);color:var(--paper-80);margin-top:2px;">Reviewed the motion spec...</div></div>';
+        timeline.appendChild(entry);
+
+        // Force reflow then animate
+        entry.offsetHeight;
+        entry.style.transition = 'opacity ' + (350 * m) + 'ms cubic-bezier(0.2,0.8,0.3,1.0), transform ' + (350 * m) + 'ms cubic-bezier(0.2,0.8,0.3,1.0)';
+        entry.style.opacity = '1';
+        entry.style.transform = 'translateY(0)';
+
+        setTimeout(function() {
+          // Stage 3: Reset
+          highlightStage(3);
+          placeholder.textContent = 'Log...';
+          placeholder.style.fontFamily = 'var(--mono)';
+          placeholder.style.color = 'var(--paper-30)';
+
+          setTimeout(function() {
+            clearStageHighlights();
+            commitDemoRunning = false;
+          }, 250 * m);
+        }, 350 * m);
+      }, 150 * m);
+    }
+
+    /* ---- Modal Slide-Up Demo ---- */
+    var modalDemoRunning = false;
+
+    function playModalDemo() {
+      if (modalDemoRunning) return;
+      modalDemoRunning = true;
+
+      var overlay = document.getElementById('modalDemoOverlay');
+      var panel = document.getElementById('modalDemoPanel');
+      var btn = document.getElementById('modalShowBtn');
+
+      // Reset
+      overlay.style.transition = 'none';
+      panel.style.transition = 'none';
+      overlay.style.opacity = '0';
+      panel.style.transform = 'translateY(100%)';
+      overlay.offsetHeight;
+
+      // Show: overlay 200ms + panel 400ms concurrent
+      overlay.style.transition = 'opacity 200ms ease-in-out';
+      panel.style.transition = 'transform 400ms ease-out';
+      overlay.style.opacity = '1';
+      panel.style.transform = 'translateY(0)';
+      btn.textContent = 'Dismiss';
+
+      btn.onclick = function() {
+        // Dismiss
+        overlay.style.transition = 'opacity 200ms ease-in-out';
+        panel.style.transition = 'transform 300ms ease-in';
+        overlay.style.opacity = '0';
+        panel.style.transform = 'translateY(100%)';
+
+        setTimeout(function() {
+          btn.textContent = 'Show';
+          btn.onclick = playModalDemo;
+          modalDemoRunning = false;
+        }, 400);
+      };
+    }
+
+    /* ---- Easing Comparison Demo ---- */
+    var easingRunning = false;
+
+    function playEasingComparison() {
+      if (easingRunning) return;
+      easingRunning = true;
+
+      var mech = document.getElementById('easingBoxMechanical');
+      var std = document.getElementById('easingBoxStandard');
+
+      // Reset to start
+      mech.style.transition = 'none';
+      std.style.transition = 'none';
+      mech.style.left = '0';
+      std.style.left = '0';
+
+      // Force reflow
+      mech.offsetHeight;
+
+      // Animate forward
+      mech.style.transition = 'left 600ms cubic-bezier(0.2, 0.8, 0.3, 1.0)';
+      std.style.transition = 'left 600ms ease-in-out';
+      mech.style.left = 'calc(100% - 16px)';
+      std.style.left = 'calc(100% - 16px)';
+
+      setTimeout(function() {
+        // Animate back
+        mech.style.left = '0';
+        std.style.left = '0';
+
+        setTimeout(function() {
+          easingRunning = false;
+        }, 650);
+      }, 800);
+    }
+  </script>
 </body>
 </html>
