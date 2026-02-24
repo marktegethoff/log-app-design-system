@@ -40,6 +40,7 @@
     .app-nav-title { font-family: var(--mono); font-size: var(--type-16); font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--paper-80); }
     body.dark-mode .app-nav-title { color: var(--paper-05); }
     .app-nav-title .period { color: var(--amber); margin-left: 1px; }
+    .app-nav-actions { display: flex; align-items: center; }
     .app-nav-action { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .app-nav-action svg { stroke: var(--paper-60); }
     body.dark-mode .app-nav-action svg { stroke: var(--paper-30); }
@@ -51,14 +52,23 @@
     .entry-row:active { opacity: 0.7; }
     .entry-gutter { display: flex; flex-direction: column; align-items: center; width: 16px; flex-shrink: 0; padding-top: 5px; }
     .intent-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .dot-thought { background: var(--signal-thought); }
-    .dot-action { background: var(--signal-action); }
-    .dot-decision { background: var(--signal-decision); }
-    .dot-reference { background: var(--signal-reference); }
-    .dot-unknown { background: var(--signal-unknown); }
+    .dot-question { background: var(--signal-question); }
+    .dot-proposal { background: var(--signal-proposal); }
+    .dot-constraint { background: var(--signal-constraint); }
+    .dot-fact { background: var(--signal-fact); }
+    .dot-note { background: var(--signal-note); }
+    .dot-tradeoff { background: var(--signal-tradeoff); }
 
     .entry-body { flex: 1; min-width: 0; }
-    .entry-timestamp { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); margin-bottom: 3px; }
+    .entry-meta { display: flex; align-items: center; margin-bottom: 3px; }
+    .entry-intent-label { font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+    .label-question { color: var(--signal-question); }
+    .label-proposal { color: var(--signal-proposal); }
+    .label-constraint { color: var(--signal-constraint); }
+    .label-fact { color: var(--signal-fact); }
+    .label-note { color: var(--signal-note); }
+    .label-tradeoff { color: var(--signal-tradeoff); }
+    .entry-timestamp { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); }
     body.dark-mode .entry-timestamp { color: var(--paper-30); }
     .entry-text { font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-80); margin: 0; }
     body.dark-mode .entry-text { color: var(--paper-05); }
@@ -101,41 +111,58 @@
 
       <div class="app-nav">
         <span class="app-nav-title">Log<span class="period">•</span></span>
-        <div class="app-nav-action">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+        <div class="app-nav-actions">
+          <div class="app-nav-action" aria-label="Search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="app-nav-action" aria-label="Account">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
         </div>
       </div>
 
       <div class="timeline-scroll">
         <div class="entry-row">
           <div class="entry-gutter">
-            <div class="intent-dot dot-thought"></div>
+            <div class="intent-dot dot-question"></div>
           </div>
           <div class="entry-body">
-            <div class="entry-timestamp">9:14</div>
+            <div class="entry-meta">
+              <span class="entry-intent-label label-question">QUESTION</span>
+              <span class="entry-timestamp"> · 9:14</span>
+            </div>
             <p class="entry-text">Need to reconsider the batching window.</p>
           </div>
         </div>
 
         <div class="entry-row">
           <div class="entry-gutter">
-            <div class="intent-dot dot-decision"></div>
+            <div class="intent-dot dot-constraint"></div>
           </div>
           <div class="entry-body">
-            <div class="entry-timestamp">9:29 <span class="corrected-badge">CORRECTED</span></div>
+            <div class="entry-meta">
+              <span class="entry-intent-label label-constraint">CONSTRAINT</span>
+              <span class="entry-timestamp"> · 9:29 <span class="corrected-badge">AMENDED</span></span>
+            </div>
             <p class="entry-text">Going with last-write-wins for MVP. Full conflict resolution is post-1.0.</p>
           </div>
         </div>
 
         <div class="entry-row">
           <div class="entry-gutter">
-            <div class="intent-dot dot-action"></div>
+            <div class="intent-dot dot-proposal"></div>
           </div>
           <div class="entry-body">
-            <div class="entry-timestamp">9:45</div>
+            <div class="entry-meta">
+              <span class="entry-intent-label label-proposal">PROPOSAL</span>
+              <span class="entry-timestamp"> · 9:45</span>
+            </div>
             <p class="entry-text">Updated the architecture doc with sync decision.</p>
           </div>
         </div>
@@ -144,8 +171,9 @@
       <div class="compose-area">
         <div class="compose-inner">
           <div class="compose-input-wrap">
-            <textarea class="compose-input" placeholder="Log..." rows="1"></textarea>
+            <textarea class="compose-input" placeholder="Log..." rows="1" aria-label="Compose entry"></textarea>
           </div>
+          <div class="sync-dot" role="status" aria-label="Entry synced"></div>
           <button class="compose-commit" aria-label="Commit entry">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="3" fill="currentColor"/>

@@ -322,17 +322,17 @@
       </div>
       <div class="demo-filters" role="group" aria-label="Filter by intent">
         <button class="demo-pill active" data-filter="all">All</button>
-        <button class="demo-pill" data-filter="thought">
-          <span class="demo-pip" style="background: var(--signal-thought);"></span>Thought
+        <button class="demo-pill" data-filter="question">
+          <span class="demo-pip" style="background: var(--signal-question);"></span>Question
         </button>
-        <button class="demo-pill" data-filter="action">
-          <span class="demo-pip" style="background: var(--signal-action);"></span>Action
+        <button class="demo-pill" data-filter="proposal">
+          <span class="demo-pip" style="background: var(--signal-proposal);"></span>Proposal
         </button>
-        <button class="demo-pill" data-filter="decision">
-          <span class="demo-pip" style="background: var(--signal-decision);"></span>Decision
+        <button class="demo-pill" data-filter="constraint">
+          <span class="demo-pip" style="background: var(--signal-constraint);"></span>Constraint
         </button>
-        <button class="demo-pill" data-filter="reference">
-          <span class="demo-pip" style="background: var(--signal-reference);"></span>Reference
+        <button class="demo-pill" data-filter="fact">
+          <span class="demo-pip" style="background: var(--signal-fact);"></span>Fact
         </button>
       </div>
       <div class="count-bar">
@@ -381,16 +381,16 @@
   <script src="../assets/scripts.js"></script>
   <script>
     var CORPUS = [
-      { ts: 'Feb 17', type: 'decision', color: '#8B6E4E', text: 'Going with last-write-wins for MVP. Full conflict resolution is post-1.0.' },
-      { ts: 'Feb 17', type: 'thought', color: '#6B7B8D', text: 'Need to reconsider the batching window — 30s might be too aggressive for longer thoughts.' },
-      { ts: 'Feb 17', type: 'action', color: '#C4652A', text: 'Sent revised spec to engineering. Flagged sync conflict resolution as unresolved.' },
-      { ts: 'Feb 15', type: 'reference', color: '#5B7A6B', text: 'From brief: Supabase Realtime has 100ms typical sync latency on cellular.' },
-      { ts: 'Feb 15', type: 'thought', color: '#6B7B8D', text: 'The tape metaphor might be doing too much work. Seismograph is more honest about idle gaps.' },
-      { ts: 'Feb 14', type: 'decision', color: '#8B6E4E', text: 'Offline-first is non-negotiable. Sync is best-effort, not blocking.' },
-      { ts: 'Feb 13', type: 'action', color: '#C4652A', text: 'Updated brand spec with dark mode contrast audit fixes. All Track A items resolved.' },
-      { ts: 'Feb 12', type: 'thought', color: '#6B7B8D', text: 'Space Mono for mechanism, IBM Plex Sans for tape — this distinction keeps working.' },
-      { ts: 'Feb 10', type: 'reference', color: '#5B7A6B', text: 'iOS minimum touch target is 44x44pt per HIG. Non-negotiable for compose controls.' },
-      { ts: 'Feb 9', type: 'action', color: '#C4652A', text: 'Locked 14 architectural decisions. Engineering timeline starts Feb 24.' }
+      { ts: 'Feb 17', type: 'constraint', color: '#8B6E4E', text: 'Going with last-write-wins for MVP. Full conflict resolution is post-1.0.' },
+      { ts: 'Feb 17', type: 'question', color: '#6B7B8D', text: 'Need to reconsider the batching window — 30s might be too aggressive for longer thoughts.' },
+      { ts: 'Feb 17', type: 'proposal', color: '#C4652A', text: 'Sent revised spec to engineering. Flagged sync conflict resolution as unresolved.' },
+      { ts: 'Feb 15', type: 'fact', color: '#5B7A6B', text: 'From brief: Supabase Realtime has 100ms typical sync latency on cellular.' },
+      { ts: 'Feb 15', type: 'question', color: '#6B7B8D', text: 'The tape metaphor might be doing too much work. Seismograph is more honest about idle gaps.' },
+      { ts: 'Feb 14', type: 'constraint', color: '#8B6E4E', text: 'Offline-first is non-negotiable. Sync is best-effort, not blocking.' },
+      { ts: 'Feb 13', type: 'proposal', color: '#C4652A', text: 'Updated brand spec with dark mode contrast audit fixes. All Track A items resolved.' },
+      { ts: 'Feb 12', type: 'question', color: '#6B7B8D', text: 'Space Mono for mechanism, IBM Plex Sans for tape — this distinction keeps working.' },
+      { ts: 'Feb 10', type: 'fact', color: '#5B7A6B', text: 'iOS minimum touch target is 44x44pt per HIG. Non-negotiable for compose controls.' },
+      { ts: 'Feb 9', type: 'proposal', color: '#C4652A', text: 'Locked 14 architectural decisions. Engineering timeline starts Feb 24.' }
     ];
 
     var filterType = 'all';

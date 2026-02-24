@@ -498,11 +498,11 @@ struct LogCommitStyle: ButtonStyle {
             <tr><th>Type</th><th>Color</th><th>Hex</th><th>Meaning</th></tr>
           </thead>
           <tbody>
-            <tr><td><span class="signal-dot" style="background: var(--signal-thought);"></span> Thought</td><td>signal-thought</td><td>#6B7B8D</td><td>Reflection, observation</td></tr>
-            <tr><td><span class="signal-dot" style="background: var(--signal-action);"></span> Action</td><td>signal-action</td><td>#C4652A</td><td>Action to take</td></tr>
-            <tr><td><span class="signal-dot" style="background: var(--signal-decision);"></span> Decision</td><td>signal-decision</td><td>#8B6E4E</td><td>Decision made</td></tr>
-            <tr><td><span class="signal-dot" style="background: var(--signal-reference);"></span> Reference</td><td>signal-reference</td><td>#5B7A6B</td><td>Reference material</td></tr>
-            <tr><td><span class="signal-dot" style="background: var(--signal-unknown);"></span> Unknown</td><td>signal-unknown</td><td>#928A7E</td><td>Pending classification</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-question);"></span> Question</td><td>signal-question</td><td>#6B7B8D</td><td>Reflection, observation</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-proposal);"></span> Proposal</td><td>signal-proposal</td><td>#C4652A</td><td>Action to take</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-constraint);"></span> Constraint</td><td>signal-constraint</td><td>#8B6E4E</td><td>Decision made</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-fact);"></span> Fact</td><td>signal-fact</td><td>#5B7A6B</td><td>Reference material</td></tr>
+            <tr><td><span class="signal-dot" style="background: var(--signal-note);"></span> Note</td><td>signal-note</td><td>#928A7E</td><td>Pending classification</td></tr>
           </tbody>
         </table>
       </div>
@@ -668,11 +668,11 @@ struct LogCommitStyle: ButtonStyle {
 }
 
 /* Signal colors do NOT change in dark mode */
-.badge-thought   { background: var(--signal-thought); }
-.badge-action    { background: var(--signal-action); }
-.badge-decision  { background: var(--signal-decision); }
-.badge-reference { background: var(--signal-reference); }
-.badge-unknown   { background: var(--signal-unknown); }</pre>
+.badge-question   { background: var(--signal-question); }
+.badge-proposal    { background: var(--signal-proposal); }
+.badge-constraint  { background: var(--signal-constraint); }
+.badge-fact { background: var(--signal-fact); }
+.badge-note   { background: var(--signal-note); }</pre>
       </div>
 
       <!-- Badge — 5 Signal Color Specimens -->
@@ -683,23 +683,23 @@ struct LogCommitStyle: ButtonStyle {
         <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30); margin-bottom: var(--s-8);">LIGHT</div>
         <div style="display: flex; gap: var(--s-12); flex-wrap: wrap; padding: var(--s-24); background: #FAFAF8; border: 1px solid #ECE8E1; border-radius: 4px; margin-bottom: var(--s-16);">
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #6B7B8D; color: #FAFAF8;">Thought</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #6B7B8D; color: #FAFAF8;">Question</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#6B7B8D</div>
           </div>
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #C4652A; color: #FAFAF8;">Action</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #C4652A; color: #FAFAF8;">Proposal</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#C4652A</div>
           </div>
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #8B6E4E; color: #FAFAF8;">Decision</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #8B6E4E; color: #FAFAF8;">Constraint</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#8B6E4E</div>
           </div>
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #5B7A6B; color: #FAFAF8;">Reference</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #5B7A6B; color: #FAFAF8;">Fact</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#5B7A6B</div>
           </div>
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #928A7E; color: #FAFAF8;">Unknown</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #928A7E; color: #FAFAF8;">Note</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#928A7E</div>
           </div>
         </div>
@@ -708,23 +708,23 @@ struct LogCommitStyle: ButtonStyle {
         <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30); margin-bottom: var(--s-8);">DARK</div>
         <div style="display: flex; gap: var(--s-12); flex-wrap: wrap; padding: var(--s-24); background: #0D0B09; border: 1px solid #3A342C; border-radius: 4px;">
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #6B7B8D; color: #FAFAF8;">Thought</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #6B7B8D; color: #FAFAF8;">Question</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#6B7B8D</div>
           </div>
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #C4652A; color: #FAFAF8;">Action</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #C4652A; color: #FAFAF8;">Proposal</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#C4652A</div>
           </div>
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #8B6E4E; color: #FAFAF8;">Decision</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #8B6E4E; color: #FAFAF8;">Constraint</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#8B6E4E</div>
           </div>
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #5B7A6B; color: #FAFAF8;">Reference</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #5B7A6B; color: #FAFAF8;">Fact</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#5B7A6B</div>
           </div>
           <div style="text-align: center;">
-            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #928A7E; color: #FAFAF8;">Unknown</span>
+            <span style="display: inline-block; font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; border-radius: 3px; background: #928A7E; color: #FAFAF8;">Note</span>
             <div style="font-family: var(--mono); font-size: var(--type-11); color: #928A7E; margin-top: var(--s-4);">#928A7E</div>
           </div>
         </div>

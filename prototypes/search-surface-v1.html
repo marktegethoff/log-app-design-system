@@ -326,21 +326,21 @@
       <!-- Filter pills -->
       <div class="filter-row" role="group" aria-label="Filter by intent type">
         <button class="filter-pill active" data-type="all">All</button>
-        <button class="filter-pill" data-type="thought">
-          <span class="filter-pip" style="background: var(--signal-thought);"></span>
-          Thought
+        <button class="filter-pill" data-type="question">
+          <span class="filter-pip" style="background: var(--signal-question);"></span>
+          Question
         </button>
-        <button class="filter-pill" data-type="action">
-          <span class="filter-pip" style="background: var(--signal-action);"></span>
-          Action
+        <button class="filter-pill" data-type="proposal">
+          <span class="filter-pip" style="background: var(--signal-proposal);"></span>
+          Proposal
         </button>
-        <button class="filter-pill" data-type="decision">
-          <span class="filter-pip" style="background: var(--signal-decision);"></span>
-          Decision
+        <button class="filter-pill" data-type="constraint">
+          <span class="filter-pip" style="background: var(--signal-constraint);"></span>
+          Constraint
         </button>
-        <button class="filter-pill" data-type="reference">
-          <span class="filter-pip" style="background: var(--signal-reference);"></span>
-          Reference
+        <button class="filter-pill" data-type="fact">
+          <span class="filter-pip" style="background: var(--signal-fact);"></span>
+          Fact
         </button>
       </div>
 
@@ -351,12 +351,12 @@
       <div class="results-scroll" id="resultsList">
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-decision);"></div>
+            <div class="result-dot" style="background: var(--signal-constraint);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 17</span>
-              <span class="result-type">Decision</span>
+              <span class="result-type">Constraint</span>
             </div>
             <div class="result-text">Going with <mark>last-write-wins</mark> for MVP. Full conflict resolution post-1.0.</div>
           </div>
@@ -364,12 +364,12 @@
 
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-thought);"></div>
+            <div class="result-dot" style="background: var(--signal-question);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 15</span>
-              <span class="result-type">Thought</span>
+              <span class="result-type">Question</span>
             </div>
             <div class="result-text">The <mark>batching</mark> window feels right at 30s but need to test with real usage patterns.</div>
           </div>
@@ -377,12 +377,12 @@
 
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-action);"></div>
+            <div class="result-dot" style="background: var(--signal-proposal);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 14</span>
-              <span class="result-type">Action</span>
+              <span class="result-type">Proposal</span>
             </div>
             <div class="result-text">Sent revised <mark>spec</mark> to engineering. Sync conflict resolution flagged unresolved.</div>
           </div>
@@ -390,12 +390,12 @@
 
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-reference);"></div>
+            <div class="result-dot" style="background: var(--signal-fact);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 12</span>
-              <span class="result-type">Reference</span>
+              <span class="result-type">Fact</span>
             </div>
             <div class="result-text">Supabase Realtime: 100ms typical <mark>sync</mark> latency on cellular per engineering brief.</div>
           </div>
@@ -403,12 +403,12 @@
 
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-thought);"></div>
+            <div class="result-dot" style="background: var(--signal-question);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 10</span>
-              <span class="result-type">Thought</span>
+              <span class="result-type">Question</span>
             </div>
             <div class="result-text">Offline-first means the <mark>sync</mark> layer is an artifact problem, not a real-time problem.</div>
           </div>

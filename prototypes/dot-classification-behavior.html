@@ -139,7 +139,7 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: var(--signal-unknown);
+      background: var(--signal-note);
       transition: background 0.2s;
     }
 
@@ -326,28 +326,28 @@
       <span class="demo-section-title">Intent Types — Reference</span>
       <div class="dot-row">
         <div class="dot-item">
-          <div class="dot-swatch" style="background: var(--signal-thought);"></div>
-          <span class="dot-name">Thought</span>
+          <div class="dot-swatch" style="background: var(--signal-question);"></div>
+          <span class="dot-name">Question</span>
           <span class="dot-hex">#6B7B8D</span>
         </div>
         <div class="dot-item">
-          <div class="dot-swatch" style="background: var(--signal-action);"></div>
-          <span class="dot-name">Action</span>
+          <div class="dot-swatch" style="background: var(--signal-proposal);"></div>
+          <span class="dot-name">Proposal</span>
           <span class="dot-hex">#C4652A</span>
         </div>
         <div class="dot-item">
-          <div class="dot-swatch" style="background: var(--signal-decision);"></div>
-          <span class="dot-name">Decision</span>
+          <div class="dot-swatch" style="background: var(--signal-constraint);"></div>
+          <span class="dot-name">Constraint</span>
           <span class="dot-hex">#8B6E4E</span>
         </div>
         <div class="dot-item">
-          <div class="dot-swatch" style="background: var(--signal-reference);"></div>
-          <span class="dot-name">Reference</span>
+          <div class="dot-swatch" style="background: var(--signal-fact);"></div>
+          <span class="dot-name">Fact</span>
           <span class="dot-hex">#5B7A6B</span>
         </div>
         <div class="dot-item">
-          <div class="dot-swatch" style="background: var(--signal-unknown);"></div>
-          <span class="dot-name">Unknown</span>
+          <div class="dot-swatch" style="background: var(--signal-note);"></div>
+          <span class="dot-name">Note</span>
           <span class="dot-hex">#928A7E</span>
         </div>
       </div>
@@ -380,21 +380,21 @@
         <div class="override-row">
           <span class="override-label">Override:</span>
           <div class="override-pills" id="overridePills">
-            <button class="override-pill" data-type="thought" data-color="var(--signal-thought)" aria-label="Set type to Thought">
-              <span class="override-pip" style="background: var(--signal-thought);"></span>
-              <span class="override-pill-text">Thought</span>
+            <button class="override-pill" data-type="question" data-color="var(--signal-question)" aria-label="Set type to Question">
+              <span class="override-pip" style="background: var(--signal-question);"></span>
+              <span class="override-pill-text">Question</span>
             </button>
-            <button class="override-pill" data-type="action" data-color="var(--signal-action)" aria-label="Set type to Action">
-              <span class="override-pip" style="background: var(--signal-action);"></span>
-              <span class="override-pill-text">Action</span>
+            <button class="override-pill" data-type="proposal" data-color="var(--signal-proposal)" aria-label="Set type to Proposal">
+              <span class="override-pip" style="background: var(--signal-proposal);"></span>
+              <span class="override-pill-text">Proposal</span>
             </button>
-            <button class="override-pill" data-type="decision" data-color="var(--signal-decision)" aria-label="Set type to Decision">
-              <span class="override-pip" style="background: var(--signal-decision);"></span>
-              <span class="override-pill-text">Decision</span>
+            <button class="override-pill" data-type="constraint" data-color="var(--signal-constraint)" aria-label="Set type to Constraint">
+              <span class="override-pip" style="background: var(--signal-constraint);"></span>
+              <span class="override-pill-text">Constraint</span>
             </button>
-            <button class="override-pill" data-type="reference" data-color="var(--signal-reference)" aria-label="Set type to Reference">
-              <span class="override-pip" style="background: var(--signal-reference);"></span>
-              <span class="override-pill-text">Reference</span>
+            <button class="override-pill" data-type="fact" data-color="var(--signal-fact)" aria-label="Set type to Fact">
+              <span class="override-pip" style="background: var(--signal-fact);"></span>
+              <span class="override-pill-text">Fact</span>
             </button>
           </div>
         </div>
@@ -426,27 +426,27 @@
   <script>
     /* --- Classification demo --- */
     var SIGNALS = {
-      thought:   { color: '#6B7B8D', label: 'Thought' },
-      action:    { color: '#C4652A', label: 'Action' },
-      decision:  { color: '#8B6E4E', label: 'Decision' },
-      reference: { color: '#5B7A6B', label: 'Reference' },
-      unknown:   { color: '#928A7E', label: 'Unknown' }
+      question:   { color: '#6B7B8D', label: 'Question' },
+      proposal:   { color: '#C4652A', label: 'Proposal' },
+      constraint: { color: '#8B6E4E', label: 'Constraint' },
+      fact:       { color: '#5B7A6B', label: 'Fact' },
+      note:       { color: '#928A7E', label: 'Note' }
     };
 
     var manualType = null;
 
     function detectType(text) {
       var t = text.toLowerCase();
-      if (/\b(decided|going with|chosen|committed to|will use)\b/.test(t)) return { type: 'decision', conf: 'high' };
-      if (/\b(sent|called|emailed|built|finished|completed|deployed|ran|updated)\b/.test(t)) return { type: 'action', conf: 'high' };
-      if (/\b(from|per|source|quote|see|ref|reference|according to)\b/.test(t)) return { type: 'reference', conf: 'medium' };
-      if (/\b(think|wonder|maybe|consider|what if|could be|feeling|not sure)\b/.test(t)) return { type: 'thought', conf: 'medium' };
-      if (text.length > 0) return { type: 'unknown', conf: 'low' };
+      if (/\b(decided|going with|chosen|committed to|will use)\b/.test(t)) return { type: 'constraint', conf: 'high' };
+      if (/\b(sent|called|emailed|built|finished|completed|deployed|ran|updated)\b/.test(t)) return { type: 'proposal', conf: 'high' };
+      if (/\b(from|per|source|quote|see|ref|reference|according to)\b/.test(t)) return { type: 'fact', conf: 'medium' };
+      if (/\b(think|wonder|maybe|consider|what if|could be|feeling|not sure)\b/.test(t)) return { type: 'question', conf: 'medium' };
+      if (text.length > 0) return { type: 'note', conf: 'low' };
       return null;
     }
 
     function applyType(type) {
-      var sig = SIGNALS[type] || SIGNALS.unknown;
+      var sig = SIGNALS[type] || SIGNALS.note;
       document.getElementById('liveDot').style.background = sig.color;
       document.getElementById('classDetected').textContent = sig.label;
     }
@@ -498,7 +498,7 @@
         if (batchElapsed >= BATCH_TOTAL) {
           clearInterval(batchInterval);
           document.getElementById('batchTimer').textContent = 'Committed';
-          document.getElementById('batchFill').style.background = 'var(--signal-reference)';
+          document.getElementById('batchFill').style.background = 'var(--signal-fact)';
         }
       }, 1000);
     }

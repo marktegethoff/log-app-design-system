@@ -55,7 +55,13 @@
     .result-body { flex: 1; min-width: 0; }
     .result-meta { display: flex; align-items: center; gap: var(--s-8); margin-bottom: 4px; }
     .result-ts { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); }
-    .result-type { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); }
+    .result-type { font-family: var(--mono); font-size: var(--type-11); letter-spacing: 0.06em; }
+    .result-type.type-question { color: var(--signal-question); }
+    .result-type.type-proposal { color: var(--signal-proposal); }
+    .result-type.type-constraint { color: var(--signal-constraint); }
+    .result-type.type-fact { color: var(--signal-fact); }
+    .result-type.type-note { color: var(--signal-note); }
+    .result-type.type-tradeoff { color: var(--signal-tradeoff); }
     .result-text { font-family: var(--sans); font-size: 15px; color: var(--paper-80); line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     body.dark-mode .result-text { color: var(--paper-05); }
     .result-text mark { background: none; color: var(--amber); font-weight: 500; }
@@ -89,17 +95,17 @@
         </div>
       </div>
 
-      <div class="result-count">23 entries found</div>
+      <div class="result-count">23 entries</div>
 
       <div class="results-scroll">
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-decision);"></div>
+            <div class="result-dot" style="background: var(--signal-constraint);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 17</span>
-              <span class="result-type">Decision</span>
+              <span class="result-type type-constraint">CONSTRAINT</span>
             </div>
             <div class="result-text">Going with last-write-wins for MVP. Full conflict resolution post-1.0.</div>
           </div>
@@ -107,12 +113,12 @@
 
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-thought);"></div>
+            <div class="result-dot" style="background: var(--signal-question);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 15</span>
-              <span class="result-type">Thought</span>
+              <span class="result-type type-question">QUESTION</span>
             </div>
             <div class="result-text">The batching window feels right at 30s but need to test.</div>
           </div>
@@ -120,12 +126,12 @@
 
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-action);"></div>
+            <div class="result-dot" style="background: var(--signal-proposal);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 14</span>
-              <span class="result-type">Action</span>
+              <span class="result-type type-proposal">PROPOSAL</span>
             </div>
             <div class="result-text">Sent revised spec to engineering. <mark>Sync</mark> conflict resolution flagged.</div>
           </div>
@@ -133,12 +139,12 @@
 
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-reference);"></div>
+            <div class="result-dot" style="background: var(--signal-fact);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 12</span>
-              <span class="result-type">Reference</span>
+              <span class="result-type type-fact">FACT</span>
             </div>
             <div class="result-text">Supabase Realtime: 100ms typical <mark>sync</mark> latency on cellular.</div>
           </div>
@@ -146,12 +152,12 @@
 
         <div class="result-row">
           <div class="result-gutter">
-            <div class="result-dot" style="background: var(--signal-thought);"></div>
+            <div class="result-dot" style="background: var(--signal-question);"></div>
           </div>
           <div class="result-body">
             <div class="result-meta">
               <span class="result-ts">Feb 10</span>
-              <span class="result-type">Thought</span>
+              <span class="result-type type-question">QUESTION</span>
             </div>
             <div class="result-text">Offline-first means the <mark>sync</mark> layer is an artifact problem.</div>
           </div>

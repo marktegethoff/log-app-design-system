@@ -1,6 +1,7 @@
 // ============================================================
 // Log• Design Tokens — Swift / SwiftUI
-// Source: AUTHORITATIVE_COLOR_SPECIFICATION.md
+// Source: DESIGN_SYSTEM_V1_1_AMENDMENT.md (locked Feb 21, 2026)
+// Taxonomy: v1.1 — Proposal, Question, Constraint, Trade-off, Fact, Note
 // ============================================================
 
 import SwiftUI
@@ -42,12 +43,13 @@ struct LogColors {
     static let paper90 = Color(hex: "171310")
     static let paper95 = Color(hex: "0D0B09")
 
-    // Signal Colors — Intent Classification (constant across light/dark)
-    static let signalThought   = Color(hex: "6B7B8D")
-    static let signalAction    = Color(hex: "C4652A")
-    static let signalDecision  = Color(hex: "8B6E4E")
-    static let signalReference = Color(hex: "5B7A6B")
-    static let signalUnknown   = Color(hex: "928A7E")
+    // Signal Colors — Intent Classification v1.1 (constant across light/dark)
+    static let signalProposal   = Color(hex: "4A7A7A")  // Teal — idea, option, recommendation
+    static let signalQuestion   = Color(hex: "6B7B8D")  // Blue-gray — open inquiry
+    static let signalConstraint = Color(hex: "8B6E4E")  // Warm brown — limit, boundary
+    static let signalTradeoff   = Color(hex: "7B6B8B")  // Purple-gray — competing values
+    static let signalFact       = Color(hex: "5B7A6B")  // Sage — observation, datum
+    static let signalNote       = Color(hex: "928A7E")  // Warm gray — catch-all fallback
 
     // Accent Colors
     static let amber          = Color(hex: "C4652A")
@@ -86,17 +88,18 @@ struct LogColors {
     // Signal color lookup by intent type
     static func signal(_ type: IntentType) -> Color {
         switch type {
-        case .thought:   return signalThought
-        case .action:    return signalAction
-        case .decision:  return signalDecision
-        case .reference: return signalReference
-        case .unknown:   return signalUnknown
+        case .proposal:   return signalProposal
+        case .question:   return signalQuestion
+        case .constraint: return signalConstraint
+        case .tradeoff:   return signalTradeoff
+        case .fact:       return signalFact
+        case .note:       return signalNote
         }
     }
 }
 
 enum IntentType: String, CaseIterable {
-    case thought, action, decision, reference, unknown
+    case proposal, question, constraint, tradeoff, fact, note
 }
 
 // MARK: - Typography

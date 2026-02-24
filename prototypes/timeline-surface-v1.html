@@ -172,11 +172,11 @@
       border-radius: 50%;
       flex-shrink: 0;
     }
-    .dot-thought  { background: var(--signal-thought); }
-    .dot-action   { background: var(--signal-action); }
-    .dot-decision { background: var(--signal-decision); }
-    .dot-reference{ background: var(--signal-reference); }
-    .dot-unknown  { background: var(--signal-unknown); }
+    .dot-thought  { background: var(--signal-question); }
+    .dot-action   { background: var(--signal-proposal); }
+    .dot-decision { background: var(--signal-constraint); }
+    .dot-reference{ background: var(--signal-fact); }
+    .dot-unknown  { background: var(--signal-note); }
 
     .entry-body { flex: 1; min-width: 0; }
     .entry-timestamp {
@@ -305,9 +305,8 @@
     }
     body.dark-mode .annotation-card-ref { color: var(--paper-40); }
     .annotation-card-text {
-      font-family: var(--sans);
+      font-family: var(--mono);
       font-size: var(--type-13);
-      font-style: italic;
       color: var(--paper-60);
       line-height: 1.5;
       margin: 0;
@@ -485,36 +484,36 @@
       <div class="annotation-panel-label">Archivist Notes</div>
 
       <div class="annotation-card">
-        <div class="annotation-card-ref">re: 9:29 — Decision</div>
+        <div class="annotation-card-ref">re: 9:29 — Constraint</div>
         <p class="annotation-card-text">This mirrors the choice made in March on the sync model. Last-write-wins was flagged then as a temporary measure.</p>
       </div>
 
       <div class="annotation-card">
-        <div class="annotation-card-ref">re: 9:14 — Thought</div>
+        <div class="annotation-card-ref">re: 9:14 — Question</div>
         <p class="annotation-card-text">The 30s batching question has appeared 3 times this week. May warrant a formal decision entry.</p>
       </div>
 
       <div class="intent-legend">
         <div class="intent-legend-title">Intent Types</div>
         <div class="legend-row">
-          <div class="legend-dot" style="background: var(--signal-thought);"></div>
-          <span class="legend-name">Thought</span>
+          <div class="legend-dot" style="background: var(--signal-question);"></div>
+          <span class="legend-name">Question</span>
         </div>
         <div class="legend-row">
-          <div class="legend-dot" style="background: var(--signal-action);"></div>
-          <span class="legend-name">Action</span>
+          <div class="legend-dot" style="background: var(--signal-proposal);"></div>
+          <span class="legend-name">Proposal</span>
         </div>
         <div class="legend-row">
-          <div class="legend-dot" style="background: var(--signal-decision);"></div>
-          <span class="legend-name">Decision</span>
+          <div class="legend-dot" style="background: var(--signal-constraint);"></div>
+          <span class="legend-name">Constraint</span>
         </div>
         <div class="legend-row">
-          <div class="legend-dot" style="background: var(--signal-reference);"></div>
-          <span class="legend-name">Reference</span>
+          <div class="legend-dot" style="background: var(--signal-fact);"></div>
+          <span class="legend-name">Fact</span>
         </div>
         <div class="legend-row">
-          <div class="legend-dot" style="background: var(--signal-unknown);"></div>
-          <span class="legend-name">Unknown</span>
+          <div class="legend-dot" style="background: var(--signal-note);"></div>
+          <span class="legend-name">Note</span>
         </div>
       </div>
     </div>

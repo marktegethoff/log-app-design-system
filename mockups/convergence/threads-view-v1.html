@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Threads — v1 — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <style>
+    body { background: var(--paper-10); }
+    body.dark-mode { background: var(--paper-95); }
+
+    /* ---- Proto chrome ---- */
+    .proto-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      border-bottom: 1px solid var(--paper-15); background: var(--paper-00);
+    }
+    body.dark-mode .proto-header { background: var(--paper-90); border-bottom-color: var(--paper-80); }
+    .proto-header .mark { font-family: var(--mono); font-weight: 600; font-size: 18px; letter-spacing: var(--tracking-tight); color: var(--paper-80); text-decoration: none; }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; }
+    body.dark-mode .proto-label { color: var(--paper-50); }
+
+    /* ---- Layout ---- */
+    .stage {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: var(--s-48); padding: var(--s-48) var(--s-24);
+    }
+    .frame-group { display: flex; flex-direction: column; align-items: center; gap: var(--s-16); }
+    .frame-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; text-align: center; line-height: 1.6; }
+    body.dark-mode .frame-label { color: var(--paper-50); }
+
+    .section-row { padding: var(--s-24) var(--s-24) var(--s-8); max-width: 960px; margin: 0 auto; }
+    .section-desc { font-family: var(--sans); font-size: var(--type-14); color: var(--paper-50); line-height: 1.6; }
+    body.dark-mode .section-desc { color: var(--paper-40); }
+
+    /* ---- Device frame ---- */
+    .device-frame {
+      width: 390px; height: 844px; background: var(--paper-05);
+      border-radius: 48px; border: 8px solid var(--paper-70);
+      overflow: hidden; flex-shrink: 0; display: flex; flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    .dark-frame { background: var(--paper-95); border-color: var(--paper-60); }
+
+    /* ---- Status bar ---- */
+    .status-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px 8px; flex-shrink: 0;
+    }
+    .status-time { font-family: var(--mono); font-size: var(--type-11); font-weight: 700; color: var(--paper-80); }
+    .dark-frame .status-time { color: var(--paper-05); }
+    .status-signals { display: flex; align-items: center; gap: 5px; }
+    .signal-bar { width: 3px; background: var(--paper-70); border-radius: 1px; }
+    .dark-frame .signal-bar { background: var(--paper-30); }
+    .signal-bar:nth-child(1) { height: 5px; }
+    .signal-bar:nth-child(2) { height: 8px; }
+    .signal-bar:nth-child(3) { height: 11px; }
+    .signal-bar:nth-child(4) { height: 14px; }
+    .signal-battery { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-70); margin-left: 4px; }
+    .dark-frame .signal-battery { color: var(--paper-30); }
+
+    /* ---- App nav bar (timeline root) ---- */
+    .app-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px 12px; flex-shrink: 0;
+    }
+    .app-nav-title {
+      font-family: var(--mono); font-size: var(--type-16); font-weight: 700;
+      letter-spacing: var(--tracking-tight); color: var(--paper-80);
+    }
+    .dark-frame .app-nav-title { color: var(--paper-05); }
+    .app-nav-title .period { color: var(--amber); margin-left: 1px; }
+    .app-nav-actions { display: flex; align-items: center; }
+    .app-nav-action {
+      width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+      background: none; border: none; padding: 0; cursor: pointer;
+      color: var(--paper-60);
+    }
+    .dark-frame .app-nav-action { color: var(--paper-30); }
+
+    /* ---- Filter button: two-state icon ---- */
+    .filter-icon-wrap { position: relative; width: 20px; height: 20px; }
+    .filter-icon-inactive,
+    .filter-icon-active {
+      position: absolute; top: 0; left: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 150ms ease-out;
+    }
+    .filter-icon-inactive { opacity: 1; }
+    .filter-icon-active  { opacity: 0; }
+    .device-frame.filtered .filter-icon-inactive { opacity: 0; }
+    .device-frame.filtered .filter-icon-active  { opacity: 1; }
+    /* Active filter: icon elevates to paper-80 / paper-05 */
+    .device-frame.filtered .filter-btn { color: var(--paper-90); }
+    .dark-frame.filtered .filter-btn { color: var(--paper-05); }
+
+    /* ---- Timeline scroll ---- */
+    .timeline-scroll {
+      flex: 1; overflow-y: auto; padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .timeline-scroll::-webkit-scrollbar { display: none; }
+
+    /* ---- Entry rows (collapsible on filter) ---- */
+    .entry-row {
+      display: flex; gap: 10px; padding: 10px 0;
+      max-height: 200px; overflow: hidden;
+      transition:
+        max-height 220ms ease-out,
+        opacity     220ms ease-out,
+        padding-top 220ms ease-out,
+        padding-bottom 220ms ease-out;
+    }
+    .device-frame.filtered .entry-row:not(.thread-member) {
+      max-height: 0; opacity: 0;
+      padding-top: 0; padding-bottom: 0;
+    }
+    .entry-gutter {
+      display: flex; flex-direction: column; align-items: center;
+      width: 16px; flex-shrink: 0; padding-top: 4px;
+    }
+    .intent-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Signal colors v1.1 */
+    .dot-proposal   { background: var(--signal-proposal); }
+    .dot-question   { background: var(--signal-question); }
+    .dot-constraint { background: var(--signal-constraint); }
+    .dot-tradeoff   { background: var(--signal-tradeoff); }
+    .dot-fact       { background: var(--signal-fact); }
+    .dot-note       { background: var(--signal-note); }
+
+    .entry-body { flex: 1; min-width: 0; }
+    .entry-timestamp {
+      font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40);
+      display: block; margin-bottom: 3px;
+    }
+    .dark-frame .entry-timestamp { color: var(--paper-30); }
+    .entry-text {
+      font-family: var(--sans); font-size: 15px; line-height: 1.5;
+      color: var(--paper-80); margin: 0;
+    }
+    .dark-frame .entry-text { color: var(--paper-05); }
+
+    /* ---- Idle trace (collapsible on filter) ---- */
+    .idle-trace {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 0; margin: 2px 0;
+      max-height: 40px; overflow: hidden;
+      transition:
+        max-height  220ms ease-out 20ms,
+        opacity     220ms ease-out 20ms,
+        margin-top  220ms ease-out 20ms,
+        margin-bottom 220ms ease-out 20ms,
+        padding-top 220ms ease-out 20ms,
+        padding-bottom 220ms ease-out 20ms;
+    }
+    .device-frame.filtered .idle-trace {
+      max-height: 0; opacity: 0;
+      margin-top: 0; margin-bottom: 0;
+      padding-top: 0; padding-bottom: 0;
+    }
+    .idle-trace-bar { width: 1px; height: 20px; background: var(--paper-20); margin-left: 7px; flex-shrink: 0; }
+    .dark-frame .idle-trace-bar { background: var(--paper-70); }
+    .idle-trace-text { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-30); }
+    .dark-frame .idle-trace-text { color: var(--paper-50); }
+
+    /* ---- Thread card ---- */
+    .thread-card {
+      margin-top: 12px;
+      padding: 20px;
+      background: var(--paper-00);
+      border: 1px solid var(--paper-20);
+      cursor: pointer;
+    }
+    .dark-frame .thread-card {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+    .thread-card-label {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      margin-bottom: 4px;
+    }
+    .dark-frame .thread-card-label {
+      color: var(--paper-05);
+    }
+    .thread-card-meta {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.04em;
+    }
+    .dark-frame .thread-card-meta {
+      color: var(--paper-30);
+    }
+
+    /* ---- Compose bar ---- */
+    .compose-area {
+      flex-shrink: 0; border-top: 1px solid var(--paper-15);
+      padding: 12px 20px 20px; background: var(--paper-00);
+    }
+    .dark-frame .compose-area { background: var(--paper-90); border-top-color: var(--paper-80); }
+    .compose-inner { display: flex; align-items: flex-end; gap: 10px; }
+    .compose-input-wrap { flex: 1; }
+    .compose-input {
+      width: 100%; min-height: 40px; font-family: var(--sans); font-size: 15px;
+      color: var(--paper-80); background: transparent; border: none; outline: none;
+      resize: none; padding: 0; line-height: 1.5; -webkit-appearance: none;
+    }
+    .dark-frame .compose-input { color: var(--paper-05); }
+    .compose-input::placeholder { color: var(--paper-30); }
+    .dark-frame .compose-input::placeholder { color: var(--paper-50); }
+    .compose-commit {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1.5px solid var(--paper-20); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .dark-frame .compose-commit { border-color: var(--paper-60); }
+    .compose-commit svg { color: var(--paper-30); }
+
+    /* ---- Secondary nav (thread detail) ---- */
+    .secondary-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 8px 8px; flex-shrink: 0; min-height: 56px;
+    }
+    .secondary-nav-back {
+      display: flex; align-items: center; gap: 4px;
+      font-family: var(--mono); font-size: var(--type-13); color: var(--amber);
+      cursor: pointer; padding: 10px 12px; margin: -10px -12px; min-width: 60px;
+    }
+    .secondary-nav-title {
+      font-family: var(--mono); font-size: var(--type-14); font-weight: 700;
+      letter-spacing: var(--tracking-tight); color: var(--paper-80);
+      flex: 1; text-align: center; padding: 0 8px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .dark-frame .secondary-nav-title { color: var(--paper-05); }
+    .secondary-nav-action {
+      font-family: var(--mono); font-size: var(--type-11); letter-spacing: 0.06em;
+      color: var(--paper-60); cursor: pointer; padding: 10px 4px;
+      min-width: 60px; text-align: right;
+    }
+    .dark-frame .secondary-nav-action { color: var(--paper-30); }
+
+    /* ---- Thread detail scroll ---- */
+    .detail-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .detail-scroll::-webkit-scrollbar { display: none; }
+
+    .detail-scope {
+      font-family: var(--mono); font-size: var(--type-11);
+      color: var(--paper-40); padding: 10px 20px 12px;
+      border-bottom: 1px solid var(--paper-15);
+    }
+    .dark-frame .detail-scope { color: var(--paper-30); border-bottom-color: var(--paper-80); }
+
+    .detail-entry-row {
+      display: flex; gap: 10px; padding: 14px 20px;
+      border-bottom: 1px solid var(--paper-10);
+    }
+    .dark-frame .detail-entry-row { border-bottom-color: var(--paper-80); }
+    .detail-entry-row:last-of-type { border-bottom: none; }
+    .detail-entry-gutter {
+      display: flex; flex-direction: column; align-items: center;
+      width: 16px; flex-shrink: 0; padding-top: 3px;
+    }
+    .detail-entry-body { flex: 1; min-width: 0; }
+    /* Text leads — the thought is the artifact */
+    .detail-entry-text {
+      font-family: var(--sans); font-size: 15px; line-height: 1.5;
+      color: var(--paper-80); margin: 0 0 5px;
+    }
+    .dark-frame .detail-entry-text { color: var(--paper-05); }
+    /* Metadata follows — intent + timestamp as a single subordinate line */
+    .detail-entry-meta {
+      display: flex; align-items: baseline;
+      font-family: var(--mono); font-size: var(--type-11);
+    }
+    .detail-intent-label { letter-spacing: 0.03em; }
+    .label-proposal   { color: var(--signal-proposal); }
+    .label-question   { color: var(--signal-question); }
+    .label-constraint { color: var(--signal-constraint); }
+    .label-tradeoff   { color: var(--signal-tradeoff); }
+    .label-fact       { color: var(--signal-fact); }
+    .label-note       { color: var(--signal-note); }
+    .detail-entry-timestamp { color: var(--paper-40); }
+    .dark-frame .detail-entry-timestamp { color: var(--paper-30); }
+
+    /* ---- Examination section ---- */
+    .examination-section {
+      border-top: 1px solid var(--paper-15);
+      padding: 16px 20px 32px;
+    }
+    .dark-frame .examination-section { border-top-color: var(--paper-80); }
+    .examination-label {
+      font-family: var(--mono); font-size: var(--type-11);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--paper-40); margin-bottom: 14px;
+    }
+    .dark-frame .examination-label { color: var(--paper-50); }
+    .examination-prompt {
+      font-family: var(--mono); font-size: var(--type-13);
+      color: var(--paper-60); line-height: 1.5; margin-bottom: 12px;
+    }
+    .dark-frame .examination-prompt { color: var(--paper-30); }
+    .examination-prompt:last-child { margin-bottom: 0; }
+
+    /* ---- Sheet examination section ---- */
+    .sheet-examination {
+      padding: 20px 20px 24px;
+      border-top: 1px solid var(--paper-10);
+      margin-top: 4px;
+    }
+    .dark-frame .sheet-examination {
+      border-top-color: var(--paper-80);
+    }
+    .sheet-examination-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .dark-frame .sheet-examination-label {
+      color: var(--paper-50);
+    }
+    .sheet-examination-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sheet-examination-list li {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--paper-50);
+      line-height: 1.5;
+    }
+    .dark-frame .sheet-examination-list li {
+      color: var(--paper-30);
+    }
+
+    /* ---- Reduced motion ---- */
+    @media (prefers-reduced-motion: reduce) {
+      .entry-row, .idle-trace,
+      .filter-icon-inactive, .filter-icon-active {
+        transition: none !important;
+      }
+    }
+
+    /* ---- Sheet presentation (frames 3 & 4) ---- */
+    .sheet-frame-inner {
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .timeline-peek {
+      height: 15%;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .timeline-peek-dim {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 1;
+    }
+    .detail-sheet {
+      flex: 1;
+      background: var(--paper-00);
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .dark-frame .detail-sheet {
+      background: var(--paper-90);
+    }
+    .sheet-handle {
+      width: 32px;
+      height: 5px;
+      border-radius: 3px;
+      background: var(--paper-30);
+      margin: 12px auto 0;
+      flex-shrink: 0;
+    }
+    .sheet-header {
+      padding: 16px 20px 14px;
+      flex-shrink: 0;
+    }
+    .sheet-header-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .sheet-topic {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+    }
+    .dark-frame .sheet-topic {
+      color: var(--paper-05);
+    }
+    .sheet-export {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-80);
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 8px;
+      border: none;
+      background: none;
+    }
+    .dark-frame .sheet-export {
+      color: var(--paper-05);
+    }
+    .sheet-export-sub {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      color: var(--paper-40);
+      margin-top: 2px;
+    }
+    .dark-frame .sheet-export-sub {
+      color: var(--paper-50);
+    }
+    .sheet-meta {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    .dark-frame .sheet-meta {
+      color: var(--paper-30);
+    }
+    .sheet-separator {
+      height: 1px;
+      background: var(--paper-15);
+      flex-shrink: 0;
+    }
+    .dark-frame .sheet-separator {
+      background: var(--paper-80);
+    }
+    .sheet-entries {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .sheet-entries::-webkit-scrollbar { display: none; }
+    .sheet-entry {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--paper-10);
+    }
+    .dark-frame .sheet-entry {
+      border-bottom-color: var(--paper-80);
+    }
+    .sheet-entry-text {
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--paper-80);
+      margin: 0 0 5px;
+    }
+    .dark-frame .sheet-entry-text {
+      color: var(--paper-05);
+    }
+    .sheet-entry-meta {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+    }
+    .sheet-entry-timestamp {
+      color: var(--paper-40);
+    }
+    .dark-frame .sheet-entry-timestamp {
+      color: var(--paper-30);
+    }
+    .sheet-compose {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+    }
+
+    /* ---- Focus styles ---- */
+    .thread-card:focus { outline: 2px solid var(--paper-60); outline-offset: 2px; }
+    .filter-btn:focus { outline: 2px solid var(--paper-60); outline-offset: 2px; }
+
+    /* ---- Screen reader only ---- */
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  </style>
+</head>
+<body>
+
+  <div aria-live="polite" aria-atomic="true" class="sr-only" id="filter-announce"></div>
+
+  <header class="proto-header">
+    <a href="../../index.html" class="mark">Log<span class="period">•</span></a>
+    <span class="proto-label">Threads — v1</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════
+       ROW 1 — TIMELINE (full + filtered)
+  ═══════════════════════════════════════════════ -->
+
+  <div class="section-row">
+    <p class="section-desc">Timeline with thread markers embedded inline. Thread markers are instrument records — they appear at the moment the threshold is crossed, not as a notification. The filter icon collapses entry rows and idle traces, leaving thread markers with a 2px left border. Tap the filter icon in the left frame.</p>
+  </div>
+
+  <div class="stage">
+
+    <!-- Frame 1: Light — interactive filter toggle -->
+    <div class="frame-group">
+      <div class="frame-label">TIMELINE — LIGHT<br>tap filter icon to collapse</div>
+      <div class="device-frame" id="frame-timeline-light">
+
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-signals">
+            <div class="signal-bar"></div><div class="signal-bar"></div>
+            <div class="signal-bar"></div><div class="signal-bar"></div>
+            <span class="signal-battery">100%</span>
+          </div>
+        </div>
+
+        <div class="app-nav">
+          <span class="app-nav-title">Log<span class="period">•</span></span>
+          <div class="app-nav-actions">
+            <button class="app-nav-action" aria-label="Search">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+              </svg>
+            </button>
+            <button class="app-nav-action" aria-label="Account">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+            </button>
+            <button class="app-nav-action filter-btn" aria-label="Filter by threads" aria-pressed="false">
+              <div class="filter-icon-wrap">
+                <span class="filter-icon-inactive">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <line x1="3" y1="7"  x2="21" y2="7"/>
+                    <line x1="3" y1="12" x2="16" y2="12"/>
+                    <line x1="3" y1="17" x2="21" y2="17"/>
+                  </svg>
+                </span>
+                <span class="filter-icon-active">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <circle cx="4" cy="7"  r="2" fill="currentColor" stroke="none"/>
+                    <line x1="8" y1="7"  x2="21" y2="7"/>
+                    <circle cx="4" cy="12" r="2" fill="currentColor" stroke="none"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <circle cx="4" cy="17" r="2" fill="currentColor" stroke="none"/>
+                    <line x1="8" y1="17" x2="21" y2="17"/>
+                  </svg>
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="timeline-scroll">
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-constraint"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 4 · 9:14</span>
+              <p class="entry-text">The query planner can't see across partition boundaries. Every cross-shard join becomes a full table scan.</p>
+            </div>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-proposal"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 6 · 11:30</span>
+              <p class="entry-text">Could pre-compute the join paths at write time and store as a materialized index.</p>
+            </div>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-question"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 9 · 16:45</span>
+              <p class="entry-text">What happens to the materialized index when a partition is rebalanced?</p>
+            </div>
+          </div>
+
+          <div class="idle-trace">
+            <div class="idle-trace-bar"></div>
+            <span class="idle-trace-text">3 days</span>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-fact"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 12 · 10:05</span>
+              <p class="entry-text">We're committed to the partition scheme. Changing it costs more than optimizing around it.</p>
+            </div>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-tradeoff"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 15 · 14:22</span>
+              <p class="entry-text">Pre-computed paths vs. query-time resolution: 12ms vs. 340ms at p99. The gap is real.</p>
+            </div>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-constraint"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 20 · 9:47</span>
+              <p class="entry-text">The index refresh on write could create write amplification at 10k+ writes/sec.</p>
+            </div>
+          </div>
+
+          <div class="thread-card" role="button" tabindex="0" aria-label="Architecture Database. 6 entries. Jan 4 to Jan 20.">
+            <div class="thread-card-label">Architecture Database</div>
+            <div class="thread-card-meta">6 entries · Jan 4 – Jan 20</div>
+          </div>
+
+          <div class="entry-row">
+            <div class="entry-gutter"><div class="intent-dot dot-note"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 20 · 16:30</span>
+              <p class="entry-text">Team agrees: ship the materialized index with a staleness budget. Revisit at beta.</p>
+            </div>
+          </div>
+
+          <div class="idle-trace">
+            <div class="idle-trace-bar"></div>
+            <span class="idle-trace-text">13 days</span>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-proposal"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 2 · 11:15</span>
+              <p class="entry-text">Redis as a caching layer before the query planner would absorb the read load.</p>
+            </div>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-question"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 7 · 9:30</span>
+              <p class="entry-text">What's the cache invalidation strategy when a partition rebalances?</p>
+            </div>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-fact"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 10 · 13:50</span>
+              <p class="entry-text">Benchmark: cache hit rate stabilizes at 94% after 6 hours of warm-up.</p>
+            </div>
+          </div>
+
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-tradeoff"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 14 · 10:20</span>
+              <p class="entry-text">Cache warm-up window vs. cold start latency. Cold: 340ms. Warm: 12ms. The gap widens at load.</p>
+            </div>
+          </div>
+
+          <div class="thread-card" role="button" tabindex="0" aria-label="Caching Layer. 4 entries. Feb 2 to Feb 14.">
+            <div class="thread-card-label">Caching Layer</div>
+            <div class="thread-card-meta">4 entries · Feb 2 – Feb 14</div>
+          </div>
+
+        </div><!-- /timeline-scroll -->
+
+        <div class="compose-area">
+          <div class="compose-inner">
+            <div class="compose-input-wrap">
+              <textarea class="compose-input" placeholder="Log..." rows="1" aria-label="Compose entry"></textarea>
+            </div>
+            <div class="sync-dot" role="status" aria-label="Entry synced"></div>
+            <button class="compose-commit" aria-label="Commit entry">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="3" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /device-frame -->
+    </div><!-- /frame-group -->
+
+
+    <!-- Frame 2: Dark — pre-filtered (static) -->
+    <div class="frame-group">
+      <div class="frame-label">TIMELINE — DARK<br>filtered: threads only</div>
+      <div class="device-frame dark-frame filtered">
+
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-signals">
+            <div class="signal-bar"></div><div class="signal-bar"></div>
+            <div class="signal-bar"></div><div class="signal-bar"></div>
+            <span class="signal-battery">100%</span>
+          </div>
+        </div>
+
+        <div class="app-nav">
+          <span class="app-nav-title">Log<span class="period">•</span></span>
+          <div class="app-nav-actions">
+            <button class="app-nav-action" aria-label="Search">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+              </svg>
+            </button>
+            <button class="app-nav-action" aria-label="Account">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+            </button>
+            <button class="app-nav-action filter-btn" aria-label="Filter by threads" aria-pressed="true">
+              <div class="filter-icon-wrap">
+                <span class="filter-icon-inactive">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <line x1="3" y1="7"  x2="21" y2="7"/>
+                    <line x1="3" y1="12" x2="16" y2="12"/>
+                    <line x1="3" y1="17" x2="21" y2="17"/>
+                  </svg>
+                </span>
+                <span class="filter-icon-active">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <circle cx="4" cy="7"  r="2" fill="currentColor" stroke="none"/>
+                    <line x1="8" y1="7"  x2="21" y2="7"/>
+                    <circle cx="4" cy="12" r="2" fill="currentColor" stroke="none"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <circle cx="4" cy="17" r="2" fill="currentColor" stroke="none"/>
+                    <line x1="8" y1="17" x2="21" y2="17"/>
+                  </svg>
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="timeline-scroll">
+
+          <!-- All entry rows are hidden by .filtered — included for structural parity -->
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-constraint"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 4 · 9:14</span>
+              <p class="entry-text">The query planner can't see across partition boundaries.</p>
+            </div>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-proposal"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 6 · 11:30</span>
+              <p class="entry-text">Could pre-compute the join paths at write time.</p>
+            </div>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-question"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 9 · 16:45</span>
+              <p class="entry-text">What happens to the index when a partition is rebalanced?</p>
+            </div>
+          </div>
+          <div class="idle-trace">
+            <div class="idle-trace-bar"></div>
+            <span class="idle-trace-text">3 days</span>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-fact"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 12 · 10:05</span>
+              <p class="entry-text">We're committed to the partition scheme.</p>
+            </div>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-tradeoff"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 15 · 14:22</span>
+              <p class="entry-text">Pre-computed paths vs. query-time resolution.</p>
+            </div>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-constraint"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 20 · 9:47</span>
+              <p class="entry-text">Index refresh could create write amplification.</p>
+            </div>
+          </div>
+
+          <!-- Thread card 1 -->
+          <div class="thread-card" role="button" tabindex="0" aria-label="Architecture Database. 6 entries. Jan 4 to Jan 20.">
+            <div class="thread-card-label">Architecture Database</div>
+            <div class="thread-card-meta">6 entries · Jan 4 – Jan 20</div>
+          </div>
+
+          <div class="entry-row">
+            <div class="entry-gutter"><div class="intent-dot dot-note"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 20 · 16:30</span>
+              <p class="entry-text">Team agrees: ship the materialized index with a staleness budget.</p>
+            </div>
+          </div>
+          <div class="idle-trace">
+            <div class="idle-trace-bar"></div>
+            <span class="idle-trace-text">13 days</span>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-proposal"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 2 · 11:15</span>
+              <p class="entry-text">Redis as a caching layer would absorb the read load.</p>
+            </div>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-question"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 7 · 9:30</span>
+              <p class="entry-text">What's the cache invalidation strategy?</p>
+            </div>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-fact"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 10 · 13:50</span>
+              <p class="entry-text">Cache hit rate stabilizes at 94% after warm-up.</p>
+            </div>
+          </div>
+          <div class="entry-row thread-member">
+            <div class="entry-gutter"><div class="intent-dot dot-tradeoff"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 14 · 10:20</span>
+              <p class="entry-text">Cache warm-up window vs. cold start latency.</p>
+            </div>
+          </div>
+
+          <!-- Thread card 2 -->
+          <div class="thread-card" role="button" tabindex="0" aria-label="Caching Layer. 4 entries. Feb 2 to Feb 14.">
+            <div class="thread-card-label">Caching Layer</div>
+            <div class="thread-card-meta">4 entries · Feb 2 – Feb 14</div>
+          </div>
+
+        </div><!-- /timeline-scroll -->
+
+        <div class="compose-area">
+          <div class="compose-inner">
+            <div class="compose-input-wrap">
+              <textarea class="compose-input" placeholder="Log..." rows="1" aria-label="Compose entry"></textarea>
+            </div>
+            <div class="sync-dot" role="status" aria-label="Entry synced"></div>
+            <button class="compose-commit" aria-label="Commit entry">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="3" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /device-frame -->
+    </div><!-- /frame-group -->
+
+  </div><!-- /stage row 1 -->
+
+
+  <!-- ═══════════════════════════════════════════════
+       ROW 2 — THREAD DETAIL
+  ═══════════════════════════════════════════════ -->
+
+  <div class="section-row">
+    <p class="section-desc">Thread detail as iOS modal sheet. Tapping a thread marker lifts the sheet over the timeline — the timeline remains visible behind a dim overlay (top 15%). Pull handle signals dismissibility. Sheet header: topic label + EXPORT, metadata line below. Entry text leads; intent label and timestamp follow as subordinate metadata. Compose bar at the bottom: entries committed from thread context are associated with the current thread and appear on the main tape.</p>
+  </div>
+
+  <div class="stage">
+
+    <!-- Frame 3: Light — thread detail sheet -->
+    <div class="frame-group">
+      <div class="frame-label">THREAD DETAIL — LIGHT<br>sheet presentation</div>
+      <div class="device-frame">
+
+        <div class="sheet-frame-inner">
+
+          <!-- Timeline peek (top 15%) -->
+          <div class="timeline-peek">
+            <div class="status-bar" style="padding-top: 10px; padding-bottom: 4px;">
+              <span class="status-time">9:41</span>
+              <div class="status-signals">
+                <div class="signal-bar"></div><div class="signal-bar"></div>
+                <div class="signal-bar"></div><div class="signal-bar"></div>
+                <span class="signal-battery">100%</span>
+              </div>
+            </div>
+            <div style="padding: 0 20px;">
+              <div class="entry-row thread-member" style="padding: 6px 0; max-height: none;">
+                <div class="entry-gutter"><div class="intent-dot dot-constraint"></div></div>
+                <div class="entry-body">
+                  <span class="entry-timestamp">Jan 4 · 9:14</span>
+                  <p class="entry-text" style="font-size: 13px;">The query planner can't see across partition boundaries.</p>
+                </div>
+              </div>
+              <div class="entry-row thread-member" style="padding: 6px 0; max-height: none;">
+                <div class="entry-gutter"><div class="intent-dot dot-proposal"></div></div>
+                <div class="entry-body">
+                  <span class="entry-timestamp">Jan 6 · 11:30</span>
+                  <p class="entry-text" style="font-size: 13px;">Could pre-compute the join paths at write time.</p>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-peek-dim"></div>
+          </div><!-- /timeline-peek -->
+
+          <!-- Sheet -->
+          <div class="detail-sheet" role="dialog" aria-label="Architecture Database thread">
+            <div class="sheet-handle" role="button" aria-label="Dismiss" tabindex="0"></div>
+
+            <div class="sheet-header">
+              <div class="sheet-header-top">
+                <span class="sheet-topic">Architecture Database</span>
+                <button class="sheet-export" aria-label="Export thread as Markdown">EXPORT<span class="sheet-export-sub">Copy as Markdown</span></button>
+              </div>
+              <div class="sheet-meta">6 entries · Jan 4 – Jan 20</div>
+            </div>
+
+            <div class="sheet-separator"></div>
+
+            <div class="sheet-entries">
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">The query planner can't see across partition boundaries. Every cross-shard join becomes a full table scan.</p>
+                <div class="sheet-entry-meta">
+                  <span class="detail-intent-label label-constraint" style="color: var(--signal-constraint)">CONSTRAINT</span><span class="sheet-entry-timestamp"> · Jan 4 · 9:14</span>
+                </div>
+              </div>
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">Could pre-compute the join paths at write time and store as a materialized index.</p>
+                <div class="sheet-entry-meta">
+                  <span class="detail-intent-label label-proposal" style="color: var(--signal-proposal)">PROPOSAL</span><span class="sheet-entry-timestamp"> · Jan 6 · 11:30</span>
+                </div>
+              </div>
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">What happens to the materialized index when a partition is rebalanced?</p>
+                <div class="sheet-entry-meta">
+                  <span class="detail-intent-label label-question" style="color: var(--signal-question)">QUESTION</span><span class="sheet-entry-timestamp"> · Jan 9 · 16:45</span>
+                </div>
+              </div>
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">We're committed to the partition scheme. Changing it costs more than optimizing around it.</p>
+                <div class="sheet-entry-meta">
+                  <span class="detail-intent-label label-fact" style="color: var(--signal-fact)">FACT</span><span class="sheet-entry-timestamp"> · Jan 12 · 10:05</span>
+                </div>
+              </div>
+
+              <div class="sheet-examination">
+                <div class="sheet-examination-label">PROMPTS</div>
+                <ul class="sheet-examination-list">
+                  <li>Which constraint is load-bearing — the partition scheme or the join requirement?</li>
+                  <li>Where does the materialized index create the most brittleness?</li>
+                  <li>What would the proposal look like if the constraint were removed?</li>
+                  <li>Which of these entries would you revise given the write amplification finding?</li>
+                </ul>
+              </div>
+
+            </div><!-- /sheet-entries -->
+
+            <div class="sheet-separator"></div>
+
+            <div class="sheet-compose">
+              <div class="compose-input-wrap" style="flex: 1;">
+                <textarea class="compose-input" placeholder="Add to this thread..." rows="1" aria-label="Add entry to this thread"></textarea>
+              </div>
+              <button class="compose-commit" aria-label="Commit entry">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+
+          </div><!-- /detail-sheet -->
+
+        </div><!-- /sheet-frame-inner -->
+
+      </div><!-- /device-frame -->
+    </div><!-- /frame-group -->
+
+
+    <!-- Frame 4: Dark — thread detail sheet -->
+    <div class="frame-group">
+      <div class="frame-label">THREAD DETAIL — DARK<br>sheet presentation</div>
+      <div class="device-frame dark-frame">
+
+        <div class="sheet-frame-inner">
+
+          <!-- Timeline peek (top 15%) -->
+          <div class="timeline-peek">
+            <div class="status-bar" style="padding-top: 10px; padding-bottom: 4px;">
+              <span class="status-time">9:41</span>
+              <div class="status-signals">
+                <div class="signal-bar"></div><div class="signal-bar"></div>
+                <div class="signal-bar"></div><div class="signal-bar"></div>
+                <span class="signal-battery">100%</span>
+              </div>
+            </div>
+            <div style="padding: 0 20px;">
+              <div class="entry-row thread-member" style="padding: 6px 0; max-height: none;">
+                <div class="entry-gutter"><div class="intent-dot dot-constraint"></div></div>
+                <div class="entry-body">
+                  <span class="entry-timestamp">Jan 4 · 9:14</span>
+                  <p class="entry-text" style="font-size: 13px;">The query planner can't see across partition boundaries.</p>
+                </div>
+              </div>
+              <div class="entry-row thread-member" style="padding: 6px 0; max-height: none;">
+                <div class="entry-gutter"><div class="intent-dot dot-proposal"></div></div>
+                <div class="entry-body">
+                  <span class="entry-timestamp">Jan 6 · 11:30</span>
+                  <p class="entry-text" style="font-size: 13px;">Could pre-compute the join paths at write time.</p>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-peek-dim"></div>
+          </div><!-- /timeline-peek -->
+
+          <!-- Sheet -->
+          <div class="detail-sheet" role="dialog" aria-label="Architecture Database thread">
+            <div class="sheet-handle" role="button" aria-label="Dismiss" tabindex="0"></div>
+
+            <div class="sheet-header">
+              <div class="sheet-header-top">
+                <span class="sheet-topic">Architecture Database</span>
+                <button class="sheet-export" aria-label="Export thread as Markdown">EXPORT<span class="sheet-export-sub">Copy as Markdown</span></button>
+              </div>
+              <div class="sheet-meta">6 entries · Jan 4 – Jan 20</div>
+            </div>
+
+            <div class="sheet-separator"></div>
+
+            <div class="sheet-entries">
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">The query planner can't see across partition boundaries. Every cross-shard join becomes a full table scan.</p>
+                <div class="sheet-entry-meta">
+                  <span class="detail-intent-label label-constraint" style="color: var(--signal-constraint)">CONSTRAINT</span><span class="sheet-entry-timestamp"> · Jan 4 · 9:14</span>
+                </div>
+              </div>
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">Could pre-compute the join paths at write time and store as a materialized index.</p>
+                <div class="sheet-entry-meta">
+                  <span class="detail-intent-label label-proposal" style="color: var(--signal-proposal)">PROPOSAL</span><span class="sheet-entry-timestamp"> · Jan 6 · 11:30</span>
+                </div>
+              </div>
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">What happens to the materialized index when a partition is rebalanced?</p>
+                <div class="sheet-entry-meta">
+                  <span class="detail-intent-label label-question" style="color: var(--signal-question)">QUESTION</span><span class="sheet-entry-timestamp"> · Jan 9 · 16:45</span>
+                </div>
+              </div>
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">We're committed to the partition scheme. Changing it costs more than optimizing around it.</p>
+                <div class="sheet-entry-meta">
+                  <span class="detail-intent-label label-fact" style="color: var(--signal-fact)">FACT</span><span class="sheet-entry-timestamp"> · Jan 12 · 10:05</span>
+                </div>
+              </div>
+
+              <div class="sheet-examination">
+                <div class="sheet-examination-label">PROMPTS</div>
+                <ul class="sheet-examination-list">
+                  <li>Which constraint is load-bearing — the partition scheme or the join requirement?</li>
+                  <li>Where does the materialized index create the most brittleness?</li>
+                  <li>What would the proposal look like if the constraint were removed?</li>
+                  <li>Which of these entries would you revise given the write amplification finding?</li>
+                </ul>
+              </div>
+
+            </div><!-- /sheet-entries -->
+
+            <div class="sheet-separator"></div>
+
+            <div class="sheet-compose">
+              <div class="compose-input-wrap" style="flex: 1;">
+                <textarea class="compose-input" placeholder="Add to this thread..." rows="1" aria-label="Add entry to this thread"></textarea>
+              </div>
+              <button class="compose-commit" aria-label="Commit entry">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+
+          </div><!-- /detail-sheet -->
+
+        </div><!-- /sheet-frame-inner -->
+
+      </div><!-- /device-frame -->
+    </div><!-- /frame-group -->
+
+  </div><!-- /stage row 2 -->
+
+  <script>window.LOG_NAV_PREFIX = '../../';</script>
+  <script src="../../assets/scripts.js"></script>
+  <script>
+    // Filter toggle — scoped to each frame independently
+    var filterAnnouncer = document.getElementById('filter-announce');
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var frame = btn.closest('.device-frame');
+        var isFiltered = frame.classList.toggle('filtered');
+        btn.setAttribute('aria-pressed', isFiltered ? 'true' : 'false');
+        if (filterAnnouncer) {
+          filterAnnouncer.textContent = isFiltered ? 'Showing threads only' : 'Showing all entries';
+        }
+      });
+    });
+
+</script>
+
+</body>
+</html>

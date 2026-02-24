@@ -20,12 +20,13 @@
   --paper-90: #171310;
   --paper-95: #0D0B09;
 
-  /* Signal Colors — Intent Classification */
-  --signal-thought: #6B7B8D;
-  --signal-action: #C4652A;
-  --signal-decision: #8B6E4E;
-  --signal-reference: #5B7A6B;
-  --signal-unknown: #928A7E;
+  /* Signal Colors v1.1 — Intent taxonomy (Proposal, Question, Constraint, Trade-off, Fact, Note) */
+  --signal-proposal:   #4A7A7A;   /* teal — forward, constructive */
+  --signal-question:   #6B7B8D;   /* blue-gray — open, exploratory */
+  --signal-constraint: #8B6E4E;   /* warm brown — firm, limiting */
+  --signal-tradeoff:   #7B6B8B;   /* purple-gray — balanced, comparative */
+  --signal-fact:       #5B7A6B;   /* sage green — neutral, informational */
+  --signal-note:       #928A7E;   /* warm gray — catch-all */
 
   /* Accent Colors */
   --amber: #C4652A;
@@ -1009,6 +1010,27 @@ body.dark-mode .flow-connector svg { stroke: var(--paper-50); }
   .flow-connector { width: auto; height: 32px; padding-top: 0; }
   .flow-connector svg { transform: rotate(90deg); }
 }
+
+/* ---- Compose: Commit Pulse + Sync State ---- */
+@keyframes commit-pulse {
+  0%   { border-color: var(--paper-20); }
+  40%  { border-color: var(--amber); }
+  100% { border-color: var(--paper-20); }
+}
+.compose-commit.pulse { animation: commit-pulse 300ms ease-out forwards; }
+.sync-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--paper-30);
+  flex-shrink: 0;
+  align-self: flex-end;
+  margin-bottom: 20px;
+  opacity: 0;
+  transition: opacity 200ms ease-out, background-color 200ms ease-out;
+}
+.sync-dot.pending { opacity: 1; background: var(--amber); }
+.sync-dot.synced  { opacity: 1; background: var(--paper-30); }
 
 /* ---- PRINT ---- */
 @media print {

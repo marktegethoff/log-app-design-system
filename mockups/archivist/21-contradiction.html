@@ -41,7 +41,7 @@
     .back-btn svg { stroke: var(--amber); }
     .nav-title { font-family: var(--mono); font-size: var(--type-14); color: var(--paper-80); flex: 1; }
     body.dark-mode .nav-title { color: var(--paper-05); }
-    .correct-btn { font-family: var(--mono); font-size: var(--type-13); color: var(--amber); border: none; background: none; cursor: pointer; padding: var(--s-8) var(--s-4); min-height: 44px; }
+    .amend-btn { font-family: var(--mono); font-size: var(--type-13); color: var(--amber); border: none; background: none; cursor: pointer; padding: var(--s-8) var(--s-4); min-height: 44px; }
 
     .detail-scroll { flex: 1; overflow-y: auto; padding: 0 20px 24px; }
     .detail-scroll::-webkit-scrollbar { display: none; }
@@ -60,7 +60,7 @@
     .archivist-section { margin-bottom: var(--s-32); }
     .section-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--s-12); display: block; }
     .archivist-annotation { border-left: 2px solid var(--archive-accent); padding-left: var(--s-12); }
-    .archivist-annotation p { font-family: var(--sans); font-size: var(--type-13); font-style: italic; color: var(--paper-60); line-height: 1.6; margin-bottom: var(--s-8); }
+    .archivist-annotation p { font-family: var(--sans); font-size: var(--type-13); color: var(--paper-60); line-height: 1.6; margin-bottom: var(--s-8); }
     body.dark-mode .archivist-annotation p { color: var(--paper-30); }
     .archivist-annotation p:last-child { margin-bottom: 0; }
   </style>
@@ -90,13 +90,13 @@
           </svg>
         </button>
         <span class="nav-title">Entry</span>
-        <button class="correct-btn">Correct</button>
+        <button class="amend-btn">Amend</button>
       </div>
 
       <div class="detail-scroll">
-        <div class="intent-badge" style="background: var(--signal-decision);">
+        <div class="intent-badge" style="background: var(--signal-constraint);">
           <div class="badge-dot"></div>
-          <span class="badge-text">Decision</span>
+          <span class="badge-text">Constraint</span>
         </div>
 
         <span class="entry-timestamp-full">Tuesday, February 17, 2026 — 9:29</span>

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thread → Export Flow — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <style>
+    body { background: var(--paper-05); }
+
+    /* ---- Flow stage ---- */
+    .flow-stage {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      padding: var(--s-48) var(--s-32);
+      overflow-x: auto;
+    }
+
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .step-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: var(--s-16);
+      gap: var(--s-4);
+    }
+
+    .step-num {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-30);
+      letter-spacing: 0.06em;
+    }
+
+    .step-name {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      font-weight: 700;
+      color: var(--paper-60);
+      letter-spacing: var(--tracking-tight);
+    }
+
+    /* ---- Connector ---- */
+    .flow-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 80px;
+      padding-top: 80px; /* align with device frame center */
+      gap: var(--s-8);
+    }
+
+    .connector-arrow {
+      color: var(--paper-30);
+    }
+
+    .connector-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      text-align: center;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    /* ---- Device frame ---- */
+    .device-frame {
+      width: 320px;
+      height: 693px;
+      background: var(--paper-00);
+      border: 1px solid var(--paper-20);
+      border-radius: 40px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ---- Status bar ---- */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px 4px;
+      flex-shrink: 0;
+    }
+    .status-time { font-family: var(--mono); font-size: var(--type-13); font-weight: 700; color: var(--paper-80); }
+    .status-signals { display: flex; align-items: center; gap: 4px; }
+    .signal-bar { width: 3px; height: 12px; background: var(--paper-60); border-radius: 1px; }
+    .signal-battery { font-family: var(--mono); font-size: 10px; color: var(--paper-60); }
+
+    /* ---- Nav bar ---- */
+    .app-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-8) var(--s-16) var(--s-8);
+      flex-shrink: 0;
+    }
+    .app-nav-mark { font-family: var(--mono); font-weight: 700; font-size: 16px; letter-spacing: var(--tracking-tight); color: var(--paper-80); }
+    .app-nav-mark .period { color: var(--amber); }
+    .app-nav-action { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--paper-60); cursor: pointer; }
+
+    /* ---- Timeline scroll ---- */
+    .timeline-scroll { flex: 1; overflow: hidden; }
+
+    /* ---- Entry rows ---- */
+    .entry-row {
+      display: flex;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--paper-10);
+      gap: 10px;
+    }
+    .entry-gutter { width: 16px; flex-shrink: 0; display: flex; align-items: flex-start; padding-top: 4px; }
+    .intent-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .dot-question  { background: var(--signal-question); }
+    .dot-proposal  { background: var(--signal-proposal); }
+    .dot-constraint { background: var(--signal-constraint); }
+    .dot-fact      { background: var(--signal-fact); }
+    .dot-note      { background: var(--signal-note); }
+    .entry-body { flex: 1; min-width: 0; }
+    .entry-timestamp { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); display: block; margin-bottom: 3px; }
+    .entry-text { font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-80); margin: 0; }
+
+    /* ---- Thread card ---- */
+    .thread-card {
+      margin-top: 12px;
+      padding: 20px;
+      background: var(--paper-00);
+      border: 1px solid var(--paper-20);
+      cursor: pointer;
+    }
+    .thread-card-label {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+      margin-bottom: 4px;
+    }
+    .thread-card-meta {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+
+    /* ---- Compose bar ---- */
+    .compose-area { flex-shrink: 0; border-top: 1px solid var(--paper-15); padding: 12px 20px; background: var(--paper-00); display: flex; align-items: center; gap: 12px; }
+    .compose-input { flex: 1; border: none; outline: none; font-family: var(--mono); font-size: var(--type-13); color: var(--paper-80); background: transparent; resize: none; }
+    .compose-commit { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--paper-20); background: transparent; display: flex; align-items: center; justify-content: center; color: var(--paper-30); cursor: pointer; flex-shrink: 0; }
+
+    /* ============================================================
+       FRAME 2 — Sheet presentation
+       ============================================================ */
+    .sheet-frame-inner { height: 100%; display: flex; flex-direction: column; }
+
+    .timeline-peek { height: 15%; overflow: hidden; position: relative; flex-shrink: 0; }
+    .timeline-peek-dim { position: absolute; inset: 0; background: rgba(0,0,0,0.35); z-index: 1; }
+
+    .detail-sheet {
+      flex: 1;
+      background: var(--paper-00);
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sheet-handle { width: 32px; height: 5px; border-radius: 3px; background: var(--paper-30); margin: 12px auto 0; flex-shrink: 0; }
+    .sheet-header { padding: 14px 20px 12px; flex-shrink: 0; }
+    .sheet-header-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+    .sheet-topic { font-family: var(--mono); font-size: 14px; font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--paper-80); }
+    .sheet-export-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-60); letter-spacing: 0.06em; }
+    .sheet-meta { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); }
+    .sheet-separator { height: 1px; background: var(--paper-15); flex-shrink: 0; }
+    .sheet-entries { flex: 1; overflow: hidden; }
+    .sheet-entry { padding: 12px 20px; border-bottom: 1px solid var(--paper-10); }
+    .sheet-entry-text { font-family: var(--sans); font-size: 14px; line-height: 1.5; color: var(--paper-80); margin: 0 0 4px; }
+    .sheet-entry-meta { font-family: var(--mono); font-size: var(--type-11); }
+    .sheet-entry-timestamp { color: var(--paper-40); }
+    .sheet-compose { flex-shrink: 0; display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--paper-15); }
+
+    /* ============================================================
+       FRAME 3 — Share sheet overlay
+       ============================================================ */
+    .share-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+    }
+    .share-dim {
+      flex: 1;
+      background: rgba(0,0,0,0.40);
+    }
+    .share-sheet {
+      background: #F2F2F7; /* iOS system gray */
+      border-radius: 14px 14px 0 0;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .share-header {
+      padding: 16px 20px 12px;
+      text-align: center;
+      border-bottom: 0.5px solid rgba(0,0,0,0.12);
+    }
+    .share-title {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: #000;
+      margin: 0 0 2px;
+    }
+    .share-subtitle {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: #8E8E93;
+      margin: 0;
+    }
+    .share-apps {
+      display: flex;
+      gap: 16px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      border-bottom: 0.5px solid rgba(0,0,0,0.12);
+    }
+    .share-app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .share-app-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .share-app-name {
+      font-family: var(--sans);
+      font-size: 10px;
+      color: #000;
+      text-align: center;
+    }
+    .share-actions { background: #fff; margin: 8px 16px; border-radius: 14px; overflow: hidden; }
+    .share-action {
+      padding: 14px 16px;
+      font-family: var(--sans);
+      font-size: 14px;
+      color: #007AFF;
+      border-bottom: 0.5px solid rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .share-action:last-child { border-bottom: none; }
+    .share-action-icon { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .share-cancel {
+      margin: 8px 16px 16px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 600;
+      color: #007AFF;
+      cursor: pointer;
+    }
+
+    /* ---- Flow description ---- */
+    .flow-desc {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--s-32) var(--s-32) 0;
+    }
+    .flow-desc-title {
+      font-family: var(--mono);
+      font-size: var(--type-16);
+      font-weight: 700;
+      color: var(--paper-80);
+      letter-spacing: var(--tracking-tight);
+      margin-bottom: var(--s-8);
+    }
+    .flow-desc-body {
+      font-family: var(--mono);
+      font-size: var(--type-13);
+      color: var(--paper-40);
+      line-height: 1.6;
+    }
+    .flow-desc-rule {
+      margin-top: var(--s-16);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-4);
+    }
+    .flow-rule-item {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.04em;
+    }
+    .flow-rule-item strong {
+      color: var(--paper-60);
+      font-weight: 700;
+    }
+
+    /* ---- Dark mode ---- */
+    body.dark-mode { background: var(--paper-90); }
+    body.dark-mode .proto-header { background: var(--paper-85); border-bottom-color: var(--paper-75); }
+    body.dark-mode .proto-header .mark { color: var(--paper-05); }
+    body.dark-mode .flow-desc-title { color: var(--paper-05); }
+    body.dark-mode .flow-desc-body { color: var(--paper-50); }
+    body.dark-mode .flow-rule-item { color: var(--paper-50); }
+    body.dark-mode .flow-rule-item strong { color: var(--paper-30); }
+    body.dark-mode .step-num { color: var(--paper-50); }
+    body.dark-mode .step-name { color: var(--paper-30); }
+    body.dark-mode .frame-label { color: var(--paper-50); }
+    body.dark-mode .connector-label { color: var(--paper-50); }
+    body.dark-mode .connector-arrow { color: var(--paper-50); }
+    body.dark-mode .device-frame { background: var(--paper-80); border-color: var(--paper-70); }
+    body.dark-mode .status-time { color: var(--paper-05); }
+    body.dark-mode .signal-bar { background: var(--paper-40); }
+    body.dark-mode .signal-battery { color: var(--paper-40); }
+    body.dark-mode .app-nav-mark { color: var(--paper-05); }
+    body.dark-mode .app-nav-action { color: var(--paper-30); }
+    body.dark-mode .entry-text { color: var(--paper-05); }
+    body.dark-mode .entry-timestamp { color: var(--paper-30); }
+    body.dark-mode .thread-card { background: var(--paper-75); border-color: var(--paper-65); }
+    body.dark-mode .thread-card-label { color: var(--paper-05); }
+    body.dark-mode .thread-card-meta { color: var(--paper-30); }
+    body.dark-mode .compose-area { background: var(--paper-80); border-top-color: var(--paper-70); }
+    body.dark-mode .compose-input { color: var(--paper-05); }
+    body.dark-mode .compose-commit { border-color: var(--paper-60); color: var(--paper-50); }
+    body.dark-mode .sheet-topic { color: var(--paper-05); }
+    body.dark-mode .sheet-meta { color: var(--paper-30); }
+    body.dark-mode .sheet-export-label { color: var(--paper-40); }
+    body.dark-mode .sheet-separator { background: var(--paper-75); }
+    body.dark-mode .sheet-entry { border-bottom-color: var(--paper-75); }
+    body.dark-mode .sheet-entry-text { color: var(--paper-05); }
+    body.dark-mode .sheet-entry-timestamp { color: var(--paper-30); }
+    body.dark-mode .detail-sheet { background: var(--paper-80); }
+  </style>
+</head>
+<body>
+  <header class="proto-header">
+    <a href="../../index.html" class="mark">Log<span class="period">•</span></a>
+    <span class="proto-label">Thread → Export Flow</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+  </header>
+
+  <div class="flow-desc">
+    <div class="flow-desc-title">Thread → Export Key Flow</div>
+    <p class="flow-desc-body">Three-state sequence: thread card on the tape → thread detail sheet → iOS share sheet. The export flow is the primary value delivery moment for the threads feature.</p>
+    <div class="flow-desc-rule">
+      <div class="flow-rule-item"><strong>State 1</strong> — Thread card appears inline on the tape. Placed by the archivist. Tap to open.</div>
+      <div class="flow-rule-item"><strong>State 2</strong> — Thread detail sheet rises. Timeline visible above (dimmed). Entries + examination prompts. Tap EXPORT.</div>
+      <div class="flow-rule-item"><strong>State 3</strong> — iOS UIActivityViewController (system). No custom UI. Markdown pre-generated synchronously.</div>
+    </div>
+  </div>
+
+  <div class="flow-stage">
+
+    <!-- ============================================================
+         STEP 1 — Thread card on the tape
+         ============================================================ -->
+    <div class="flow-step">
+      <div class="step-meta">
+        <span class="step-num">01</span>
+        <span class="step-name">THREAD CARD ON TAPE</span>
+      </div>
+
+      <div class="device-frame">
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-signals">
+            <div class="signal-bar"></div><div class="signal-bar"></div>
+            <div class="signal-bar"></div><div class="signal-bar"></div>
+            <span class="signal-battery">100%</span>
+          </div>
+        </div>
+
+        <div class="app-nav">
+          <span class="app-nav-mark">Log<span class="period">•</span></span>
+          <div class="app-nav-action" aria-label="Filter by threads" aria-pressed="false">
+            <!-- Filter icon — inactive -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <line x1="3" y1="7" x2="21" y2="7"/>
+              <line x1="3" y1="12" x2="16" y2="12"/>
+              <line x1="3" y1="17" x2="21" y2="17"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="timeline-scroll">
+          <div class="entry-row">
+            <div class="entry-gutter"><div class="intent-dot dot-question"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 3 · 14:22</span>
+              <p class="entry-text">How do we handle partition rebalancing without dropping queries mid-flight?</p>
+            </div>
+          </div>
+
+          <div class="entry-row">
+            <div class="entry-gutter"><div class="intent-dot dot-note"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 4 · 8:55</span>
+              <p class="entry-text">Weekly sync — agreed to hold on schema migration until after the load test.</p>
+            </div>
+          </div>
+
+          <!-- Thread card -->
+          <div class="thread-card" role="button" tabindex="0" aria-label="Architecture Database. 6 entries. Jan 4 to Jan 20.">
+            <div class="thread-card-label">Architecture Database</div>
+            <div class="thread-card-meta">6 entries · Jan 4 – Jan 20</div>
+          </div>
+
+          <div class="entry-row">
+            <div class="entry-gutter"><div class="intent-dot dot-proposal"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Jan 21 · 10:14</span>
+              <p class="entry-text">The staleness budget could be expressed as a write-amplification ceiling.</p>
+            </div>
+          </div>
+
+          <div class="entry-row">
+            <div class="entry-gutter"><div class="intent-dot dot-fact"></div></div>
+            <div class="entry-body">
+              <span class="entry-timestamp">Feb 1 · 16:05</span>
+              <p class="entry-text">Benchmarks confirm: materialized index adds 14ms at p99 on current hardware.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="compose-area">
+          <textarea class="compose-input" placeholder="Log..." rows="1" aria-label="Compose entry"></textarea>
+          <button class="compose-commit" aria-label="Commit entry">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="3" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div><!-- /device-frame -->
+    </div><!-- /flow-step 1 -->
+
+    <!-- Connector 1→2 -->
+    <div class="flow-connector">
+      <svg class="connector-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="13 6 19 12 13 18"/>
+      </svg>
+      <span class="connector-label">Tap thread card</span>
+    </div>
+
+    <!-- ============================================================
+         STEP 2 — Thread detail sheet
+         ============================================================ -->
+    <div class="flow-step">
+      <div class="step-meta">
+        <span class="step-num">02</span>
+        <span class="step-name">THREAD DETAIL SHEET</span>
+      </div>
+
+      <div class="device-frame">
+        <div class="sheet-frame-inner">
+
+          <!-- Timeline peek -->
+          <div class="timeline-peek">
+            <div class="status-bar" style="padding-top: 10px; padding-bottom: 4px;">
+              <span class="status-time">9:41</span>
+              <div class="status-signals">
+                <div class="signal-bar"></div><div class="signal-bar"></div>
+                <div class="signal-bar"></div><div class="signal-bar"></div>
+                <span class="signal-battery">100%</span>
+              </div>
+            </div>
+            <div style="padding: 0 20px;">
+              <div class="entry-row" style="padding: 5px 0; max-height: none; border: none;">
+                <div class="entry-gutter"><div class="intent-dot dot-note"></div></div>
+                <div class="entry-body">
+                  <span class="entry-timestamp" style="font-size: 10px;">Jan 4 · 8:55</span>
+                  <p class="entry-text" style="font-size: 12px; line-height: 1.4;">Weekly sync — agreed to hold on schema migration.</p>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-peek-dim"></div>
+          </div>
+
+          <!-- Sheet -->
+          <div class="detail-sheet" role="dialog" aria-label="Architecture Database thread">
+            <div class="sheet-handle" role="button" aria-label="Dismiss" tabindex="0"></div>
+
+            <div class="sheet-header">
+              <div class="sheet-header-top">
+                <span class="sheet-topic">Architecture Database</span>
+                <button class="sheet-export-label" aria-label="Export thread as Markdown" style="background: none; border: none; cursor: pointer; padding: 0; display: inline-flex; flex-direction: column; align-items: flex-end; justify-content: center; min-height: 44px; padding: 0 4px;">EXPORT<span style="font-size: 8px; letter-spacing: 0.04em; color: var(--paper-40); margin-top: 1px;">Copy as Markdown</span></button>
+              </div>
+              <div class="sheet-meta">6 entries · Jan 4 – Jan 20</div>
+            </div>
+
+            <div class="sheet-separator"></div>
+
+            <div class="sheet-entries">
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">The query planner can't see across partition boundaries. Every cross-shard join becomes a full table scan.</p>
+                <div class="sheet-entry-meta">
+                  <span style="color: var(--signal-constraint); font-family: var(--mono); font-size: var(--type-11);">CONSTRAINT</span><span class="sheet-entry-timestamp" style="font-family: var(--mono); font-size: var(--type-11);"> · Jan 4 · 9:14</span>
+                </div>
+              </div>
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">Could pre-compute the join paths at write time and store as a materialized index.</p>
+                <div class="sheet-entry-meta">
+                  <span style="color: var(--signal-proposal); font-family: var(--mono); font-size: var(--type-11);">PROPOSAL</span><span class="sheet-entry-timestamp" style="font-family: var(--mono); font-size: var(--type-11);"> · Jan 6 · 11:30</span>
+                </div>
+              </div>
+
+              <div class="sheet-entry">
+                <p class="sheet-entry-text">What happens to the materialized index when a partition is rebalanced?</p>
+                <div class="sheet-entry-meta">
+                  <span style="color: var(--signal-question); font-family: var(--mono); font-size: var(--type-11);">QUESTION</span><span class="sheet-entry-timestamp" style="font-family: var(--mono); font-size: var(--type-11);"> · Jan 9 · 16:45</span>
+                </div>
+              </div>
+
+              <div style="padding: 16px 20px; border-top: 1px solid var(--paper-10);">
+                <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;">Examination Prompts</div>
+                <div style="font-family: var(--mono); font-size: var(--type-11); color: var(--paper-50); line-height: 1.6;">Which constraint is load-bearing — the partition scheme or the join requirement?</div>
+              </div>
+            </div>
+
+            <div class="sheet-separator"></div>
+
+            <div class="sheet-compose">
+              <textarea class="compose-input" placeholder="Add to this thread..." rows="1" aria-label="Add to this thread" style="font-family: var(--mono); font-size: var(--type-13); border: none; outline: none; flex: 1; background: transparent; resize: none; color: var(--paper-80);"></textarea>
+              <button class="compose-commit" aria-label="Commit entry">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+
+          </div><!-- /detail-sheet -->
+        </div><!-- /sheet-frame-inner -->
+      </div><!-- /device-frame -->
+    </div><!-- /flow-step 2 -->
+
+    <!-- Connector 2→3 -->
+    <div class="flow-connector">
+      <svg class="connector-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="13 6 19 12 13 18"/>
+      </svg>
+      <span class="connector-label">Tap EXPORT</span>
+    </div>
+
+    <!-- ============================================================
+         STEP 3 — iOS Share Sheet
+         ============================================================ -->
+    <div class="flow-step">
+      <div class="step-meta">
+        <span class="step-num">03</span>
+        <span class="step-name">iOS SHARE SHEET</span>
+      </div>
+
+      <div class="device-frame">
+        <!-- Thread detail visible behind (dimmed) -->
+        <div class="sheet-frame-inner">
+          <div class="timeline-peek">
+            <div style="padding: 10px 20px 4px;">
+              <span class="status-time" style="font-family: var(--mono); font-size: var(--type-13); font-weight: 700; color: var(--paper-80);">9:41</span>
+            </div>
+            <div class="timeline-peek-dim" style="background: rgba(0,0,0,0.25);"></div>
+          </div>
+          <div class="detail-sheet" style="opacity: 0.4;">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+              <div class="sheet-header-top">
+                <span class="sheet-topic">Architecture Database</span>
+                <span class="sheet-export-label" style="display: inline-flex; flex-direction: column; align-items: flex-end;">EXPORT<span style="font-size: 8px; letter-spacing: 0.04em; color: var(--paper-40); margin-top: 1px;">Copy as Markdown</span></span>
+              </div>
+              <div class="sheet-meta">6 entries · Jan 4 – Jan 20</div>
+            </div>
+            <div class="sheet-separator"></div>
+            <div class="sheet-entries">
+              <div class="sheet-entry">
+                <p class="sheet-entry-text" style="font-size: 13px;">The query planner can't see across partition boundaries.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- iOS Share Sheet overlay -->
+        <div class="share-overlay">
+          <div class="share-dim"></div>
+          <div class="share-sheet">
+            <div class="share-header">
+              <p class="share-title">Architecture Database</p>
+              <p class="share-subtitle">Markdown · 6 entries</p>
+            </div>
+
+            <div class="share-apps">
+              <div class="share-app">
+                <div class="share-app-icon" style="background: #34C759;">
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="6" y="8" width="16" height="14" rx="2" stroke="white" stroke-width="1.5"/><path d="M10 8V6a2 2 0 0 1 4 0v2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="share-app-name">Notes</span>
+              </div>
+              <div class="share-app">
+                <div class="share-app-icon" style="background: #007AFF;">
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 9l8 6 8-6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="5" y="7" width="18" height="14" rx="2" stroke="white" stroke-width="1.5"/></svg>
+                </div>
+                <span class="share-app-name">Mail</span>
+              </div>
+              <div class="share-app">
+                <div class="share-app-icon" style="background: #5856D6;">
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="6" stroke="white" stroke-width="1.5"/><path d="M14 8V5M14 23v-3M8 14H5M23 14h-3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="share-app-name">Obsidian</span>
+              </div>
+              <div class="share-app">
+                <div class="share-app-icon" style="background: #FF9500;">
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="6" y="6" width="16" height="16" rx="3" stroke="white" stroke-width="1.5"/><path d="M10 14h8M14 10v8" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="share-app-name">Files</span>
+              </div>
+              <div class="share-app">
+                <div class="share-app-icon" style="background: #8E8E93;">
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="5" stroke="white" stroke-width="1.5"/><path d="M14 5v2M14 21v2M5 14h2M21 14h2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                <span class="share-app-name">More</span>
+              </div>
+            </div>
+
+            <div class="share-actions">
+              <div class="share-action">
+                <div class="share-action-icon" style="background: #E5E5EA;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="9" height="10" rx="1.5" stroke="#007AFF" stroke-width="1.2"/><path d="M5 5V3.5A1.5 1.5 0 0 1 6.5 2h6A1.5 1.5 0 0 1 14 3.5v7A1.5 1.5 0 0 1 12.5 12H11" stroke="#007AFF" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                Copy
+              </div>
+              <div class="share-action">
+                <div class="share-action-icon" style="background: #E5E5EA;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="#007AFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11v1.5A1.5 1.5 0 0 0 3.5 14h9A1.5 1.5 0 0 0 14 12.5V11" stroke="#007AFF" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                Save to Files
+              </div>
+              <div class="share-action" style="border: none;">
+                <div class="share-action-icon" style="background: #E5E5EA;">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke="#007AFF" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="#007AFF" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                Print
+              </div>
+            </div>
+
+            <div class="share-cancel">Cancel</div>
+          </div><!-- /share-sheet -->
+        </div><!-- /share-overlay -->
+
+      </div><!-- /device-frame -->
+    </div><!-- /flow-step 3 -->
+
+  </div><!-- /flow-stage -->
+
+  <script>window.LOG_NAV_PREFIX = '../../';</script>
+  <script src="../../assets/scripts.js"></script>
+</body>
+</html>

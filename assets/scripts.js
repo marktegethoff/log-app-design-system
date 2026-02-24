@@ -268,6 +268,32 @@
     window.addEventListener('load', broadcastTheme);
   }
 
+  // ---- Compose: Commit Pulse + Sync State ----
+  function initCompose() {
+    document.querySelectorAll('.compose-commit').forEach(function(btn) {
+      var inner = btn.closest('.compose-inner');
+      var syncDot = inner ? inner.querySelector('.sync-dot') : null;
+      btn.addEventListener('click', function() {
+        // Commit pulse: restart animation on each tap
+        btn.classList.remove('pulse');
+        void btn.offsetWidth;
+        btn.classList.add('pulse');
+        btn.addEventListener('animationend', function() {
+          btn.classList.remove('pulse');
+        }, { once: true });
+        // Sync dot: pending (amber) → synced (paper-30) after 400ms
+        if (syncDot) {
+          syncDot.classList.remove('synced');
+          syncDot.classList.add('pending');
+          setTimeout(function() {
+            syncDot.classList.remove('pending');
+            syncDot.classList.add('synced');
+          }, 400);
+        }
+      });
+    });
+  }
+
   // ---- Init ----
   function init() {
     initTheme();
@@ -279,6 +305,7 @@
     initSmoothScroll();
     initCopyButtons();
     initBackToTop();
+    initCompose();
     initFlowIframeSync();
   }
 
