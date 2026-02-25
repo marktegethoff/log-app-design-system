@@ -13,7 +13,7 @@
 
     .proto-header { display: flex; align-items: center; justify-content: space-between; padding: var(--s-16) var(--s-24); border-bottom: 1px solid var(--paper-15); background: var(--paper-00); }
     body.dark-mode .proto-header { background: var(--paper-90); border-bottom-color: var(--paper-80); }
-    .proto-header .mark { font-family: var(--mono); font-weight: 600; font-size: 18px; letter-spacing: var(--tracking-tight); color: var(--paper-80); text-decoration: none; }
+    .proto-header .mark { font-family: var(--mono); font-weight: 700; font-size: 18px; letter-spacing: var(--tracking-tight); color: var(--paper-80); text-decoration: none; }
     body.dark-mode .proto-header .mark { color: var(--paper-05); }
     .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
     .proto-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; }
@@ -62,12 +62,8 @@
     .entry-body { flex: 1; min-width: 0; }
     .entry-meta { display: flex; align-items: center; margin-bottom: 3px; }
     .entry-intent-label { font-family: var(--mono); font-size: var(--type-11); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
-    .label-question { color: var(--signal-question); }
-    .label-proposal { color: var(--signal-proposal); }
-    .label-constraint { color: var(--signal-constraint); }
-    .label-fact { color: var(--signal-fact); }
-    .label-note { color: var(--signal-note); }
-    .label-tradeoff { color: var(--signal-tradeoff); }
+    .label-question, .label-proposal, .label-constraint, .label-fact, .label-note, .label-tradeoff { color: var(--paper-40); }
+    body.dark-mode .label-question, body.dark-mode .label-proposal, body.dark-mode .label-constraint, body.dark-mode .label-fact, body.dark-mode .label-note, body.dark-mode .label-tradeoff { color: var(--paper-30); }
     .entry-timestamp { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); }
     body.dark-mode .entry-timestamp { color: var(--paper-30); }
     .entry-text { font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--paper-80); margin: 0; }

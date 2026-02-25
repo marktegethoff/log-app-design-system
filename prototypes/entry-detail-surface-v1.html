@@ -25,7 +25,7 @@
     }
     .proto-header .mark {
       font-family: var(--mono);
-      font-weight: 600;
+      font-weight: 700;
       font-size: 18px;
       letter-spacing: var(--tracking-tight);
       color: var(--paper-80);
@@ -83,7 +83,7 @@
       font-size: var(--type-11);
       color: var(--paper-40);
     }
-    body.dark-mode .status-right { color: var(--paper-40); }
+    body.dark-mode .status-right { color: var(--paper-30); }
 
     /* App nav with back button */
     .app-nav {
@@ -105,7 +105,7 @@
       padding: 0;
       margin-left: -10px;
     }
-    .back-btn svg { stroke: var(--amber); }
+    .back-btn svg { stroke: var(--paper-50); }
     .nav-title {
       font-family: var(--mono);
       font-size: var(--type-14);
@@ -116,7 +116,7 @@
     .correct-btn {
       font-family: var(--mono);
       font-size: var(--type-13);
-      color: var(--amber);
+      color: var(--paper-60);
       border: none;
       background: none;
       cursor: pointer;
@@ -270,7 +270,7 @@
           </svg>
         </button>
         <span class="nav-title">Entry</span>
-        <button class="correct-btn" id="correctBtn">Correct</button>
+        <button class="correct-btn" id="correctBtn">Amend</button>
       </div>
 
       <!-- Detail content -->
@@ -303,9 +303,9 @@
 
         <!-- Correction history -->
         <div class="correction-history">
-          <span class="section-label">Correction history</span>
+          <span class="section-label">Amendment history</span>
           <div class="correction-item">
-            <div class="correction-meta">Corrected Feb 17, 2026 — 10:14</div>
+            <div class="correction-meta">Amended Feb 17, 2026 — 10:14</div>
             <span class="correction-original">Going with last-write-wins for MVP. Full conflict resolution is post-1.0.</span>
             <span class="correction-new">Going with last-write-wins for MVP. Full conflict resolution is post-1.0. The operational overhead of CRDT at this scale is disproportionate to the actual risk — solo users don't generate conflicting writes in practice.</span>
           </div>

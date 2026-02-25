@@ -367,6 +367,7 @@ extension View {
             <tr><td>Ignoring reduced motion</td><td>Accessibility violation</td><td>Check <code>accessibilityReduceMotion</code></td></tr>
             <tr><td>Touch targets &lt; 44pt</td><td>WCAG 2.1 failure</td><td>Use <code>.frame(minWidth: 44, minHeight: 44)</code></td></tr>
             <tr><td>Decorative animation</td><td>"Stillness over performance"</td><td>Only 6 allowed animations</td></tr>
+            <tr><td>Blur and vibrancy effects (<code>UIBlurEffect</code>, <code>UIVisualEffectView</code>, <code>.ultraThinMaterial</code>, <code>.regularMaterial</code>, etc.)</td><td>Violates materiality spec — depth via blur is decorative, not structural</td><td>Use paper-scale tonal contrast only (<code>LogColors.backgroundPrimary</code>, <code>LogColors.backgroundSecondary</code>)</td></tr>
           </tbody>
         </table>
       </div>

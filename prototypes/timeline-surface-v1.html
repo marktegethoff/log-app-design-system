@@ -26,7 +26,7 @@
     }
     .proto-header .mark {
       font-family: var(--mono);
-      font-weight: 600;
+      font-weight: 700;
       font-size: 18px;
       letter-spacing: var(--tracking-tight);
       color: var(--paper-80);
@@ -172,11 +172,11 @@
       border-radius: 50%;
       flex-shrink: 0;
     }
-    .dot-thought  { background: var(--signal-question); }
-    .dot-action   { background: var(--signal-proposal); }
-    .dot-decision { background: var(--signal-constraint); }
-    .dot-reference{ background: var(--signal-fact); }
-    .dot-unknown  { background: var(--signal-note); }
+    .dot-question  { background: var(--signal-question); }
+    .dot-proposal   { background: var(--signal-proposal); }
+    .dot-constraint { background: var(--signal-constraint); }
+    .dot-fact{ background: var(--signal-fact); }
+    .dot-note  { background: var(--signal-note); }
 
     .entry-body { flex: 1; min-width: 0; }
     .entry-timestamp {
@@ -303,7 +303,7 @@
       color: var(--paper-40);
       margin-bottom: var(--s-8);
     }
-    body.dark-mode .annotation-card-ref { color: var(--paper-40); }
+    body.dark-mode .annotation-card-ref { color: var(--paper-30); }
     .annotation-card-text {
       font-family: var(--mono);
       font-size: var(--type-13);
@@ -399,7 +399,7 @@
         <!-- Entry 1: Thought -->
         <div class="entry-row">
           <div class="entry-gutter">
-            <div class="intent-dot dot-thought"></div>
+            <div class="intent-dot dot-question"></div>
           </div>
           <div class="entry-body">
             <div class="entry-timestamp">9:14</div>
@@ -410,7 +410,7 @@
         <!-- Entry 2: Action -->
         <div class="entry-row">
           <div class="entry-gutter">
-            <div class="intent-dot dot-action"></div>
+            <div class="intent-dot dot-proposal"></div>
           </div>
           <div class="entry-body">
             <div class="entry-timestamp">9:17</div>
@@ -426,7 +426,7 @@
         <!-- Entry 3: Decision -->
         <div class="entry-row">
           <div class="entry-gutter">
-            <div class="intent-dot dot-decision"></div>
+            <div class="intent-dot dot-constraint"></div>
           </div>
           <div class="entry-body">
             <div class="entry-timestamp">9:29</div>
@@ -437,7 +437,7 @@
         <!-- Entry 4: Reference -->
         <div class="entry-row">
           <div class="entry-gutter">
-            <div class="intent-dot dot-reference"></div>
+            <div class="intent-dot dot-fact"></div>
           </div>
           <div class="entry-body">
             <div class="entry-timestamp">9:31</div>
@@ -448,7 +448,7 @@
         <!-- Entry 5: Unknown -->
         <div class="entry-row">
           <div class="entry-gutter">
-            <div class="intent-dot dot-unknown"></div>
+            <div class="intent-dot dot-note"></div>
           </div>
           <div class="entry-body">
             <div class="entry-timestamp">9:33</div>
@@ -540,7 +540,7 @@
       row.className = 'entry-row';
       var now = new Date();
       var h = now.getHours(), m = now.getMinutes();
-      row.innerHTML = '<div class="entry-gutter"><div class="intent-dot dot-unknown"></div></div>' +
+      row.innerHTML = '<div class="entry-gutter"><div class="intent-dot dot-note"></div></div>' +
         '<div class="entry-body">' +
         '<div class="entry-timestamp">' + h + ':' + String(m).padStart(2,'0') + '</div>' +
         '<p class="entry-text">' + text.replace(/</g,'&lt;') + '</p>' +

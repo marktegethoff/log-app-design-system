@@ -74,6 +74,8 @@
             <tr><td>Modal</td><td>400ms</td><td>Medium</td><td>No</td></tr>
             <tr><td>Timeline settle</td><td>250ms</td><td>Medium</td><td>Yes</td></tr>
             <tr><td>Loading</td><td>Infinite</td><td>Low</td><td>Yes</td></tr>
+            <tr><td>Convergence reveal</td><td>200–300ms</td><td>High</td><td>No</td></tr>
+            <tr><td>Draft framing crossfade</td><td>150–200ms</td><td>High</td><td>No</td></tr>
           </tbody>
         </table>
       </div>
@@ -143,7 +145,7 @@
           </thead>
           <tbody>
             <tr><td><code>linear</code></td><td>Feels robotic, not mechanical</td></tr>
-            <tr><td><code>ease-in-out</code></td><td>Too smooth, feels digital</td></tr>
+            <tr><td><code>ease-in-out</code></td><td>Too smooth, feels digital — <strong>exception: convergence reveal and draft framing crossfade use ease-in-out per Materiality Spec v1</strong></td></tr>
             <tr><td>Spring / elastic</td><td>Violates mechanical metaphor</td></tr>
           </tbody>
         </table>
@@ -490,6 +492,7 @@ function handleCommit(text) {
             <tr><td>Content-dependent timing</td><td>Entry length must not affect duration</td></tr>
             <tr><td>Idle trace animation</td><td>Trace was already drawn</td></tr>
             <tr><td>Any animation &gt; 1s</td><td>Feels slow for user-triggered actions</td></tr>
+            <tr><td>Live draft morphing while typing</td><td>Draft framing regenerates post-commit only — not during input (Materiality Spec v1)</td></tr>
           </tbody>
         </table>
       </div>

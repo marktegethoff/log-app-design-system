@@ -25,7 +25,7 @@
     }
     .proto-header .mark {
       font-family: var(--mono);
-      font-weight: 600;
+      font-weight: 700;
       font-size: 18px;
       letter-spacing: var(--tracking-tight);
       color: var(--paper-80);
@@ -62,7 +62,7 @@
       margin-bottom: var(--s-48);
       line-height: 1.6;
     }
-    body.dark-mode .page-subtitle { color: var(--paper-40); }
+    body.dark-mode .page-subtitle { color: var(--paper-30); }
 
     /* Steps */
     .steps-grid {
@@ -173,7 +173,7 @@
       margin-bottom: 0;
       line-height: 1.5;
     }
-    body.dark-mode .step-note { color: var(--paper-40); }
+    body.dark-mode .step-note { color: var(--paper-30); }
 
     /* Step 2: Correction compose */
     .edit-inline-demo {
@@ -237,7 +237,7 @@
       cursor: pointer;
       min-height: 28px;
     }
-    body.dark-mode .edit-inline-cancel { color: var(--paper-40); border-color: var(--paper-60); }
+    body.dark-mode .edit-inline-cancel { color: var(--paper-30); border-color: var(--paper-60); }
 
     /* Step 3: Correction result */
     .corrected-entry {
@@ -299,7 +299,7 @@
       line-height: 1.4;
       display: block;
     }
-    body.dark-mode .correction-new-mini { color: var(--paper-40); }
+    body.dark-mode .correction-new-mini { color: var(--paper-30); }
     .correction-when-mini {
       font-family: var(--mono);
       font-size: var(--type-11);
@@ -344,7 +344,7 @@
       line-height: 1.5;
       margin: 0;
     }
-    body.dark-mode .principle-desc { color: var(--paper-40); }
+    body.dark-mode .principle-desc { color: var(--paper-30); }
 
     .section-label {
       font-family: var(--mono);
@@ -384,10 +384,10 @@
           <div class="detail-nav-demo">
             <span class="detail-nav-back">&larr;</span>
             <span class="detail-nav-title">Entry</span>
-            <span class="detail-nav-correct">Correct</span>
+            <span class="detail-nav-correct">Amend</span>
           </div>
           <div class="detail-entry-text">Going with last-write-wins for MVP.</div>
-          <p class="step-note">Tap an entry in the timeline to open its detail view. The "Correct" button is visible only after you've observed the record. Observation precedes correction.</p>
+          <p class="step-note">Tap an entry in the timeline to open its detail view. The "Amend" button is visible only after you've observed the record. Observation precedes amendment.</p>
         </div>
       </div>
 
@@ -399,14 +399,14 @@
         </div>
         <div class="step-body">
           <div class="edit-inline-demo">
-            <span class="edit-inline-label">Correcting</span>
+            <span class="edit-inline-label">Amending</span>
             <textarea class="edit-inline-text" rows="3">Going with last-write-wins for MVP. Full conflict resolution is post-1.0.</textarea>
             <div class="edit-inline-actions">
               <button class="edit-inline-save">Save</button>
               <button class="edit-inline-cancel">Cancel</button>
             </div>
           </div>
-          <p class="step-note">Tapping "Correct" pushes to the correction surface. Original text visible above, compose field below. Amber border signals active correction state.</p>
+          <p class="step-note">Tapping "Amend" pushes to the amendment surface. Original text visible above, compose field below. Amber border signals active amendment state.</p>
         </div>
       </div>
 
@@ -414,7 +414,7 @@
       <div class="step-card">
         <div class="step-header">
           <div class="step-number">3</div>
-          <span class="step-title">Correction saved</span>
+          <span class="step-title">Amendment saved</span>
         </div>
         <div class="step-body">
           <div class="corrected-entry">
@@ -426,7 +426,7 @@
               <span class="correction-label-mini">Original</span>
               <span class="correction-orig-mini">Going with last-write-wins for MVP.</span>
               <span class="correction-new-mini">Going with last-write-wins for MVP. Full conflict resolution is post-1.0. The operational overhead...</span>
-              <span class="correction-when-mini">Corrected Feb 17 — 10:14</span>
+              <span class="correction-when-mini">Amended Feb 17 — 10:14</span>
             </div>
           </div>
           <p class="step-note">Original text preserved with struck-through rendering. New text appears below. Timestamp of correction is recorded separately from original timestamp.</p>
