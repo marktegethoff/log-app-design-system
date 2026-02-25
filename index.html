@@ -3,157 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mockups Index — Log•</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
+  <title>Log• Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
-  <style>
-    body { background: var(--paper-05); }
-    body.dark-mode { background: var(--paper-95); }
-
-    .proto-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: var(--s-16) var(--s-24);
-      border-bottom: 1px solid var(--paper-15); background: var(--paper-00);
-    }
-    body.dark-mode .proto-header { background: var(--paper-90); border-bottom-color: var(--paper-80); }
-    .proto-header .mark { font-family: var(--mono); font-weight: 700; font-size: 18px; letter-spacing: var(--tracking-tight); color: var(--paper-80); text-decoration: none; }
-    body.dark-mode .proto-header .mark { color: var(--paper-05); }
-    .proto-header .mark .period { color: var(--amber); margin-left: 1px; }
-    .proto-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); letter-spacing: 0.06em; }
-
-    .index { max-width: 720px; margin: 0 auto; padding: var(--s-48) var(--s-24); }
-    .index-title { font-family: var(--mono); font-size: var(--type-24); font-weight: 700; letter-spacing: var(--tracking-tight); color: var(--paper-80); margin-bottom: var(--s-8); }
-    body.dark-mode .index-title { color: var(--paper-05); }
-    .index-desc { font-family: var(--sans); font-size: var(--type-14); color: var(--paper-50); margin-bottom: var(--s-48); line-height: 1.5; }
-    body.dark-mode .index-desc { color: var(--paper-30); }
-
-    .track { margin-bottom: var(--s-48); }
-    .track-label { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--s-12); }
-    .track-list { list-style: none; padding: 0; }
-    .track-list li { border-bottom: 1px solid var(--paper-10); }
-    body.dark-mode .track-list li { border-bottom-color: var(--paper-80); }
-    .track-list li:last-child { border-bottom: none; }
-    .track-list a {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: var(--s-12) var(--s-4); min-height: 44px;
-      font-family: var(--sans); font-size: var(--type-14); color: var(--paper-70);
-      text-decoration: none;
-    }
-    body.dark-mode .track-list a { color: var(--paper-20); }
-    .track-list a:hover { color: var(--amber); }
-    .track-num { font-family: var(--mono); font-size: var(--type-11); color: var(--paper-40); min-width: 28px; }
-  </style>
 </head>
 <body>
-  <header class="proto-header">
+
+  <header class="site-header">
     <a href="index.html" class="mark">Log<span class="period">•</span></a>
-    <span class="proto-label">Mockups Index</span>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-      <span id="themeIcon">&#9728;</span>
-    </button>
+    <div class="site-header-controls">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span class="nav-toggle-icon"></span></button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span id="themeIcon">&#9728;</span></button>
+    </div>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="brand-system.html">Brand</a>
+      <a href="component-state-matrix.html">Components</a>
+      <a href="motion-system.html">Motion</a>
+      <a href="layout-system.html">Layout</a>
+      <a href="engineer-quick-start.html">Quick Start</a>
+    </nav>
   </header>
 
-  <div class="index">
-    <div class="index-title">Surface Mockups</div>
-    <p class="index-desc">28 surfaces + 8 component sheets for engineering handoff.</p>
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="hero-mark">Log<span class="period">•</span></div>
+    <h1 class="hero-title">Design System</h1>
+    <p class="hero-subtitle">
+      Your words are the artifact.<br>
+      The AI is the archivist.
+    </p>
+  </section>
 
-    <div class="track">
-      <div class="track-label">Track A — Timeline</div>
-      <ul class="track-list">
-        <li><a href="timeline/01-empty.html"><span class="track-num">01</span> Empty State</a></li>
-        <li><a href="timeline/02-populated.html"><span class="track-num">02</span> Populated</a></li>
-        <li><a href="timeline/03-batch.html"><span class="track-num">03</span> Batch Group</a></li>
-        <li><a href="timeline/04-idle-trace.html"><span class="track-num">04</span> Idle Trace</a></li>
-        <li><a href="timeline/05-annotation.html"><span class="track-num">05</span> Annotation</a></li>
-        <li><a href="timeline/06-dark-default.html"><span class="track-num">06</span> Dark Mode Default</a></li>
-        <li><a href="timeline/07-large-type.html"><span class="track-num">07</span> Large Type</a></li>
-        <li><a href="timeline/08-ipad.html"><span class="track-num">08</span> iPad</a></li>
-        <li><a href="timeline/09-macos.html"><span class="track-num">09</span> macOS</a></li>
-      </ul>
-    </div>
+  <div class="container">
 
-    <div class="track">
-      <div class="track-label">Track B — Entry &amp; Edit</div>
-      <ul class="track-list">
-        <li><a href="entry/10-blank-compose.html"><span class="track-num">10</span> Blank Compose</a></li>
-        <li><a href="entry/11-active-typing.html"><span class="track-num">11</span> Active Typing</a></li>
-        <li><a href="entry/11b-keyboard-up.html"><span class="track-num">11b</span> Keyboard Up (Compose)</a></li>
-        <li><a href="entry/12-post-commit.html"><span class="track-num">12</span> Post Commit</a></li>
-        <li><a href="entry/13-error.html"><span class="track-num">13</span> Sync Error</a></li>
-        <li><a href="entry/14-offline.html"><span class="track-num">14</span> Offline</a></li>
-        <li><a href="entry/15-correction.html"><span class="track-num">15</span> Amendment</a></li>
-        <li><a href="entry/16-correction-chain.html"><span class="track-num">16</span> Correction Chain</a></li>
-        <li><a href="entry/16b-edit-keyboard-up.html"><span class="track-num">16b</span> Keyboard Up (Edit)</a></li>
-      </ul>
-    </div>
+    <!-- Audience Routing -->
+    <section class="section">
+      <h2>Start Here</h2>
+      <div class="card-grid">
+        <a href="brand-system.html" class="card">
+          <h3>Designers</h3>
+          <p>Brand philosophy, color system, typography rules, signal semantics.</p>
+        </a>
+        <a href="engineer-quick-start.html" class="card">
+          <h3>Engineers</h3>
+          <p>Token reference, SwiftUI mapping, component states, implementation checklist. 15-minute read.</p>
+        </a>
+        <a href="component-state-matrix.html" class="card">
+          <h3>QA / Handoff</h3>
+          <p>Component state matrix, accessibility compliance, dark mode contrast rules.</p>
+        </a>
+      </div>
+    </section>
 
-    <div class="track">
-      <div class="track-label">Track C — Search</div>
-      <ul class="track-list">
-        <li><a href="search/17-search-empty.html"><span class="track-num">17</span> Search Empty</a></li>
-        <li><a href="search/18-search-results.html"><span class="track-num">18</span> Search Results</a></li>
-        <li><a href="search/19-search-paywall.html"><span class="track-num">19</span> Search Paywall</a></li>
-      </ul>
-    </div>
+    <!-- System Specs -->
+    <section class="section">
+      <h2>System Specifications</h2>
+      <div class="card-grid">
+        <a href="component-state-matrix.html" class="card">
+          <h3>Component States</h3>
+          <p>11 components, 7 states each. Token values, ARIA, dark mode behavior.</p>
+        </a>
+        <a href="motion-system.html" class="card">
+          <h3>Motion System</h3>
+          <p>6 animations, mechanical easing, commit cycle, reduced motion rules.</p>
+        </a>
+        <a href="layout-system.html" class="card">
+          <h3>Layout System</h3>
+          <p>8pt grid, device layouts, safe areas, z-index scale, timeline structure.</p>
+        </a>
+        <a href="swiftui-implementation-guide.html" class="card">
+          <h3>SwiftUI Guide</h3>
+          <p>Token usage, state mapping, ViewModifier patterns, anti-patterns.</p>
+        </a>
+      </div>
+    </section>
 
-    <div class="track">
-      <div class="track-label">Track D — Archivist</div>
-      <ul class="track-list">
-        <li><a href="archivist/20-general.html"><span class="track-num">20</span> General Annotation</a></li>
-        <li><a href="archivist/21-contradiction.html"><span class="track-num">21</span> Contradiction</a></li>
-        <li><a href="archivist/22-pattern.html"><span class="track-num">22</span> Pattern</a></li>
-      </ul>
-    </div>
+    <!-- Surfaces & Flows -->
+    <section class="section">
+      <h2>Surfaces &amp; Flows</h2>
+      <p>Mockup surfaces and end-to-end flows for reference during implementation.</p>
+      <div class="card-grid">
+        <a href="prototypes/timeline-surface-v1.html" class="card">
+          <h3>Timeline Surface</h3>
+          <p>Primary surface: entry timeline, compose area, intent dots, idle trace, batch groups.</p>
+        </a>
+        <a href="flows/compose.html" class="card">
+          <h3>Compose &amp; Commit</h3>
+          <p>End-to-end compose path: timeline to active typing to commit to post-commit state.</p>
+        </a>
+        <a href="flows/correction.html" class="card">
+          <h3>Amendment</h3>
+          <p>Entry detail to amendment chain: the edit-in-place path with amendment history.</p>
+        </a>
+        <a href="flows/search.html" class="card">
+          <h3>Search</h3>
+          <p>Search input, results, intent filtering, and Pro paywall boundary.</p>
+        </a>
+      </div>
+      <p style="margin-top: var(--s-16);"><a href="mockups/index.html">Full mockups index (42 surfaces + 8 components) →</a></p>
+    </section>
 
-    <div class="track">
-      <div class="track-label">Track E — Idle Trace</div>
-      <ul class="track-list">
-        <li><a href="idle-trace/23-short-gap.html"><span class="track-num">23</span> Short Gap (1hr)</a></li>
-        <li><a href="idle-trace/24-long-gap.html"><span class="track-num">24</span> Long Gap (24hr)</a></li>
-      </ul>
-    </div>
+    <!-- Status -->
+    <section class="section">
+      <h2>Status</h2>
+      <div class="table-scroll">
+        <table class="spec-table">
+          <tbody>
+            <tr><td>Version</td><td>MVP / Pre-launch</td></tr>
+            <tr><td>WCAG Compliance</td><td><span class="status-badge pass">AA</span> No paper-40 on dark backgrounds</td></tr>
+            <tr><td>Architectural Decisions</td><td>14 locked</td></tr>
+            <tr><td>Engineering Timeline</td><td>8 weeks from Feb 24, 2026</td></tr>
+            <tr><td>Stack</td><td>iOS (Swift), Supabase, offline-first sync</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-    <div class="track">
-      <div class="track-label">Track F — Settings</div>
-      <ul class="track-list">
-        <li><a href="settings/25-settings.html"><span class="track-num">25</span> Settings</a></li>
-        <li><a href="settings/26-subscription.html"><span class="track-num">26</span> Subscription</a></li>
-        <li><a href="settings/27-export.html"><span class="track-num">27</span> Export</a></li>
-      </ul>
-    </div>
-
-    <div class="track">
-      <div class="track-label">Track H — Threads</div>
-      <ul class="track-list">
-        <li><a href="convergence/threads-view-v1.html"><span class="track-num">28</span> Threads v1 (filter toggle + thread detail sheet)</a></li>
-        <li><a href="convergence/convergence-view-v1.html"><span class="track-num">28a</span> Convergence View v1 (superseded)</a></li>
-      </ul>
-    </div>
-
-    <div class="track">
-      <div class="track-label">Key Flows</div>
-      <ul class="track-list">
-        <li><a href="convergence/thread-export-flow.html">Thread → Export (card · sheet · share)</a></li>
-      </ul>
-    </div>
-
-    <div class="track">
-      <div class="track-label">Track G — Components</div>
-      <ul class="track-list">
-        <li><a href="components/comp-commit-button.html">Commit Button</a></li>
-        <li><a href="components/comp-secondary-button.html">Secondary Button</a></li>
-        <li><a href="components/comp-intent-dot.html">Intent Dot</a></li>
-        <li><a href="components/comp-annotation-block.html">Annotation Block</a></li>
-        <li><a href="components/comp-batch-container.html">Batch Container</a></li>
-        <li><a href="components/comp-hamburger.html">Hamburger Menu</a></li>
-        <li><a href="components/comp-nav-active.html">Nav Active State</a></li>
-        <li><a href="components/comp-paywall.html">Paywall Notice</a></li>
-      </ul>
-    </div>
   </div>
 
-  <script>window.LOG_NAV_PREFIX = '';</script>
+  <footer class="site-footer">
+    Log• Design System
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
   <script src="assets/scripts.js"></script>
 </body>
 </html>
