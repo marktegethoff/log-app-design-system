@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capture Sheet v1 — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+
+    body { background: var(--paper-10); }
+    body.dark-mode { background: var(--paper-90); }
+
+    /* ---- Proto header ---- */
+    .proto-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      background: var(--paper-00);
+      border-bottom: 1px solid var(--paper-15);
+    }
+    body.dark-mode .proto-header {
+      background: var(--paper-90);
+      border-bottom-color: var(--paper-80);
+    }
+    .proto-header-left {
+      display: flex;
+      align-items: baseline;
+      gap: var(--s-16);
+    }
+    .proto-mark {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+    }
+    body.dark-mode .proto-mark { color: var(--paper-05); }
+    .proto-mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.05em;
+    }
+    body.dark-mode .proto-label { color: var(--paper-30); }
+    .proto-meta {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+    }
+    body.dark-mode .proto-meta { color: var(--paper-40); }
+    .mode-toggle {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      letter-spacing: 0.04em;
+      color: var(--paper-50);
+      background: none;
+      border: 1px solid var(--paper-20);
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    body.dark-mode .mode-toggle {
+      color: var(--paper-30);
+      border-color: var(--paper-60);
+    }
+
+    /* ---- Stage: three frames in a row ---- */
+    .stage {
+      display: flex;
+      gap: var(--s-32);
+      align-items: flex-start;
+      justify-content: center;
+      padding: var(--s-48) var(--s-24);
+      flex-wrap: wrap;
+    }
+    .frame-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--s-12);
+    }
+    .frame-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+    body.dark-mode .frame-label { color: var(--paper-30); }
+
+    /* ---- Device frame — partial (bottom 480pt of phone) ---- */
+    .device-frame {
+      width: 390px;
+      height: 844px;
+      background: var(--paper-00);
+      border-radius: 48px;
+      border: 8px solid var(--paper-70);
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    body.dark-mode .device-frame {
+      background: var(--paper-90);
+      border-color: var(--paper-50);
+    }
+
+    /* ---- Status bar ---- */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px 6px;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      font-weight: 700;
+      color: var(--paper-80);
+    }
+    body.dark-mode .status-time { color: var(--paper-05); }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .bar { width: 3px; border-radius: 1px; background: var(--paper-70); }
+    body.dark-mode .bar { background: var(--paper-20); }
+    .bar:nth-child(1) { height: 5px; }
+    .bar:nth-child(2) { height: 8px; }
+    .bar:nth-child(3) { height: 11px; }
+    .bar:nth-child(4) { height: 14px; }
+    .wifi {
+      width: 13px; height: 10px;
+      border: 1.5px solid var(--paper-70);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      margin-left: 4px;
+    }
+    body.dark-mode .wifi { border-color: var(--paper-20); }
+    .battery-text {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-60);
+      margin-left: 3px;
+    }
+    body.dark-mode .battery-text { color: var(--paper-30); }
+
+    /* ---- Source app background ---- */
+    .source-app-bg {
+      flex: 1;
+      background: var(--paper-05);
+      position: relative;
+      overflow: hidden;
+    }
+    body.dark-mode .source-app-bg {
+      background: var(--paper-80);
+    }
+    /* Simulated source app content — faint lines */
+    .source-app-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 19px,
+        var(--paper-10) 19px,
+        var(--paper-10) 20px
+      );
+      opacity: 0.4;
+    }
+    body.dark-mode .source-app-bg::before {
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 19px,
+        var(--paper-70) 19px,
+        var(--paper-70) 20px
+      );
+    }
+    /* Scrim behind the sheet */
+    .source-app-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.24) 100%);
+    }
+
+    /* ---- Capture Sheet ---- */
+    .capture-sheet {
+      flex-shrink: 0;
+      background: var(--paper-00);
+      border-radius: 16px 16px 0 0;
+      border-top: 1px solid var(--paper-15);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    body.dark-mode .capture-sheet {
+      background: var(--paper-90);
+      border-top-color: var(--paper-70);
+    }
+
+    /* Sheet grab handle */
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--paper-20);
+      border-radius: 2px;
+      margin: 10px auto 0;
+    }
+    body.dark-mode .sheet-handle { background: var(--paper-60); }
+
+    /* Sheet top bar */
+    .sheet-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px 10px;
+      border-bottom: 1px solid var(--paper-10);
+    }
+    body.dark-mode .sheet-topbar {
+      border-bottom-color: var(--paper-80);
+    }
+    .sheet-mark {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+    }
+    body.dark-mode .sheet-mark { color: var(--paper-05); }
+    .sheet-mark .period { color: var(--amber); margin-left: 1px; }
+    .sheet-cancel {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--paper-40);
+      cursor: pointer;
+    }
+    body.dark-mode .sheet-cancel { color: var(--paper-40); }
+
+    /* Content preview area */
+    .sheet-preview {
+      padding: 16px 20px 12px;
+      border-bottom: 1px dashed var(--paper-15);
+    }
+    body.dark-mode .sheet-preview {
+      border-bottom-color: var(--paper-70);
+    }
+
+    /* URL preview */
+    .url-preview-domain {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--paper-40);
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    body.dark-mode .url-preview-domain { color: var(--paper-40); }
+    .favicon {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--paper-20);
+      flex-shrink: 0;
+    }
+    body.dark-mode .favicon { background: var(--paper-60); }
+    .url-preview-title {
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.4;
+      color: var(--paper-70);
+      margin: 0;
+    }
+    body.dark-mode .url-preview-title { color: var(--paper-10); }
+
+    /* Text block preview */
+    .text-preview {
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--paper-70);
+      margin: 0;
+      position: relative;
+    }
+    body.dark-mode .text-preview { color: var(--paper-10); }
+    .text-preview-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: linear-gradient(to bottom, transparent, var(--paper-00));
+      pointer-events: none;
+    }
+    body.dark-mode .text-preview-fade {
+      background: linear-gradient(to bottom, transparent, var(--paper-90));
+    }
+
+    /* Image preview */
+    .image-preview-ph {
+      width: 100%;
+      height: 160px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--paper-20) 0%, var(--paper-15) 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: 10px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    body.dark-mode .image-preview-ph {
+      background: linear-gradient(135deg, var(--paper-60) 0%, var(--paper-70) 100%);
+    }
+    .image-preview-ph::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 4px,
+        rgba(0,0,0,0.015) 4px, rgba(0,0,0,0.015) 8px
+      );
+    }
+    .image-preview-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+      letter-spacing: 0.04em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Loading state for URL (fetching title) */
+    .url-loading {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--paper-40);
+      letter-spacing: 0.02em;
+    }
+
+    /* Annotation area */
+    .sheet-annotation {
+      padding: 12px 20px 8px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      min-height: 72px;
+    }
+    .annotation-input {
+      flex: 1;
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--paper-70);
+    }
+    body.dark-mode .annotation-input { color: var(--paper-10); }
+    .annotation-placeholder {
+      flex: 1;
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--paper-30);
+    }
+    body.dark-mode .annotation-placeholder { color: var(--paper-50); }
+
+    /* Commit button */
+    .commit-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .commit-btn.idle {
+      border: 1px solid var(--paper-20);
+      background: var(--paper-05);
+    }
+    body.dark-mode .commit-btn.idle {
+      border-color: var(--paper-60);
+      background: var(--paper-80);
+    }
+    .commit-btn.active {
+      border: 2px solid var(--amber);
+      background: var(--paper-00);
+    }
+    body.dark-mode .commit-btn.active {
+      background: var(--paper-90);
+    }
+    .commit-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .commit-dot.idle   { background: var(--paper-30); }
+    body.dark-mode .commit-dot.idle { background: var(--paper-50); }
+    .commit-dot.active { background: var(--amber); }
+
+    /* Sheet safe area bottom padding */
+    .sheet-safe-area { height: 32px; }
+
+    /* =============================================
+       DESIGN DECISIONS
+       ============================================= */
+    .design-notes {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: var(--s-48) var(--s-24) var(--s-96);
+    }
+    .notes-heading {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      font-weight: 700;
+      color: var(--paper-40);
+      letter-spacing: 0.06em;
+      margin-bottom: var(--s-32);
+    }
+    body.dark-mode .notes-heading { color: var(--paper-30); }
+    .notes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-32);
+    }
+    @media (max-width: 700px) { .notes-grid { grid-template-columns: 1fr; } }
+    .note-card {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-15);
+      border-radius: 4px;
+      padding: var(--s-24);
+    }
+    body.dark-mode .note-card {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+    .note-title {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      font-weight: 700;
+      color: var(--paper-50);
+      letter-spacing: 0.05em;
+      margin-bottom: var(--s-12);
+    }
+    body.dark-mode .note-title { color: var(--paper-30); }
+    .note-body {
+      font-family: var(--sans);
+      font-size: var(--type-14);
+      line-height: 1.6;
+      color: var(--paper-60);
+    }
+    body.dark-mode .note-body { color: var(--paper-20); }
+    .note-body code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--paper-05);
+      color: var(--paper-60);
+      padding: 1px 5px;
+      border-radius: 2px;
+    }
+    body.dark-mode .note-body code {
+      background: var(--paper-80);
+      color: var(--paper-20);
+    }
+    .note-rule {
+      display: block;
+      margin-top: var(--s-8);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.03em;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ======================== HEADER ======================== -->
+  <header class="proto-header">
+    <div class="proto-header-left">
+      <span class="proto-mark">Log<span class="period">.</span></span>
+      <span class="proto-label">CAPTURE SHEET v1</span>
+    </div>
+    <span class="proto-meta">Prototype · Feb 24, 2026</span>
+    <button class="mode-toggle" onclick="document.body.classList.toggle('dark-mode')">
+      TOGGLE MODE
+    </button>
+  </header>
+
+  <!-- ======================== STAGE ======================== -->
+  <div class="stage">
+
+    <!-- ---- State 1: URL (title fetched, OG image loaded) ---- -->
+    <div class="frame-group">
+      <div class="frame-label">URL — Title fetched</div>
+      <div class="device-frame">
+        <div class="status-bar">
+          <span class="status-time">11:04</span>
+          <div class="status-icons">
+            <div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div>
+            <div class="wifi"></div>
+            <span class="battery-text">88%</span>
+          </div>
+        </div>
+
+        <!-- Source app background -->
+        <div class="source-app-bg"></div>
+
+        <!-- Capture sheet — emerges from bottom -->
+        <div class="capture-sheet">
+          <div class="sheet-handle"></div>
+
+          <!-- Top bar -->
+          <div class="sheet-topbar">
+            <span class="sheet-mark">Log<span class="period">.</span></span>
+            <span class="sheet-cancel">Cancel</span>
+          </div>
+
+          <!-- URL preview (title fetched) -->
+          <div class="sheet-preview">
+            <div class="url-preview-domain">
+              <div class="favicon"></div>
+              nytimes.com
+            </div>
+            <p class="url-preview-title">The Case for Boredom</p>
+          </div>
+
+          <!-- Annotation + commit -->
+          <div class="sheet-annotation">
+            <span class="annotation-placeholder">Add a note…</span>
+            <!-- CommitButton: active (URL always active once title fetched) -->
+            <div class="commit-btn active">
+              <div class="commit-dot active"></div>
+            </div>
+          </div>
+
+          <div class="sheet-safe-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- State 1b: URL (fetching — title not yet loaded) ---- -->
+    <div class="frame-group">
+      <div class="frame-label">URL — Fetching title</div>
+      <div class="device-frame">
+        <div class="status-bar">
+          <span class="status-time">11:03</span>
+          <div class="status-icons">
+            <div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div>
+            <div class="wifi"></div>
+            <span class="battery-text">88%</span>
+          </div>
+        </div>
+        <div class="source-app-bg"></div>
+        <div class="capture-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-topbar">
+            <span class="sheet-mark">Log<span class="period">.</span></span>
+            <span class="sheet-cancel">Cancel</span>
+          </div>
+          <!-- Loading state: raw URL in mono / paper-40. No spinner. -->
+          <div class="sheet-preview">
+            <span class="url-loading">nytimes.com/2026/02/20/opinion/…</span>
+          </div>
+          <div class="sheet-annotation">
+            <span class="annotation-placeholder">Add a note…</span>
+            <!-- Active even while loading — commit proceeds with URL as title if needed -->
+            <div class="commit-btn active">
+              <div class="commit-dot active"></div>
+            </div>
+          </div>
+          <div class="sheet-safe-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- State 2: Text block ---- -->
+    <div class="frame-group">
+      <div class="frame-label">Text block</div>
+      <div class="device-frame">
+        <div class="status-bar">
+          <span class="status-time">2:37</span>
+          <div class="status-icons">
+            <div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div>
+            <div class="wifi"></div>
+            <span class="battery-text">74%</span>
+          </div>
+        </div>
+        <div class="source-app-bg"></div>
+        <div class="capture-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-topbar">
+            <span class="sheet-mark">Log<span class="period">.</span></span>
+            <span class="sheet-cancel">Cancel</span>
+          </div>
+          <!-- Text block preview: fades if > 4 lines -->
+          <div class="sheet-preview" style="position:relative; max-height:100px; overflow:hidden;">
+            <p class="text-preview">
+              "Boredom is not a problem to be solved. It is the last
+              privilege of a free mind. When we eliminate it, we
+              also eliminate the conditions that allow us to think
+              at all." — from the NYT piece on distraction.
+            </p>
+            <div class="text-preview-fade"></div>
+          </div>
+          <!-- Annotation with text typed + active commit -->
+          <div class="sheet-annotation">
+            <span class="annotation-input">Relevant to idle trace.</span>
+            <div class="commit-btn active">
+              <div class="commit-dot active"></div>
+            </div>
+          </div>
+          <div class="sheet-safe-area"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- State 3: Image ---- -->
+    <div class="frame-group">
+      <div class="frame-label">Image</div>
+      <div class="device-frame">
+        <div class="status-bar">
+          <span class="status-time">10:15</span>
+          <div class="status-icons">
+            <div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div>
+            <div class="wifi"></div>
+            <span class="battery-text">91%</span>
+          </div>
+        </div>
+        <div class="source-app-bg"></div>
+        <div class="capture-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-topbar">
+            <span class="sheet-mark">Log<span class="period">.</span></span>
+            <span class="sheet-cancel">Cancel</span>
+          </div>
+          <!-- Image preview: 160pt, 8pt radius -->
+          <div class="sheet-preview">
+            <div class="image-preview-ph">
+              <span class="image-preview-label">Image preview · 160pt</span>
+            </div>
+          </div>
+          <!-- No annotation typed yet — idle commit (image always active) -->
+          <div class="sheet-annotation">
+            <span class="annotation-placeholder">Add a note…</span>
+            <!-- Image: always active — content exists without annotation -->
+            <div class="commit-btn active">
+              <div class="commit-dot active"></div>
+            </div>
+          </div>
+          <div class="sheet-safe-area"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /stage -->
+
+  <!-- ======================== DESIGN DECISIONS ======================== -->
+  <div class="design-notes">
+    <div class="notes-heading">DESIGN DECISIONS</div>
+    <div class="notes-grid">
+
+      <div class="note-card">
+        <div class="note-title">SHEET IDENTITY</div>
+        <div class="note-body">
+          The sheet must be immediately recognizable as Log even
+          appearing over another app's chrome. Log• occupies the leading
+          position — where iOS convention places "who's presenting this."
+          Cancel is trailing, following iOS form sheet conventions (keyboard
+          dismiss, Done buttons). Cancel is IBM Plex Sans Regular (tape, not
+          mechanism) — a user action, not instrument labeling.
+        </div>
+        <span class="note-rule">Mark leading · Cancel trailing · Cancel in Sans</span>
+      </div>
+
+      <div class="note-card">
+        <div class="note-title">URL LOADING STATE</div>
+        <div class="note-body">
+          While the extension fetches the page title and OG image (up to 5s timeout),
+          the preview area shows the raw URL in Space Mono / paper-40. No spinner —
+          the instrument doesn't perform. The CommitButton is already active: the user can
+          commit immediately with the URL as fallback title. No blocking.
+        </div>
+        <span class="note-rule">No spinner · Raw URL in mono · Commit active immediately</span>
+      </div>
+
+      <div class="note-card">
+        <div class="note-title">ANNOTATION FIELD</div>
+        <div class="note-body">
+          IBM Plex Sans Regular 15pt (tape — user's words). Placeholder "Add a note…"
+          in paper-30. Optional. Up to 4 lines before scrolling. Multiline.
+          The CommitButton activates based on content type, not annotation presence —
+          annotation is always optional.
+        </div>
+        <span class="note-rule">Optional · 4 lines max before scroll · IBM Plex Sans 15pt</span>
+      </div>
+
+      <div class="note-card">
+        <div class="note-title">COMMIT BUTTON STATES</div>
+        <div class="note-body">
+          <strong>URL:</strong> active as soon as the sheet appears (content exists). <br>
+          <strong>Text block:</strong> active when text is non-empty (fetched content exists). <br>
+          <strong>Image:</strong> always active (image file is already committed to share payload). <br>
+          Idle state: paper-20 border, paper-05 bg, paper-30 dot. <br>
+          Active state: amber border, paper-00 bg, amber dot.
+        </div>
+        <span class="note-rule">URL + Image: always active · Text: active when non-empty</span>
+      </div>
+
+      <div class="note-card">
+        <div class="note-title">TEXT BLOCK FADE</div>
+        <div class="note-body">
+          If the shared text exceeds 4 visible lines, it fades at the bottom with a
+          gradient mask (paper-00 → transparent). No hard cut. No "read more" — the
+          preview is non-interactive. The full text is committed to the entry on save.
+        </div>
+        <span class="note-rule">Gradient mask · No hard cut · Non-interactive preview</span>
+      </div>
+
+      <div class="note-card">
+        <div class="note-title">DISMISS BEHAVIOR</div>
+        <div class="note-body">
+          Cancel: dismisses the extension, returns to the source app, no entry saved.
+          Commit: saves entry, dismisses, returns to source app immediately. No confirmation
+          dialog — trusting the user (same philosophy as the main app's commit button).
+          On commit, the entry writes with <code>intentType = nil</code>; classification
+          happens on next main app launch.
+        </div>
+        <span class="note-rule">No confirmation · Returns to source app · Classifies async</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem('logDarkMode') === '1') {
+      document.body.classList.add('dark-mode');
+    }
+    document.querySelector('.mode-toggle').addEventListener('click', function() {
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('logDarkMode', isDark ? '1' : '0');
+    });
+  </script>
+
+</body>
+</html>

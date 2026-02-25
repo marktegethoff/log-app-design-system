@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rich Entries v1 — Log•</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+
+    body { background: var(--paper-10); }
+    body.dark-mode { background: var(--paper-90); }
+
+    /* ---- Proto header ---- */
+    .proto-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-16) var(--s-24);
+      background: var(--paper-00);
+      border-bottom: 1px solid var(--paper-15);
+    }
+    body.dark-mode .proto-header {
+      background: var(--paper-90);
+      border-bottom-color: var(--paper-80);
+    }
+    .proto-header-left {
+      display: flex;
+      align-items: baseline;
+      gap: var(--s-16);
+    }
+    .proto-mark {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+    }
+    body.dark-mode .proto-mark { color: var(--paper-05); }
+    .proto-mark .period { color: var(--amber); margin-left: 1px; }
+    .proto-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.05em;
+    }
+    body.dark-mode .proto-label { color: var(--paper-30); }
+    .proto-meta {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.03em;
+    }
+    body.dark-mode .proto-meta { color: var(--paper-40); }
+
+    .mode-toggle {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      letter-spacing: 0.04em;
+      color: var(--paper-50);
+      background: none;
+      border: 1px solid var(--paper-20);
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    body.dark-mode .mode-toggle {
+      color: var(--paper-30);
+      border-color: var(--paper-60);
+    }
+    .mode-toggle:hover { border-color: var(--paper-40); }
+
+    /* ---- Stage ---- */
+    .stage {
+      display: flex;
+      gap: var(--s-32);
+      align-items: flex-start;
+      justify-content: center;
+      padding: var(--s-48) var(--s-24);
+      flex-wrap: wrap;
+    }
+
+    /* ---- Device Frame ---- */
+    .device-frame {
+      width: 390px;
+      height: 844px;
+      background: var(--paper-00);
+      border-radius: 48px;
+      border: 8px solid var(--paper-70);
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    body.dark-mode .device-frame {
+      background: var(--paper-90);
+      border-color: var(--paper-60);
+    }
+    .device-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.05em;
+      text-align: center;
+      margin-bottom: var(--s-12);
+    }
+    body.dark-mode .device-label { color: var(--paper-30); }
+
+    /* ---- Status Bar ---- */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px 6px;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      font-weight: 700;
+      color: var(--paper-80);
+    }
+    body.dark-mode .status-time { color: var(--paper-05); }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .bar { width: 3px; border-radius: 1px; background: var(--paper-70); }
+    body.dark-mode .bar { background: var(--paper-20); }
+    .bar:nth-child(1) { height: 5px; }
+    .bar:nth-child(2) { height: 8px; }
+    .bar:nth-child(3) { height: 11px; }
+    .bar:nth-child(4) { height: 14px; }
+    .wifi {
+      width: 13px; height: 10px;
+      border: 1.5px solid var(--paper-70);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      margin-left: 4px;
+    }
+    body.dark-mode .wifi { border-color: var(--paper-20); }
+    .battery-text {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-60);
+      margin-left: 3px;
+    }
+    body.dark-mode .battery-text { color: var(--paper-30); }
+
+    /* ---- App Nav ---- */
+    .app-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 20px 10px;
+      flex-shrink: 0;
+    }
+    .app-nav-title {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: var(--tracking-tight);
+      color: var(--paper-80);
+    }
+    body.dark-mode .app-nav-title { color: var(--paper-05); }
+    .app-nav-title .period { color: var(--amber); margin-left: 1px; }
+    .nav-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-icon svg { stroke: var(--paper-50); fill: none; }
+    body.dark-mode .nav-icon svg { stroke: var(--paper-30); }
+
+    /* ---- Timeline Scroll ---- */
+    .timeline-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 20px 20px;
+    }
+    .timeline-scroll::-webkit-scrollbar { display: none; }
+
+    /* ---- Entry Row ---- */
+    .entry-row {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .entry-gutter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 14px;
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
+
+    /* Intent dots — v1.1 taxonomy */
+    .intent-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-proposal   { background: var(--signal-proposal); }
+    .dot-question   { background: var(--signal-question); }
+    .dot-constraint { background: var(--signal-constraint); }
+    .dot-tradeoff   { background: var(--signal-tradeoff); }
+    .dot-fact       { background: var(--signal-fact); }
+    .dot-note       { background: var(--signal-note); }
+
+    .entry-body { flex: 1; min-width: 0; }
+
+    .entry-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+    .entry-timestamp {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.03em;
+    }
+    body.dark-mode .entry-timestamp { color: var(--paper-30); }
+    .entry-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.05em;
+    }
+    body.dark-mode .entry-label { color: var(--paper-30); }
+
+    /* ---- Entry text — Tape ---- */
+    .entry-text {
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--paper-70);
+      margin: 0;
+    }
+    body.dark-mode .entry-text { color: var(--paper-05); }
+
+    /* Markdown within entry text */
+    .entry-text strong { font-weight: 600; }
+    .entry-text em     { font-style: italic; }
+    .entry-text code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--paper-05);
+      color: var(--paper-60);
+      padding: 1px 4px;
+      border-radius: 2px;
+    }
+    body.dark-mode .entry-text code {
+      background: var(--paper-80);
+      color: var(--paper-20);
+    }
+
+    /* Inline links within entry text — subordinate, not amber */
+    .entry-text a,
+    .entry-link {
+      color: var(--paper-50);
+      text-decoration: underline;
+      text-decoration-color: var(--paper-30);
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+    body.dark-mode .entry-text a,
+    body.dark-mode .entry-link {
+      color: var(--paper-30);
+      text-decoration-color: var(--paper-50);
+    }
+
+    /* ---- Image attachment ---- */
+    .rich-image {
+      margin: 6px 0 4px;
+    }
+    .img-placeholder {
+      width: 100%;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--paper-20) 0%, var(--paper-15) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    body.dark-mode .img-placeholder {
+      background: linear-gradient(135deg, var(--paper-70) 0%, var(--paper-80) 100%);
+    }
+    .img-placeholder.img-user {
+      height: 220px;
+    }
+    .img-placeholder-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+      letter-spacing: 0.04em;
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+    }
+    body.dark-mode .img-placeholder-label { color: var(--paper-40); }
+    /* Subtle texture */
+    .img-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 4px,
+        rgba(0,0,0,0.015) 4px,
+        rgba(0,0,0,0.015) 8px
+      );
+    }
+
+    /* ---- URL-sourced entry ---- */
+    .og-image {
+      width: 100%;
+      height: 160px;
+      border-radius: 8px;
+      margin: 6px 0 6px;
+      background: linear-gradient(135deg, var(--paper-20) 0%, var(--paper-10) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    body.dark-mode .og-image {
+      background: linear-gradient(135deg, var(--paper-70) 0%, var(--paper-80) 100%);
+    }
+    .og-image-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+      letter-spacing: 0.04em;
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+    }
+    .og-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 4px,
+        rgba(0,0,0,0.015) 4px,
+        rgba(0,0,0,0.015) 8px
+      );
+    }
+
+    .source-domain {
+      display: block;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--paper-40);
+      letter-spacing: 0.03em;
+      margin-top: 2px;
+      margin-bottom: 1px;
+    }
+    body.dark-mode .source-domain { color: var(--paper-30); }
+
+    .entry-annotation {
+      font-size: 14px;
+      color: var(--paper-50);
+      margin-top: 3px;
+    }
+    body.dark-mode .entry-annotation { color: var(--paper-30); }
+
+    /* ---- Idle trace — matches timeline-surface-v1 pattern ---- */
+    .idle-trace {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      margin: 2px 0;
+    }
+    .idle-trace-bar {
+      width: 1px;
+      background: var(--paper-20);
+      margin-left: 7px;
+      flex-shrink: 0;
+    }
+    body.dark-mode .idle-trace-bar { background: var(--paper-70); }
+    .idle-trace-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-30);
+      white-space: nowrap;
+    }
+    body.dark-mode .idle-trace-label { color: var(--paper-50); }
+
+    /* ---- Compose area (bottom) ---- */
+    .compose-area {
+      padding: 12px 20px 28px;
+      border-top: 1px solid var(--paper-10);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    body.dark-mode .compose-area {
+      border-top-color: var(--paper-80);
+      background: var(--paper-90);
+    }
+    .compose-placeholder {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 15px;
+      color: var(--paper-30);
+    }
+    body.dark-mode .compose-placeholder { color: var(--paper-50); }
+    .commit-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--paper-20);
+      background: var(--paper-05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    body.dark-mode .commit-btn {
+      border-color: var(--paper-60);
+      background: var(--paper-80);
+    }
+    .commit-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--paper-30);
+    }
+    body.dark-mode .commit-dot { background: var(--paper-50); }
+
+    /* =============================================
+       DETAIL VIEW
+       ============================================= */
+
+    .detail-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 20px 10px;
+      flex-shrink: 0;
+    }
+    .detail-nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .detail-nav-btn svg {
+      stroke: var(--paper-50);
+      fill: none;
+      width: 18px;
+      height: 18px;
+    }
+    body.dark-mode .detail-nav-btn svg { stroke: var(--paper-30); }
+
+    .detail-header {
+      padding: 0 24px 16px;
+      border-bottom: 1px solid var(--paper-10);
+      flex-shrink: 0;
+    }
+    body.dark-mode .detail-header {
+      border-bottom-color: var(--paper-80);
+    }
+    .detail-timestamp {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    body.dark-mode .detail-timestamp { color: var(--paper-30); }
+    .detail-intent-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .detail-intent-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .detail-intent-label {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      color: var(--paper-40);
+      letter-spacing: 0.05em;
+    }
+    body.dark-mode .detail-intent-label { color: var(--paper-30); }
+
+    .detail-archivist {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+    }
+    .archivist-bar {
+      width: 2px;
+      background: var(--archive-accent);
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+    .archivist-text {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--archive-accent);
+      line-height: 1.5;
+    }
+
+    .detail-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+    .detail-scroll::-webkit-scrollbar { display: none; }
+
+    .detail-og-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--paper-20) 0%, var(--paper-10) 100%);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    body.dark-mode .detail-og-image {
+      background: linear-gradient(135deg, var(--paper-70) 0%, var(--paper-80) 100%);
+    }
+    .detail-og-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 4px,
+        rgba(0,0,0,0.015) 4px, rgba(0,0,0,0.015) 8px
+      );
+    }
+    .detail-og-label {
+      position: absolute;
+      bottom: 10px;
+      left: 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+      letter-spacing: 0.04em;
+      z-index: 1;
+    }
+
+    .detail-body {
+      padding: 20px 24px 32px;
+    }
+    .detail-page-title {
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--paper-80);
+      margin: 0 0 6px;
+    }
+    body.dark-mode .detail-page-title { color: var(--paper-05); }
+    .detail-url-link {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--paper-40);
+      text-decoration: underline;
+      text-decoration-color: var(--paper-20);
+      text-underline-offset: 2px;
+      letter-spacing: 0.02em;
+      display: block;
+      margin-bottom: 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    body.dark-mode .detail-url-link {
+      color: var(--paper-30);
+      text-decoration-color: var(--paper-50);
+    }
+    .detail-entry-text {
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--paper-70);
+      margin: 0 0 24px;
+    }
+    body.dark-mode .detail-entry-text { color: var(--paper-10); }
+    .detail-entry-text strong { font-weight: 600; }
+    .detail-entry-text em { font-style: italic; }
+    .detail-entry-text code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--paper-05);
+      color: var(--paper-60);
+      padding: 1px 4px;
+      border-radius: 2px;
+    }
+    body.dark-mode .detail-entry-text code {
+      background: var(--paper-80);
+      color: var(--paper-20);
+    }
+    .detail-entry-text a {
+      color: var(--paper-50);
+      text-decoration: underline;
+      text-decoration-color: var(--paper-30);
+      text-underline-offset: 2px;
+    }
+    body.dark-mode .detail-entry-text a {
+      color: var(--paper-30);
+      text-decoration-color: var(--paper-50);
+    }
+
+    .detail-user-annotation {
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--paper-50);
+      margin: 0 0 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--paper-10);
+    }
+    body.dark-mode .detail-user-annotation {
+      color: var(--paper-30);
+      border-top-color: var(--paper-80);
+    }
+
+    /* =============================================
+       DESIGN DECISIONS SECTION
+       ============================================= */
+    .design-notes {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: var(--s-48) var(--s-24) var(--s-96);
+    }
+    .notes-heading {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      font-weight: 700;
+      color: var(--paper-40);
+      letter-spacing: 0.06em;
+      margin-bottom: var(--s-32);
+    }
+    body.dark-mode .notes-heading { color: var(--paper-30); }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-32);
+    }
+    @media (max-width: 700px) { .notes-grid { grid-template-columns: 1fr; } }
+
+    .note-card {
+      background: var(--paper-00);
+      border: 1px solid var(--paper-15);
+      border-radius: 4px;
+      padding: var(--s-24);
+    }
+    body.dark-mode .note-card {
+      background: var(--paper-90);
+      border-color: var(--paper-80);
+    }
+    .note-title {
+      font-family: var(--mono);
+      font-size: var(--type-11);
+      font-weight: 700;
+      color: var(--paper-50);
+      letter-spacing: 0.05em;
+      margin-bottom: var(--s-12);
+    }
+    body.dark-mode .note-title { color: var(--paper-30); }
+    .note-body {
+      font-family: var(--sans);
+      font-size: var(--type-14);
+      line-height: 1.6;
+      color: var(--paper-60);
+    }
+    body.dark-mode .note-body { color: var(--paper-20); }
+    .note-body code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--paper-05);
+      color: var(--paper-60);
+      padding: 1px 5px;
+      border-radius: 2px;
+    }
+    body.dark-mode .note-body code {
+      background: var(--paper-80);
+      color: var(--paper-20);
+    }
+    .note-rule {
+      display: block;
+      margin-top: var(--s-8);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.03em;
+    }
+
+    /* Inline demo row in notes */
+    .demo-entry {
+      background: var(--paper-05);
+      border: 1px solid var(--paper-10);
+      border-radius: 4px;
+      padding: var(--s-12);
+      margin-top: var(--s-12);
+    }
+    body.dark-mode .demo-entry {
+      background: var(--paper-80);
+      border-color: var(--paper-70);
+    }
+    .demo-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+    .demo-text {
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--paper-70);
+    }
+    body.dark-mode .demo-text { color: var(--paper-10); }
+    .demo-text strong { font-weight: 600; }
+    .demo-text em { font-style: italic; }
+    .demo-text code {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--paper-10);
+      color: var(--paper-60);
+      padding: 1px 4px;
+      border-radius: 2px;
+    }
+    body.dark-mode .demo-text code {
+      background: var(--paper-70);
+      color: var(--paper-20);
+    }
+    .demo-link {
+      color: var(--paper-50);
+      text-decoration: underline;
+      text-decoration-color: var(--paper-30);
+      text-underline-offset: 2px;
+    }
+    body.dark-mode .demo-link {
+      color: var(--paper-30);
+      text-decoration-color: var(--paper-50);
+    }
+    .demo-source {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-40);
+      letter-spacing: 0.03em;
+      margin-top: 2px;
+    }
+    .demo-image-ph {
+      width: 100%;
+      height: 80px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--paper-20), var(--paper-15));
+      margin: 6px 0 4px;
+      display: flex;
+      align-items: flex-end;
+      padding: 6px 8px;
+    }
+    body.dark-mode .demo-image-ph {
+      background: linear-gradient(135deg, var(--paper-70), var(--paper-75, #1d1810));
+    }
+    .demo-image-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--paper-40);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ======================== HEADER ======================== -->
+  <header class="proto-header">
+    <div class="proto-header-left">
+      <span class="proto-mark">Log<span class="period">.</span></span>
+      <span class="proto-label">RICH ENTRIES v1</span>
+    </div>
+    <span class="proto-meta">Prototype · Feb 24, 2026</span>
+    <button class="mode-toggle" onclick="document.body.classList.toggle('dark-mode')">
+      TOGGLE MODE
+    </button>
+  </header>
+
+  <!-- ======================== STAGE ======================== -->
+  <div class="stage">
+
+    <!-- ---- DEVICE: Timeline ---- -->
+    <div>
+      <div class="device-label">TIMELINE — All entry types</div>
+      <div class="device-frame">
+
+        <!-- Status bar -->
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div>
+            <div class="wifi"></div>
+            <span class="battery-text">91%</span>
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <div class="app-nav">
+          <div style="width:28px"></div>
+          <span class="app-nav-title">Log<span class="period">.</span></span>
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" stroke-width="1.5">
+              <circle cx="9" cy="9" r="7"/>
+              <line x1="9" y1="6" x2="9" y2="9"/>
+              <line x1="9" y1="12" x2="9.01" y2="12"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-scroll">
+
+          <!-- Entry 1: Typed with markdown (bold + inline code) -->
+          <div class="entry-row">
+            <div class="entry-gutter">
+              <div class="intent-dot dot-note"></div>
+            </div>
+            <div class="entry-body">
+              <div class="entry-meta">
+                <span class="entry-timestamp">9:23 AM</span>
+                <span class="entry-label">NOTE</span>
+              </div>
+              <p class="entry-text">
+                Decided on the <strong>two-column layout</strong> for the detail view.
+                The archivist annotation needs its own zone —
+                can't compete with <code>entry.text</code> for visual weight.
+              </p>
+            </div>
+          </div>
+
+          <!-- Entry 2: Typed with inline link -->
+          <div class="entry-row">
+            <div class="entry-gutter">
+              <div class="intent-dot dot-fact"></div>
+            </div>
+            <div class="entry-body">
+              <div class="entry-meta">
+                <span class="entry-timestamp">9:41 AM</span>
+                <span class="entry-label">FACT</span>
+              </div>
+              <p class="entry-text">
+                The idle trace formula comes from the
+                <a href="#" class="entry-link">barograph design paper</a>.
+                Log₂ scaling gives the right perceptual weight without
+                exaggerating short gaps.
+              </p>
+            </div>
+          </div>
+
+          <!-- Entry 3: Image (from Photos) -->
+          <div class="entry-row">
+            <div class="entry-gutter">
+              <div class="intent-dot dot-proposal"></div>
+            </div>
+            <div class="entry-body">
+              <div class="entry-meta">
+                <span class="entry-timestamp">10:15 AM</span>
+                <span class="entry-label">PROPOSAL</span>
+              </div>
+              <div class="rich-image">
+                <div class="img-placeholder img-user">
+                  <span class="img-placeholder-label">Photo · 1 image</span>
+                </div>
+              </div>
+              <p class="entry-text entry-annotation">Sketch of the new compose layout with offset margin.</p>
+            </div>
+          </div>
+
+          <!-- Idle gap -->
+          <div class="idle-trace" style="height:36px;">
+            <div class="idle-trace-bar" style="height:100%; align-self:stretch;"></div>
+          </div>
+
+          <!-- Entry 4: URL-sourced, with OG image -->
+          <div class="entry-row">
+            <div class="entry-gutter">
+              <div class="intent-dot dot-fact"></div>
+            </div>
+            <div class="entry-body">
+              <div class="entry-meta">
+                <span class="entry-timestamp">11:04 AM</span>
+                <span class="entry-label">FACT</span>
+              </div>
+              <div class="og-image">
+                <span class="og-image-label">OG Image · 160pt</span>
+              </div>
+              <p class="entry-text" style="margin-bottom:1px">The Case for Boredom</p>
+              <span class="source-domain">nytimes.com</span>
+              <p class="entry-text entry-annotation">Good framing for the idle trace rationale.</p>
+            </div>
+          </div>
+
+          <!-- Entry 5: URL-sourced, no OG image -->
+          <div class="entry-row">
+            <div class="entry-gutter">
+              <div class="intent-dot dot-question"></div>
+            </div>
+            <div class="entry-body">
+              <div class="entry-meta">
+                <span class="entry-timestamp">2:37 PM</span>
+                <span class="entry-label">QUESTION</span>
+              </div>
+              <p class="entry-text" style="margin-bottom:1px">Why Append-Only Databases Win</p>
+              <span class="source-domain">scattered-thoughts.io</span>
+              <p class="entry-text entry-annotation">How does this apply to the correction model?</p>
+            </div>
+          </div>
+
+        </div><!-- /timeline-scroll -->
+
+        <!-- Compose area -->
+        <div class="compose-area">
+          <span class="compose-placeholder">_</span>
+          <div class="commit-btn">
+            <div class="commit-dot"></div>
+          </div>
+        </div>
+
+      </div><!-- /device-frame timeline -->
+    </div>
+
+    <!-- ---- DEVICE: Detail View (URL entry with OG image) ---- -->
+    <div>
+      <div class="device-label">DETAIL VIEW — URL-sourced entry</div>
+      <div class="device-frame">
+
+        <!-- Status bar -->
+        <div class="status-bar">
+          <span class="status-time">11:04</span>
+          <div class="status-icons">
+            <div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div>
+            <div class="wifi"></div>
+            <span class="battery-text">88%</span>
+          </div>
+        </div>
+
+        <!-- Detail nav — close (leading) + share (trailing) -->
+        <div class="detail-nav">
+          <!-- Close: leading -->
+          <div class="detail-nav-btn">
+            <svg viewBox="0 0 18 18" stroke-width="1.5">
+              <line x1="4" y1="4" x2="14" y2="14"/>
+              <line x1="14" y1="4" x2="4" y2="14"/>
+            </svg>
+          </div>
+          <!-- Share: trailing -->
+          <div class="detail-nav-btn">
+            <svg viewBox="0 0 18 18" stroke-width="1.5">
+              <path d="M9 2v9"/>
+              <path d="M5 6l4-4 4 4"/>
+              <path d="M3 11v4a1 1 0 001 1h10a1 1 0 001-1v-4"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Entry header -->
+        <div class="detail-header">
+          <div class="detail-timestamp">Tuesday, February 24, 2026 · 11:04 AM</div>
+          <div class="detail-intent-row">
+            <div class="detail-intent-dot dot-fact"></div>
+            <span class="detail-intent-label">FACT</span>
+          </div>
+          <!-- Archivist annotation -->
+          <div class="detail-archivist" style="margin-top:12px;">
+            <div class="archivist-bar"></div>
+            <div class="archivist-text">
+              Observation about information architecture. Related to idle trace entry (9:41 AM).
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrolling content -->
+        <div class="detail-scroll">
+
+          <!-- Full-width OG image (natural aspect ratio / uncapped) -->
+          <div class="detail-og-image">
+            <span class="detail-og-label">OG Image · full width · natural aspect ratio</span>
+          </div>
+
+          <div class="detail-body">
+            <!-- Page title -->
+            <p class="detail-page-title">The Case for Boredom</p>
+
+            <!-- Tappable URL — mechanism typography, paper-40 -->
+            <a href="#" class="detail-url-link">nytimes.com/2026/02/20/opinion/boredom-creativity.html</a>
+
+            <!-- User annotation -->
+            <p class="detail-user-annotation">
+              Good framing for the idle trace rationale.
+            </p>
+
+          </div>
+        </div><!-- /detail-scroll -->
+
+      </div><!-- /device-frame detail -->
+    </div>
+
+  </div><!-- /stage -->
+
+  <!-- ======================== DESIGN DECISIONS ======================== -->
+  <div class="design-notes">
+    <div class="notes-heading">DESIGN DECISIONS</div>
+    <div class="notes-grid">
+
+      <!-- Markdown -->
+      <div class="note-card">
+        <div class="note-title">MARKDOWN IN ENTRIES</div>
+        <div class="note-body">
+          Rendered in both timeline and detail view via <code>renderedMarkdown</code>.
+          Bold and italic use IBM Plex Sans 600/italic. Inline code renders in Space Mono
+          (12px) on a paper-05 chip — mechanism within tape. No headers or tables; entries
+          are records, not documents.
+        </div>
+        <div class="demo-entry">
+          <div class="demo-meta">● 9:23 AM · NOTE</div>
+          <div class="demo-text">
+            The <strong>two-column layout</strong> approach. Can't compete with
+            <code>entry.text</code> for visual weight.
+          </div>
+        </div>
+        <span class="note-rule">Supported: **bold** *italic* `code` ~~strike~~ [links](url)</span>
+      </div>
+
+      <!-- Inline links -->
+      <div class="note-card">
+        <div class="note-title">INLINE LINKS IN TYPED ENTRIES</div>
+        <div class="note-body">
+          Links render in paper-50 with a paper-30 underline at 2px offset. Not amber —
+          amber is reserved for the mark, commit button active state, and active nav.
+          In dark mode: paper-30 text, paper-50 underline.
+          Tap opens in-app Safari view (SFSafariViewController).
+        </div>
+        <div class="demo-entry">
+          <div class="demo-meta">● 9:41 AM · FACT</div>
+          <div class="demo-text">
+            From the <a href="#" class="demo-link">barograph design paper</a>.
+            Log₂ scaling without exaggerating short gaps.
+          </div>
+        </div>
+        <span class="note-rule">Never amber · paper-50 text · paper-30 underline</span>
+      </div>
+
+      <!-- Images -->
+      <div class="note-card">
+        <div class="note-title">IMAGE ENTRIES</div>
+        <div class="note-body">
+          Shared from Photos or captured in-app (future). Timeline thumbnail: 220pt height,
+          full content width, 8pt corner radius. Detail view: full width, natural aspect
+          ratio, scrolls with content. User annotation (if any) appears below the image.
+          Intent classification uses annotation text only — no vision model in v2.
+        </div>
+        <div class="demo-entry">
+          <div class="demo-meta">● 10:15 AM · PROPOSAL</div>
+          <div class="demo-image-ph">
+            <span class="demo-image-label">Photo · 220pt</span>
+          </div>
+          <div class="demo-text">Sketch of the compose layout.</div>
+        </div>
+        <span class="note-rule">Timeline: 220pt · Detail: natural ratio · 8pt radius</span>
+      </div>
+
+      <!-- URL source indicator -->
+      <div class="note-card">
+        <div class="note-title">URL-SOURCED ENTRIES</div>
+        <div class="note-body">
+          Provenance is expressed through typography, not decoration. The domain appears
+          in Space Mono (the instrument's voice) below the page title — the instrument
+          noting where this came from. OG image (if available) leads the entry at 160pt.
+          Detail view: full-width image (uncapped), tappable URL in Space Mono / paper-40.
+        </div>
+        <div class="demo-entry">
+          <div class="demo-meta">● 11:04 AM · FACT</div>
+          <div class="demo-image-ph" style="height:60px;">
+            <span class="demo-image-label">OG Image · 160pt</span>
+          </div>
+          <div class="demo-text">The Case for Boredom</div>
+          <span class="demo-source">nytimes.com</span>
+        </div>
+        <span class="note-rule">Domain: Space Mono · paper-40 · mechanism typography</span>
+      </div>
+
+      <!-- Image detail view -->
+      <div class="note-card">
+        <div class="note-title">IMAGE DETAIL VIEW</div>
+        <div class="note-body">
+          Full-width image at natural aspect ratio, no corner radius, flush to content
+          area edges. Scrolls with content if tall. No lightbox — tap does nothing (image
+          is not interactive in v2). Annotation below the image, same treatment as
+          URL annotation. Archivist section at bottom if annotation triggered.
+        </div>
+        <span class="note-rule">No lightbox · Natural ratio · No interaction in v2</span>
+      </div>
+
+      <!-- Share button -->
+      <div class="note-card">
+        <div class="note-title">SHARE BUTTON — DETAIL VIEW TOOLBAR</div>
+        <div class="note-body">
+          Close button moves from trailing to leading. Share button occupies trailing.
+          Icon: SF Symbol <code>square.and.arrow.up</code>, 16pt, paper-50 / paper-30 dark.
+          On tap: presents <code>UIActivityViewController</code> with Markdown-formatted
+          entry text. No format selection, no settings.
+        </div>
+        <span class="note-rule">Close → leading · Share → trailing · Format: Markdown only</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Preserve dark mode on reload
+    if (localStorage.getItem('logDarkMode') === '1') {
+      document.body.classList.add('dark-mode');
+    }
+    document.querySelector('.mode-toggle').addEventListener('click', function() {
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('logDarkMode', isDark ? '1' : '0');
+    });
+  </script>
+
+</body>
+</html>
